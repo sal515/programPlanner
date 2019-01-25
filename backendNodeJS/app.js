@@ -21,7 +21,7 @@ app.use((req, res, next)=>{
 app.use((req, res, next)=>{
     // This will sent all the appropriate header and other stuff required for the response
     // This is why express is useful, it takes care of shit for me!
-    res.send('Hello from Express app');
+    res.send('Hello from Express app with nodemon installed');
 });
 
 
@@ -29,3 +29,4 @@ app.use((req, res, next)=>{
 module.exports = app;
 
 // The server.js file has to import the app
+
