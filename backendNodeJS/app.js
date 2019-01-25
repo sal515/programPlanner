@@ -6,6 +6,19 @@ const express = require('express');
 // creating an express app
 const app = express();
 
+// importing mongoose
+const mongoose = require('mongoose');
+// connect to database using the url from the website
+mongoose.connect("mongodb+srv://sal:jacksonlight123@programplanner-khyhz.mongodb.net/programPlannerCheck?retryWrites=true")
+    .then(()=>{
+        console.log('connected to the db');
+    })
+    .catch(() =>{
+    console.log('connection failed!');
+});
+// importing the mongodb model
+const Mongodb = require('./mongodbSchema');
+
 // middleware function which handles the http requests
 app.use((req, res, next)=>{
     console.log('First Middleware Called')
@@ -19,6 +32,16 @@ app.use((req, res, next)=>{
 
 // middleware function which handles the http requests
 app.use((req, res, next)=>{
+    // new db object
+    const mongodb1 = new Mongodb({
+        title: 'hello',
+        content: 'Hi'
+    });
+
+    // NOT wrking save???
+
+
+
     // This will sent all the appropriate header and other stuff required for the response
     // This is why express is useful, it takes care of shit for me!
     res.send('Hello from Express app with nodemon installed');
