@@ -9,6 +9,7 @@ const app = require('./backendNodeJS/app');
 const debug = require("debug")("node-angular");
 
 
+
 // checks the port for integer when received from the hosting provider
 const normalizePort = val => {
     var port = parseInt(val, 10);

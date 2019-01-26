@@ -10,42 +10,46 @@ const app = express();
 const mongoose = require('mongoose');
 // connect to database using the url from the website
 mongoose.connect("mongodb+srv://sal:jacksonlight123@programplanner-khyhz.mongodb.net/programPlannerCheck?retryWrites=true?", {useNewUrlParser: true})
-    .then(()=>{
-        console.log('connected to the db');
-    })
-    .catch(() =>{
+  .then(()=>{
+    console.log('connected to the db');
+  })
+  .catch(() =>{
     console.log('connection failed!');
-});
+  });
 // importing the mongodb model
-const Mongodb = require('./mongodbSchema');
+const Mongodb = require('./models/mongodbSchema');
 
 // middleware function which handles the http requests
 app.use((req, res, next)=>{
-    console.log('First Middleware Called')
-    // the next allows the request to be continued after this function
-    // if the next() is commented out and a response is not sent from this method
-    // A timeout err will occur due to no response from server, this shows how next() works
-    // Might be required somewhere
-    next();
+  console.log('First Middleware Called')
+  // the next allows the request to be continued after this function
+  // if the next() is commented out and a response is not sent from this method
+  // A timeout err will occur due to no response from server, this shows how next() works
+  // Might be required somewhere
+
+
+  console.log('Before ')
+  // new db object
+  const mongodb1 = new Mongodb({
+    name: 'hello'
+  });
+  console.log(mongodb1)
+
+  mongodb1.save();
+  console.log('after')
+
+  next();
 });
 
 
 // middleware function which handles the http requests
 app.use((req, res, next)=>{
-    // new db object
-    const mongodb1 = new Mongodb({
-      title: 'hello',
-      content: 'Hi'
-    });
 
+  // NOT wrking save???
 
-    // NOT wrking save???
-
-
-
-    // This will sent all the appropriate header and other stuff required for the response
-    // This is why express is useful, it takes care of shit for me!
-    res.send('Hello from Express app with nodemon installed');
+  // This will sent all the appropriate header and other stuff required for the response
+  // This is why express is useful, it takes care of shit for me!
+  res.send('Hello from Express app with nodemon installed');
 });
 
 
@@ -53,4 +57,3 @@ app.use((req, res, next)=>{
 module.exports = app;
 
 // The server.js file has to import the app
-
