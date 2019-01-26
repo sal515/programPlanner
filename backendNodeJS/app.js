@@ -9,7 +9,7 @@ const app = express();
 // importing mongoose
 const mongoose = require('mongoose');
 // connect to database using the url from the website
-mongoose.connect("mongodb+srv://sal:jacksonlight123@programplanner-khyhz.mongodb.net/programPlannerCheck?retryWrites=true")
+mongoose.connect("mongodb+srv://sal:jacksonlight123@programplanner-khyhz.mongodb.net/programPlannerCheck?retryWrites=true?", {useNewUrlParser: true})
     .then(()=>{
         console.log('connected to the db');
     })
@@ -34,9 +34,10 @@ app.use((req, res, next)=>{
 app.use((req, res, next)=>{
     // new db object
     const mongodb1 = new Mongodb({
-        title: 'hello',
-        content: 'Hi'
+      title: 'hello',
+      content: 'Hi'
     });
+
 
     // NOT wrking save???
 
