@@ -1,23 +1,34 @@
 // This is an example express app
 
+//---------------------------------------------------------------------
+// Code to make this file an express app
+//---------------------------------------------------------------------
+
 // importing express package as const app
 const express = require('express');
 
 // creating an express app
 const app = express();
 
-// importing mongoose
-const mongoose = require('mongoose');
-// connect to database using the url from the website
-mongoose.connect("mongodb+srv://sal:jacksonlight123@programplanner-khyhz.mongodb.net/programPlannerCheck?retryWrites=true?", {useNewUrlParser: true})
-  .then(()=>{
-    console.log('connected to the db');
-  })
-  .catch(() =>{
-    console.log('connection failed!');
-  });
+//---------------------------------------------------------------------
+// Connect to db
+//---------------------------------------------------------------------
+
+// importing dbHelpers.js file that contains custom db helper functions
+const dbHelpers = require('./databaseHandlers/dbHelpers');
+// import db url variable
+const dbURL = require('./databaseSetting');
+// connect to db
+dbHelpers.connectToDB(dbURL.dbURLString);
+
+//---------------------------------------------------------------------
+// Importing schema
+//---------------------------------------------------------------------
+
 // importing the mongodb model
 const Mongodb = require('./models/mongodbSchema');
+
+
 
 // middleware function which handles the http requests
 app.use((req, res, next)=>{
