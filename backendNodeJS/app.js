@@ -11,6 +11,11 @@ const express = require('express');
 const app = express();
 
 //---------------------------------------------------------------------
+// Code to make this file an express app
+//---------------------------------------------------------------------
+
+
+//---------------------------------------------------------------------
 // Connect to db
 //---------------------------------------------------------------------
 
@@ -22,13 +27,25 @@ const dbURL = require('./databaseSetting');
 dbHelpers.connectToDB(dbURL.dbURLString);
 
 //---------------------------------------------------------------------
+// Connect to db
+//---------------------------------------------------------------------
+
+
+//---------------------------------------------------------------------
 // Importing schema
 //---------------------------------------------------------------------
 
 // importing the mongodb model
 const Mongodb = require('./models/mongodbSchema');
 
+//---------------------------------------------------------------------
+// Importing schema
+//---------------------------------------------------------------------
 
+
+//---------------------------------------------------------------------
+// Express functions / Middleware functions
+//---------------------------------------------------------------------
 
 // middleware function which handles the http requests
 app.use((req, res, next)=>{
@@ -38,6 +55,9 @@ app.use((req, res, next)=>{
   // A timeout err will occur due to no response from server, this shows how next() works
   // Might be required somewhere
 
+//---------------------------------------------------------------------
+// Creating an object from the Schema and saving it to the db
+//---------------------------------------------------------------------
 
   console.log('Before ')
   // new db object
@@ -48,6 +68,12 @@ app.use((req, res, next)=>{
 
   mongodb1.save();
   console.log('after')
+
+
+//---------------------------------------------------------------------
+// Creating an object from the Schema and saving it to the db
+//---------------------------------------------------------------------
+
 
   next();
 });
@@ -63,8 +89,19 @@ app.use((req, res, next)=>{
   res.send('Hello from Express app with nodemon installed');
 });
 
+//---------------------------------------------------------------------
+// Express functions / Middleware functions
+//---------------------------------------------------------------------
+
+
+//---------------------------------------------------------------------
+// Exporting the express app to the server.js file
+//---------------------------------------------------------------------
 
 // The following code will allow up to export this express app called "app" to our NodeJS server
 module.exports = app;
 
 // The server.js file has to import the app
+//---------------------------------------------------------------------
+// Exporting the express app to the server.js file
+//---------------------------------------------------------------------
