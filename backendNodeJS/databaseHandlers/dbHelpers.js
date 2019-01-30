@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 var exports = module.exports = {};
 
 
-exports.connectToDB = function (databaseName, mongoDbHost,mongoDbHostParam) {
+exports.connectToDB = function (databaseName, mongoDbHost, mongoDbHostParam) {
 
   // the following parameters creates the mongoDb url to connect to
   // when the dataBaseName is changed a new database will be created and connected to from the code!
@@ -20,4 +20,4 @@ exports.connectToDB = function (databaseName, mongoDbHost,mongoDbHostParam) {
       console.log('connection failed!');
     });
 
-}
+};

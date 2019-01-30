@@ -21,4 +21,5 @@ const mongooseSchema = mongoose.Schema({
 
 // The following is a model created from the layout created above
 // The model has to be exported, so that it can be used outside of the file
-module.exports = mongoose.model("dbModelName", mongooseSchema);
+// module.exports = mongoose.model("dbModelName", mongooseSchema);
+module.exports = mongooseSchema;

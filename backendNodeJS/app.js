@@ -5,6 +5,8 @@
 //---------------------------------------------------------------------
 
 // importing express package as const app
+const mongoose = require('mongoose');
+
 const express = require('express');
 
 // creating an express app
@@ -22,7 +24,7 @@ const dbHelpers = require('./databaseHandlers/dbHelpers');
 // import db url variable
 const dbURL = require('./databaseSetting');
 // connect to db
-dbHelpers.connectToDB(dbURL.dbURLString);
+// dbHelpers.connectToDB(dbURL.dbURLString);
 
 // ====================================================================
 
@@ -33,6 +35,24 @@ dbHelpers.connectToDB(dbURL.dbURLString);
 
 // importing the mongodb model
 const Mongodb = require('./models/mongodbSchema');
+
+
+var conn1 = mongoose.createConnection(dbURL.dbURL1String);
+var exSchema1 = conn1.model('exShema', Mongodb);
+
+var conn2 = mongoose.createConnection(dbURL.dbURL2String);
+var exSchema2 = conn2.model('exShema', Mongodb);
+
+// const mongooseSchema = mongoose.Schema({
+//   name: String
+//   // title: {type: String, required: true},
+//   // content: {type: String, required: true}
+// });
+
+
+
+
+
 
 // ====================================================================
 
@@ -53,15 +73,31 @@ app.use((req, res, next)=>{
 // Creating an object from the Schema and saving it to the db
 //---------------------------------------------------------------------
 
-  console.log('Before ')
-  // new db object
-  const mongodb1 = new Mongodb({
+  console.log('Before ');
+
+  const saveSchema1 = new exSchema1({
     name: 'hello'
   });
-  console.log(mongodb1)
+  saveSchema1.save();
+  // conn1.close();
 
-  mongodb1.save();
-  console.log('after')
+  // saveSchema.save();
+  const saveSchema2 = new exSchema2({
+    name: 'hello'
+  });
+
+  saveSchema2.save();
+
+  // // new db object
+  // const mongodb1 = new Mongodb({
+  //   name: 'hello'
+  // });
+  // console.log(mongodb1);
+  // mongodb1.save();
+
+
+
+  console.log('after');
 
 
 // ====================================================================
