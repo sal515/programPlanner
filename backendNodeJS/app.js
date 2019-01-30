@@ -63,7 +63,7 @@ var exSchema2 = conn2.model('exShema', Mongodb);
 
 // middleware function which handles the http requests
 app.use((req, res, next)=>{
-  console.log('First Middleware Called')
+  console.log('First Middleware Called');
   // the next allows the request to be continued after this function
   // if the next() is commented out and a response is not sent from this method
   // A timeout err will occur due to no response from server, this shows how next() works
@@ -83,7 +83,7 @@ app.use((req, res, next)=>{
 
   // saveSchema.save();
   const saveSchema2 = new exSchema2({
-    name: 'hello'
+    name: ''
   });
 
   saveSchema2.save();
