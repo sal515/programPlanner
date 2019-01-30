@@ -6,7 +6,7 @@ const mongoDbHostParam = "?retryWrites=true?";
 const databaseName = "ideal_course_sequence";
 const mongoDbHostURL1 = mongoDbHost + databaseName + mongoDbHostParam + mongoDbHost;
 
-const databaseName2 = "ideal_course_another";
-const mongoDbHostURL2 = mongoDbHost + databaseName2 + mongoDbHostParam + mongoDbHost;
+// const databaseName2 = "Your DB Name Here";
+// const mongoDbHostURL2 = mongoDbHost + databaseName2 + mongoDbHostParam + mongoDbHost;
 
-module.exports = {dbURL1String: mongoDbHostURL1, dbURL2String: mongoDbHostURL2};
+// module.exports = {dbURL1String: mongoDbHostURL1, dbURL2String: mongoDbHostURL2};
