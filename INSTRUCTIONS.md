@@ -9,12 +9,11 @@
 		{the path should be something similar to 
 		"C:\Program Files\WebAppDependencies\mongodb-shell-win32-x86_64-2008plus-ssl-4.0.5\mongodb-win32-x86_64-2008plus-ssl-4.0.5\bin"}
 		{does not matter where the directory is as long as the path is pointing to the bin of the downloaded folder}
-4. Clone repo to local
-6. Install whatever package the IDE wants you to install, say yes
-5. Copy databaseSettingTemplate.js and paste a new file
+4. Clone git repo using your IDE / GitKraken(preferred)
+6. Install whatever package the IDE wants you to install (might show up on the bottom right of the IDE), say yes
+5. Copy databaseSettingTemplate.js and duplicate the file with new name (call the new file databaseSetting.js !!!VERY IMPORTANT!!!) 
             
-            (call the new file databaseSetting.js !!!VERY IMPORTANT!!!) 
-            --Change databaseName2 String value to your "YourNameDb"
+            To create new databases (as required) --> Change the data databaseName String values to your "yourname"
 
 
 ![Alt text](images_for_instruction_files_only/InstructionScreenshot.png?raw=true "Title")
