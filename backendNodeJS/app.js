@@ -6,10 +6,35 @@
 // const mongoose = require('mongoose');
 
 const express = require('express');
-
 // creating an express app
 const app = express();
+// creating a router variable from expressJs
+router = express.Router();
+
+
+// import body-parser MiddleWare
+const bodyParser = require("body-parser");
+
+
 // ====================================================================
+// middleware to parse the body of all the incoming requests to a special property of the req object
+// parsing json body in the request
+app.use(bodyParser.json());
+// parsing urlencoded bodies in the request
+app.use(bodyParser.urlencoded({extended: false}));
+
+
+
+// Testing the body-parser usage and sending json with the response
+app.post("/api/courses", (req, res, next) => {
+  const course = req.body;
+  console.log(course);
+  res.status(201).json({
+    message: 'Course added successfully'
+  });
+});
+
+
 
 // importing corsHelper file
 const corsHelper = require('./server/corsHelper');
@@ -63,11 +88,11 @@ app.use('/save', function (req, res, next) {
 // ---------------------------------------------------------------------
 
   console.log('Before ');
-
+// making a new object from the model
   const saveSchema1 = new schemaModel1({
     name: 'hello'
   });
-
+// saving the object in the database
   dbHelpers.saveData(saveSchema1);
 
   console.log('after');
@@ -76,7 +101,6 @@ app.use('/save', function (req, res, next) {
 
   next();
 });
-
 
 // middleware function which handles the REST API call from frontEnd at the filtered path
 app.use('/api/courses', function (req, res, next) {
