@@ -27,10 +27,26 @@ exports.createModelOfSchema = function (ModelName, schemaName, connectionVar) {
 // };
 
 
-exports.saveData = function (newModelObject) {
-  newModelObject.save(function (err) {
+exports.saveData = function (ModelObject) {
+  ModelObject.save(function (err) {
     if (err) {
-      onHandleError(err);
+      this.onHandleError(err);
+    }
+  });
+};
+
+exports.findAllDocuments = function (Model) {
+  const findAllQuery = Model.find();
+  // var findAllQuery = Model.find({id: /a/b}, null );
+  return this.findAllDocumentsCallBack(findAllQuery);
+};
+
+exports.findAllDocumentsCallBack = function (query) {
+  query.exec(function (err, result) {
+    if (err) {
+      this.onHandleError(err);
+    } else {
+      return result;
     }
   });
 };

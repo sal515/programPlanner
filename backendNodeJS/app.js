@@ -9,14 +9,15 @@ const express = require('express');
 // creating an express app
 const app = express();
 // creating a router variable from expressJs
-router = express.Router();
-
+const router = express.Router();
 
 // import body-parser MiddleWare
 const bodyParser = require("body-parser");
 
+// importing corsHelper file
+const corsHelper = require('./server/corsHelper');
 
-// ====================================================================
+
 // middleware to parse the body of all the incoming requests to a special property of the req object
 // parsing json body in the request
 app.use(bodyParser.json());
@@ -24,29 +25,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 
-
-// Testing the body-parser usage and sending json with the response
-app.post("/api/courses", (req, res, next) => {
-  const course = req.body;
-  console.log(course);
-  res.status(201).json({
-    message: 'Course added successfully'
-  });
-});
-
-
-
-// importing corsHelper file
-const corsHelper = require('./server/corsHelper');
-
-// This function is required for our Decoupled Applicaiton -- Don't Remove it to keep the back and front connected
-app.use((req, res, next) => {
-  // Handling CORS for our Decoupled FrontEnd and BackEnd
-  // This is done by setting the proper Headers for the response (please see corsHelpers.js file in server directory)
-  corsHelper.setCorsHeaders(res, req, next);
-  next();
-});
-
+// ====================================================================
 
 // ---------------------------------------------------------------------
 // Imports required to connect to db and
@@ -63,18 +42,43 @@ const conn1 = dbHelpers.connectToDB(dbURL.databaseName1);
 // ====================================================================
 
 
-// ---------------------------------------------------------------------
-// Importing schema or making a model (not sure about the proper references yet, will get there!)
-// ---------------------------------------------------------------------
-// importing and creating a model from a schema
-const schemaModel1 = dbHelpers.createModelOfSchema('schemaName', 'mongodbSchema', conn1);
-
-// ====================================================================
+// This function is required for our Decoupled Application -- Don't Remove it to keep the back and front connected
+app.use((req, res, next) => {
+  // Handling CORS for our Decoupled FrontEnd and BackEnd
+  // This is done by setting the proper Headers for the response (please see corsHelpers.js file in server directory)
+  corsHelper.setCorsHeaders(res, req, next);
+  next();
+});
 
 
 // ---------------------------------------------------------------------
 // Express functions / Middleware functions
 // ---------------------------------------------------------------------
+
+// Testing the body-parser usage and sending json with the response
+app.post("/api/courses", (req, res, next) => {
+  // The data received from front-end is accessed by req.body
+  const courseFromFrontEnd = req.body;
+
+  // creating a model of courseSchema
+  const CourseModel = dbHelpers.createModelOfSchema('courseModel', 'courseSchema', conn1);
+  // creating a new object from the model created above
+  const newCourse = new CourseModel({
+    courseType: courseFromFrontEnd.courseType,
+    courseCode: courseFromFrontEnd.courseCode
+  });
+  console.log(newCourse);
+// saving the object in the database
+  dbHelpers.saveData(newCourse);
+
+  res.status(201).json({
+    // code 201 represents that the request was successful and data was received
+    // code 201 represents that the request was successful and data was received
+    message: 'Course added successfully'
+  });
+});
+
+
 // express/middleware function such as the following handles the http requests
 app.use('/save', function (req, res, next) {
   console.log('Routed: callSave');
@@ -87,6 +91,12 @@ app.use('/save', function (req, res, next) {
 // Creating an object from the Schema and saving it to the db
 // ---------------------------------------------------------------------
 
+// ---------------------------------------------------------------------
+// Importing schema or making a model (not sure about the proper references yet, will get there!)
+// ---------------------------------------------------------------------
+// importing and creating a model from a schema
+  const schemaModel1 = dbHelpers.createModelOfSchema('schemaName', 'mongodbSchema', conn1);
+// ====================================================================
   console.log('Before ');
 // making a new object from the model
   const saveSchema1 = new schemaModel1({
@@ -102,39 +112,49 @@ app.use('/save', function (req, res, next) {
   next();
 });
 
-// middleware function which handles the REST API call from frontEnd at the filtered path
-app.use('/api/courses', function (req, res, next) {
-  const courses = [
-    {
-      id: '10001',
-      courseType: 'SOEN',
-      courseCode: 341
-    },
-    {
-      id: '1002',
-      courseType: 'COEN',
-      courseCode: 346
-    },
-    {
-      id: '10003',
-      courseType: 'COEN',
-      courseCode: 390
-    },
-    {
-      id: '10004',
-      courseType: 'ELEC',
-      courseCode: 353
-    }
-  ];
-  // sending simple object which will be converted to json
-  // res.json(courses);
-  // sending more complex object with message and properties
+app.get("/api/courses", (req, res, next) => {
+  const CourseModel = dbHelpers.createModelOfSchema('courseModel', 'courseSchema', conn1);
+  var courses = dbHelpers.findAllDocuments(CourseModel);
   res.status(200).json({
-    message: 'Course Fetched Successfully',
+    message: "Course fetched successfully",
     courses: courses
   });
-
 });
+
+// Test data was used to check if the httpClient library was working properly
+// // middleware function which handles the REST API call from frontEnd at the filtered path
+// app.use('/api/courses', function (req, res, next) {
+//   const courses = [
+//     {
+//       id: '10001',
+//       courseType: 'SOEN',
+//       courseCode: 341
+//     },
+//     {
+//       id: '1002',
+//       courseType: 'COEN',
+//       courseCode: 346
+//     },
+//     {
+//       id: '10003',
+//       courseType: 'COEN',
+//       courseCode: 390
+//     },
+//     {
+//       id: '10004',
+//       courseType: 'ELEC',
+//       courseCode: 353
+//     }
+//   ];
+//   // sending simple object which will be converted to json
+//   // res.json(courses);
+//   // sending more complex object with message and properties
+//   res.status(200).json({
+//     message: 'Course Fetched Successfully',
+//     courses: courses
+//   });
+//
+// });
 
 // middleware function which handles the http requests
 app.use((req, res, next) => {

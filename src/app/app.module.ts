@@ -30,14 +30,14 @@ import {
 // Service
 // The course service is a service created to handle data separately from components; The module is added in the provider section below
 // Note: Doesn't need to be imported if the decorator is used
-// import {CourseService} from './user/course.service';
+// import {CourseService} from './Courses/course.service';
 // Service
 
 
 // imports of my custom components
 import {HeaderComponent} from './header/header.component';
-import {CourseCreateComponent} from './user/course_create/course_create.component';
-import {CourseListComponent} from './user/course_list/course_list.component';
+import {CourseCreateComponent} from './Courses/course_create/course_create.component';
+import {CourseListComponent} from './Courses/course_list/course_list.component';
 
 // imports of my custom components
 
