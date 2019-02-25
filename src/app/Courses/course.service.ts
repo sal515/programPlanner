@@ -40,7 +40,7 @@ export class CourseService {
     // array passed by reference
     // return this._courseArr;
 
-    // Angualar http clients uses observables, so needs to be subscribed to listen
+    // Angular http clients uses observables, so needs to be subscribed to listen
     // We don't have to unsubscribe observables that are build into Angular to prevent memory leaks, its Handled!
     // We only need to unsubscribe observables that are created by us
     this.httpClient.get <{ message: string, courses: CourseModel[] }>(this.courseAddURL).subscribe((courseData) => {
