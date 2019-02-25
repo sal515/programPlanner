@@ -8,50 +8,54 @@ const app = require('./backendNodeJS/app');
 // needed for nodemon
 const debug = require("debug")("node-angular");
 
+// ============= Function Definition ========================
 
 
 // checks the port for integer when received from the hosting provider
 const normalizePort = val => {
-    var port = parseInt(val, 10);
+  var port = parseInt(val, 10);
 
-    if (isNaN(port)) {
-        // named pipe
-        return val;
-    }
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
 
-    if (port >= 0) {
-        // port number
-        return port;
-    }
+  if (port >= 0) {
+    // port number
+    return port;
+  }
 
-    return false;
+  return false;
 };
 
 // Error handling function to check what kind of error occurred
 const onError = error => {
-    if (error.syscall !== "listen") {
-        throw error;
-    }
-    const bind = typeof port === "string" ? "pipe " + port : "port " + port;
-    switch (error.code) {
-        case "EACCES":
-            console.error(bind + " requires elevated privileges");
-            process.exit(1);
-            break;
-        case "EADDRINUSE":
-            console.error(bind + " is already in use");
-            process.exit(1);
-            break;
-        default:
-            throw error;
-    }
+  if (error.syscall !== "listen") {
+    throw error;
+  }
+  const bind = typeof port === "string" ? "pipe " + port : "port " + port;
+  switch (error.code) {
+    case "EACCES":
+      console.error(bind + " requires elevated privileges");
+      process.exit(1);
+      break;
+    case "EADDRINUSE":
+      console.error(bind + " is already in use");
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
 };
 
 const onListening = () => {
-    const addr = server.address();
-    const bind = typeof port === "string" ? "pipe " + port : "port " + port;
-    debug("Listening on " + bind);
+  const addr = server.address();
+  const bind = typeof port === "string" ? "pipe " + port : "port " + port;
+  debug("Listening on " + bind);
 };
+
+// ============= Function Calls ========================
+
 
 // setting a constant port for the server
 const port = normalizePort(process.env.PORT || 3000);
@@ -69,16 +73,13 @@ server.on("listening", onListening);
 server.listen(port);
 
 
-
-
-
 // THe following code is to setup for pure nodeJS server without express
 
 // the following creates a http server with the variables (request , response)
 // const server = http.createServer((req, res)=>{
-    // response is used to write to the response, here we are writing a text as the response
-    // res.end('This is a test response');
-    // res.headersSent();
+// response is used to write to the response, here we are writing a text as the response
+// res.end('This is a test response');
+// res.headersSent();
 // })
 
 // the server will be listening at local port 3000 or

@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 // nodeJS and javascript is upper case -->> String
 
 
-
 // https://mongoosejs.com/docs/guide.html
 
 // This is to just create a schema or definition of a table
@@ -12,8 +11,8 @@ const mongoose = require('mongoose');
 // This is basically a layout of the structure
 const exampleMongooseSchema = mongoose.Schema({
   name: String
-    // title: {type: String, required: true},
-    // content: {type: String, required: true}
+  // title: {type: String, required: true},
+  // content: {type: String, required: true}
 });
 
 // The following takes the definition and models for data storage etc

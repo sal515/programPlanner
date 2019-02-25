@@ -41,16 +41,6 @@ exports.onHandleError = function (err) {
 };
 
 
-
-
-
-
-
-
-
-
-
-
 // the following is the example to make a default connection to the database, can't connect to multiple db simultaneously
 // no return connection of variable
 exports.defaultConnectionToDB = function (mongodbHostURL) {
