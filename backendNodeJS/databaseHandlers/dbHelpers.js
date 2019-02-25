@@ -35,12 +35,13 @@ exports.saveData = function (ModelObject) {
   });
 };
 
+// FIXME The fetch all function was not completely tested
 exports.findAllDocuments = function (Model) {
   const findAllQuery = Model.find();
   // var findAllQuery = Model.find({id: /a/b}, null );
   return this.findAllDocumentsCallBack(findAllQuery);
 };
-
+// FIXME The fetch all function was not completely tested
 exports.findAllDocumentsCallBack = function (query) {
   query.exec(function (err, result) {
     if (err) {

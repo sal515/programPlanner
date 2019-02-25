@@ -114,6 +114,7 @@ app.use('/save', function (req, res, next) {
 
 app.get("/api/courses", (req, res, next) => {
   const CourseModel = dbHelpers.createModelOfSchema('courseModel', 'courseSchema', conn1);
+  // FIXME The fetch all function was not completely tested
   var courses = dbHelpers.findAllDocuments(CourseModel);
   res.status(200).json({
     message: "Course fetched successfully",
