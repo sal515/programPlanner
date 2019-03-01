@@ -1,7 +1,23 @@
-.example-icon {
-  padding: 0 14px;
+/*.example-icon {*/
+  /*padding: 0 14px;*/
+/*}*/
+
+.menu_button {
+  margin: 0 5px;
 }
 
 .example-spacer {
   flex: 1 1 auto;
 }
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+

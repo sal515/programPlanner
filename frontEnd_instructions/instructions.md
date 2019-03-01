@@ -161,7 +161,7 @@
                   declarations: [
                     AppComponent,
                     HeaderComponent,
-                    CourseCreateComponent
+                    HomeComponent
                   ],
                   imports: [
                     BrowserModule,
@@ -253,7 +253,7 @@
           templateUrl: './course_create.component.html',
           styleUrls: ['./course_create.component.css']
         })
-        export class CourseCreateComponent {
+        export class HomeComponent {
           courseCodeText = 'CourseModel Code';
           courseTypeText = 'CourseModel Type';
           // courseTypeName;
@@ -426,7 +426,7 @@
               
               // imports of my custom components
               import {HeaderComponent} from './header/header.component';
-              import {CourseCreateComponent} from './user/course_create/course_create.component';
+              import {HomeComponent} from './user/course_create/course_create.component';
               import {CourseListComponent} from './user/course_list/course_list.component';
               // imports of my custom components
               
@@ -434,7 +434,7 @@
                 declarations: [
                   AppComponent,
                   HeaderComponent,
-                  CourseCreateComponent,
+                  HomeComponent,
                   CourseListComponent
                 ],
                 imports: [
@@ -553,7 +553,7 @@
         // import the course model 
         import {CourseModel} from '../course.model';
 
-        export class CourseCreateComponent {
+        export class HomeComponent {
         
         // The variables shown below are two-way binded to the input boxes
         
@@ -594,7 +594,7 @@
             styleUrls: ['./course_create.component.css']
           })
           
-          export class CourseCreateComponent {
+          export class HomeComponent {
             courseTypeName = '';
             courseCodeName = 0;
             @Output() courseCreated = new EventEmitter<CourseModel>();

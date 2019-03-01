@@ -3,6 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
+import {AppRoutingModule} from './app-routing.module';
 
 // import the following in service
 // import {HttpClient} from '@angular/common/http';
@@ -38,6 +39,8 @@ import {
 import {HeaderComponent} from './header/header.component';
 import {CourseCreateComponent} from './Courses/course_create/course_create.component';
 import {CourseListComponent} from './Courses/course_list/course_list.component';
+import {HomeComponent} from './home/home';
+import {CourseCreateListContainerComponent} from './Courses/course_create_list_container';
 
 // imports of my custom components
 
@@ -46,10 +49,13 @@ import {CourseListComponent} from './Courses/course_list/course_list.component';
     AppComponent,
     HeaderComponent,
     CourseCreateComponent,
-    CourseListComponent
+    CourseListComponent,
+    HomeComponent,
+    CourseCreateListContainerComponent
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
     MatInputModule,
