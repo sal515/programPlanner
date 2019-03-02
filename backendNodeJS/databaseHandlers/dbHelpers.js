@@ -2,7 +2,7 @@
 // const mongoose = require('mongoose');
 
 // the exports object can be set to functions that needs to be exposed to other files
-let exports = module.exports = {};
+var exports = module.exports = {};
 
 // EXAMPLE: How to connect to dB using createConnection methods can be found in the commented out section
 // // method to connect to multiple databases simultaneously, returns a connection variable, preferred method
