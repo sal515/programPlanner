@@ -49,8 +49,9 @@ app.use("/api/genIdealSchedule", genIdealSequenceRoutes);
 // middleware handling http request that has no specific routing path by sending error message as response
 app.use((req, res, next) => {
   // TODO Cleanup: Remove console log, when test is done
-  console.log('ERROR: REQUESTED REST API ENDPOINT not found, Default Request Handler Executed');
-  res.send('ERROR: REQUESTED REST API ENDPOINT not found, Default Request Handler Executed');
+  console.log('ERROR: Requested REST API Endpoint was not found');
+  console.log('Default Request Handler Executed');
+  res.send('ERROR: Requested REST API Endpoint was not found - Default Request Handler Executed');
 });
 // ====================================================================
 
