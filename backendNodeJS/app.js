@@ -15,7 +15,7 @@ const corsHelper = require('./server/corsHelper');
 // Importing the routing file to execute the required functions
 // ---------------------------------------------------------------------
 // importing routes files from the routes directory for simplification of this files
-const genIdealSequenceRoutes = require('./routes/generateIdealSequences');
+const genSequenceRoutes = require('./routes/generateSequences');
 // ====================================================================
 
 // ---------------------------------------------------------------------
@@ -44,7 +44,7 @@ app.use((req, res, next) => {
 // ExpressJS middleware used to forward HTTP request to their proper router files
 // ---------------------------------------------------------------------
 // Forwarding the initial requests from the user to generate their ideal Schedule
-app.use("/api/genIdealSchedule", genIdealSequenceRoutes);
+app.use("/api/generateSequences", genSequenceRoutes);
 
 // middleware handling http request that has no specific routing path by sending error message as response
 app.use((req, res, next) => {

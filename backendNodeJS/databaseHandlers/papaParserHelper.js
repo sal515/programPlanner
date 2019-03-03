@@ -1,13 +1,14 @@
+//  papa parser used to parse the CSV to JSON 
 const papaParser = require('papaparse');
-// const preReqOrCSVfile = require('../../csv/preReqOR.csv');
 
+// fs is used to read the CSV file as a stream to the papa parser
 const fs = require('fs');
 
 var exports = module.exports = {};
 
-// exports.parseCSV = function () {
-exports.parseCSV = function (csvFilePath) {
-  // The file path should be -->   parser.parseCSV('backendNodeJS/csv/preReqOR.csv');
+// exports.parseCSVAndSaveToDB = function () {
+exports.parseCSVAndSaveToDB = function (csvFilePath) {
+  // The file path should be -->   parser.parseCSVAndSaveToDB('backendNodeJS/csv/preReqOR.csv');
   let file = fs.createReadStream(csvFilePath);
   papaParser.parse(file, {
     // The commented out object members are all available options for parsing, please don't delete
@@ -61,43 +62,14 @@ function saveParsedData(data, error, meta) {
   const dataHandlers = require("../dataHandlers/objectGenerators");
   const connectionVar = require("../databaseHandlers/dbConnection");
 
-  // creating a model
-  console.log(">>>>>?????<<<<<<");
+  // creating a model of courseSchema
+  const preReqORModel = dbHelpers.generateModel('preReqOR', 'preReqORSchema', connectionVar.connection1);
 
-  const preReqORSchema = dbHelpers.generateModel('pre_req_OR', 'preReqORSchema', connectionVar.connection1);
-  console.log(">>>>>?????<<<<<<");
-
-  // creating a new object from the model created above
-  const newCourse = dataHandlers.generatePreReqObject(preReqORSchema,data);
-
-
-  // const newCourse = dataHandlers.generatePreReqObject(preReqORModel,
-  //   courseSubject,
-  //   courseCatalog,
-  //   preReqORWC1,
-  //   preReqORsubject1,
-  //   preReqORCode1,
-  //   preReqORWC2,
-  //   preReqORsubject2,
-  //   preReqORCode2,
-  //   preReqORWC3,
-  //   preReqORsubject3,
-  //   preReqORCode3,
-  //   preReqORWC4,
-  //   preReqORsubject4,
-  //   preReqORCode4,
-  //   preReqORWC5,
-  //   preReqORsubject5,
-  //   preReqORCode5,
-  //   preReqORWC6,
-  //   preReqORsubject6,
-  //   preReqORCode6);
-  // // TODO Cleanup: Printing the new model in the console
-  console.log(">>>>>?????<<<<<<");
-  console.log(newCourse);
-  // saving the object in the database
-  // dbHelpers.saveData(newCourse);
-
+  // Extracting every object from the data array and saving it to the database
+  data.forEach(function (dataObj) {
+    let newPreReqORModel = dataHandlers.generatePreReqObject(preReqORModel, dataObj);
+    dbHelpers.saveData(newPreReqORModel);
+  });
 
   // To check the output or the result of the parse
   // console.log(data);

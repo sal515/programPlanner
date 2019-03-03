@@ -7,6 +7,8 @@ const dataHandlers = require("../dataHandlers/objectGenerators")
 // import parserHelper file
 const parser = require("../databaseHandlers/papaParserHelper");
 
+
+// TODO: FIX ROUTE - Doesn't make sense now since test is done
 exports.saveCourse = (req, res, next) => {
 
     const dataReceived = req.body;
@@ -14,6 +16,7 @@ exports.saveCourse = (req, res, next) => {
   // TODO CLEANUP: DELETE TEST FUNCTION
   testDataReceived(dataReceived);
 
+  // -------------- To Save to DB ------------------------------------------------
   // creating a model of courseSchema
   const CourseModel = dbHelpers.generateModel('courseCollection', 'courseSchema', connectionVar.connection1);
   // creating a new object from the model created above
@@ -22,6 +25,7 @@ exports.saveCourse = (req, res, next) => {
   console.log(newCourse);
   // saving the object in the database
   dbHelpers.saveData(newCourse);
+  // -------------- To Save to DB ------------------------------------------------
 
   res.status(201).json({
     // code 201 represents that the request was successful and data was received
@@ -41,22 +45,18 @@ function testDataReceived(courseFromFrontEnd) {
 // console.log( typeof courseFromFrontEnd.code);
 }
 
-// TODO CLEANUP: DELETE TEST FUNCTION
-function testParsing() {
-  // let parsedData = [];
-  parser.parseCSV('backendNodeJS/csv/preReqOR.csv');
-  // console.log(parser.parsedData());
-  // console.log(parser.parsedData);
-
-  // console.log(parser.parsedData('backendNodeJS/csv/preReqOR.csv'));
-
-
-}
-
+// TODO: FIX ROUTE - Doesn't make sense now since test is done
 exports.retrieveCourse = (req, res, next) => {
+  res.status(200).json({
+    message: "Course fetched successfully",
+    title: "SOEN",
+    code: "341"
+  });
+};
 
-  //TODO CLEANUP : Test parsing function
-  testParsing();
+exports.generatePreReqORList= (req, res, next) => {
+
+  parser.parseCSVAndSaveToDB('backendNodeJS/csv/preReqOR.csv');
 
   res.status(200).json({
     message: "Course fetched successfully",
