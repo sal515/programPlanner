@@ -1,4 +1,4 @@
-//  papa parser used to parse the CSV to JSON 
+//  papa parser used to parse the CSV to JSON
 const papaParser = require('papaparse');
 
 // fs is used to read the CSV file as a stream to the papa parser
