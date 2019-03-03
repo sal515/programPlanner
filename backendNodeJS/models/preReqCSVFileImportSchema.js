@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const preReqCSVFileSchema = mongoose.Schema({
+
   courseSubject: {type: String, required: true},
   courseCatalog: {type: String, required: true},
+
   courseTitle: {type: String, required: true},
   courseCredits: {type: String, required: true},
   componentCode: {type: String, required: true},

@@ -11,7 +11,7 @@ var exports = module.exports = {};
 // };
 
 // The following function is used to make a model reference of the schema defined in the model folder
-exports.generateCourseModel = function (collectionNameInDB, schemaFileNameInModelsDir, connectionVar) {
+exports.generateModel = function (collectionNameInDB, schemaFileNameInModelsDir, connectionVar) {
   let schemaDirectoryPath = '../models/' + schemaFileNameInModelsDir;
   const mongoDBSchema = require(schemaDirectoryPath);
   return connectionVar.model(collectionNameInDB, mongoDBSchema);

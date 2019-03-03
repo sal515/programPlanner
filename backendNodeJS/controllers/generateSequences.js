@@ -4,21 +4,28 @@ const connectionVar = require("../databaseHandlers/dbConnection");
 const dbHelpers = require("../databaseHandlers/dbHelpers");
 // variables holding the references of the object creation helper methods
 const dataHandlers = require("../dataHandlers/objectGenerators")
+// import parserHelper file
+const parser = require("../databaseHandlers/papaParserHelper");
 
+
+// TODO: FIX ROUTE - Doesn't make sense now since test is done
 exports.saveCourse = (req, res, next) => {
-  const dataReceived = req.body;
+
+    const dataReceived = req.body;
 
   // TODO CLEANUP: DELETE TEST FUNCTION
   testDataReceived(dataReceived);
 
+  // -------------- To Save to DB ------------------------------------------------
   // creating a model of courseSchema
-  const CourseModel = dbHelpers.generateCourseModel('courseCollection', 'courseSchema', connectionVar.connection1);
+  const CourseModel = dbHelpers.generateModel('courseCollection', 'courseSchema', connectionVar.connection1);
   // creating a new object from the model created above
   const newCourse = dataHandlers.generateCourseObject(CourseModel, dataReceived.courseSubject, dataReceived.courseCatalog, dataReceived.courseTitle, dataReceived.courseCredits);
   // TODO Cleanup: Printing the new model in the console
   console.log(newCourse);
   // saving the object in the database
   dbHelpers.saveData(newCourse);
+  // -------------- To Save to DB ------------------------------------------------
 
   res.status(201).json({
     // code 201 represents that the request was successful and data was received
@@ -28,18 +35,29 @@ exports.saveCourse = (req, res, next) => {
 };
 
 // TODO CLEANUP: DELETE TEST FUNCTION
-function testDataReceived(courseFromFrontEnd){
-console.log(courseFromFrontEnd.courseSubject);
-console.log(parseInt(courseFromFrontEnd.courseCatalog, 10));
-console.log(courseFromFrontEnd.courseTitle);
-console.log(courseFromFrontEnd.courseCredits);
+function testDataReceived(courseFromFrontEnd) {
+  console.log(courseFromFrontEnd.courseSubject);
+  console.log(parseInt(courseFromFrontEnd.courseCatalog, 10));
+  console.log(courseFromFrontEnd.courseTitle);
+  console.log(courseFromFrontEnd.courseCredits);
 // console.log( typeof courseFromFrontEnd.title);
 // console.log(Number(courseFromFrontEnd.code));
 // console.log( typeof courseFromFrontEnd.code);
 }
 
-
+// TODO: FIX ROUTE - Doesn't make sense now since test is done
 exports.retrieveCourse = (req, res, next) => {
+  res.status(200).json({
+    message: "Course fetched successfully",
+    title: "SOEN",
+    code: "341"
+  });
+};
+
+exports.generatePreReqORList= (req, res, next) => {
+
+  parser.parseCSVAndSaveToDB('backendNodeJS/csv/preReqOR.csv');
+
   res.status(200).json({
     message: "Course fetched successfully",
     title: "SOEN",
@@ -53,7 +71,7 @@ exports.retrieveCourse = (req, res, next) => {
 //   const courseFromFrontEnd = req.body;
 //
 //   // creating a model of courseSchema
-//   const CourseModel = dbHelpers.generateCourseModel('courseModel', 'courseSchema', conn1);
+//   const CourseModel = dbHelpers.generateModel('courseModel', 'courseSchema', conn1);
 //   // creating a new object from the model created above
 //   const newCourse = new CourseModel({
 //     subject: courseFromFrontEnd.subject,
@@ -72,7 +90,7 @@ exports.retrieveCourse = (req, res, next) => {
 //
 //
 // exports.retrieveCourse = (req, res, next) => {
-//   const CourseModel = dbHelpers.generateCourseModel('courseModel', 'courseSchema', conn1);
+//   const CourseModel = dbHelpers.generateModel('courseModel', 'courseSchema', conn1);
 //   // FIXME The fetch all function was not completely tested
 //   var courses = dbHelpers.findAllDocuments(CourseModel);
 //   res.status(200).json({
