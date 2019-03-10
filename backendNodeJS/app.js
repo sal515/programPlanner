@@ -1,93 +1,63 @@
-// This is an example express app
-//---------------------------------------------------------------------
-// Code to make this file an express app
-//---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+// Basic Imports to create a functional ExpressJS app
+// ---------------------------------------------------------------------
 // importing express package as const app
-// const mongoose = require('mongoose');
 const express = require('express');
-
 // creating an express app
 const app = express();
+// import body-parser MiddleWare
+const bodyParser = require("body-parser");
+// importing corsHelper file
+const corsHelper = require('./server/corsHelper');
 // ====================================================================
 
-
-//---------------------------------------------------------------------
-// Imports required to connect to db and
-// Call database connecting wrapper from dbHelper.js
-//-------------------------------------- -------------------------------
-// importing dbHelpers.js file that contains custom db helper functions
-const dbHelpers = require('./databaseHandlers/dbHelpers');
-// import db url variable
-const dbURL = require('./databaseSetting');
-
-// calling the custom wrapper to connect to db (not the default connection method)
-var conn1 = dbHelpers.connectToDB(dbURL.databaseName1);
-
+// ---------------------------------------------------------------------
+// Importing the routing file to execute the required functions
+// ---------------------------------------------------------------------
+// importing routes files from the routes directory for simplification of this files
+const genSequenceRoutes = require('./routes/generateSequences');
 // ====================================================================
 
-
-//---------------------------------------------------------------------
-// Importing schema or making a model (not sure about the proper references yet, will get there!)
-//---------------------------------------------------------------------
-// importing and creating a model from a schema
-var schemaModel1 = dbHelpers.createModelOfSchema('schemaName', 'mongodbSchema', conn1);
-
+// ---------------------------------------------------------------------
+//  Express middleware functions used to parse the incoming request's body
+// ---------------------------------------------------------------------
+// parsing json body in the request
+app.use(bodyParser.json());
+// parsing urlencoded bodies in the request
+app.use(bodyParser.urlencoded({extended: false}));
 // ====================================================================
 
-
-//---------------------------------------------------------------------
-// Express functions / Middleware functions
-//---------------------------------------------------------------------
-// express/middleware function such as the following handles the http requests
-app.use('/callSave',function(req, res, next){
-  console.log('Routed: callSave');
-  // the next allows the request to be continued after this function
-  // if the next() is commented out and a response is not sent from this method
-  // A timeout err will occur due to no response from server, this shows how next() works
-  // Might be required somewhere
-
-//---------------------------------------------------------------------
-// Creating an object from the Schema and saving it to the db
-//---------------------------------------------------------------------
-
-  console.log('Before ');
-
-  const saveSchema1 = new schemaModel1({
-    name: 'hello'
-  });
-
-  dbHelpers.saveData(saveSchema1);
-
-  console.log('after');
-
-// ====================================================================
-
+// ---------------------------------------------------------------------
+// Setting the CORS Headers - To enable communication between the frontEnd and BackEnd
+// ---------------------------------------------------------------------
+// This function is required for our Decoupled Application -- Don't Remove it to keep the back and front connected
+app.use((req, res, next) => {
+  // Handling CORS for our Decoupled FrontEnd and BackEnd
+  // This is done by setting the proper Headers for the response (please see corsHelpers.js file in server directory)
+  corsHelper.setCorsHeaders(res, req, next);
   next();
 });
-
-
-// middleware function which handles the http requests
-app.use('/callGenerateTest', function(req, res, next){
-  console.log('Routed : callGenerateTest');
-  // This will sent all the appropriate header and other stuff required for the response
-  // This is why express is useful, it takes care of shit for me!
-  res.send('Hello from Express app with nodemon installed');
-});
-
-// middleware function which handles the http requests
-app.use((req, res, next) =>{
-  console.log('Default HTTP Request Handler');
-  // This will sent all the appropriate header and other stuff required for the response
-  // This is why express is useful, it takes care of shit for me!
-  res.send('Default Express HTTP handler was called with nodemon installed');
-});
-
 // ====================================================================
 
 
-//---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+// ExpressJS middleware used to forward HTTP request to their proper router files
+// ---------------------------------------------------------------------
+// Forwarding the initial requests from the user to generate their ideal Schedule
+app.use("/api/generateSequences", genSequenceRoutes);
+
+// middleware handling http request that has no specific routing path by sending error message as response
+app.use((req, res, next) => {
+  // TODO Cleanup: Remove console log, when test is done
+  console.log('ERROR: Requested REST API Endpoint was not found');
+  console.log('Default Request Handler Executed');
+  res.send('ERROR: Requested REST API Endpoint was not found - Default Request Handler Executed');
+});
+// ====================================================================
+
+// ---------------------------------------------------------------------
 // Exporting the express app to the server.js file
-//---------------------------------------------------------------------
+// ---------------------------------------------------------------------
 // The following code will allow up to export this express app called "app" to our NodeJS server
 module.exports = app;
 // NOTE :: The server.js file has to import this app called  "app" found in the backendNodeJS
