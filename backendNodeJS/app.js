@@ -15,8 +15,9 @@ const corsHelper = require('./server/corsHelper');
 // Importing the routing file to execute the required functions
 // ---------------------------------------------------------------------
 // importing routes files from the routes directory for simplification of this files
-const genSequenceRoutes = require('./routes/generateSequences');
-const validateLogin = require('./routes/validateLogin');
+const genSequenceRoute = require('./routes/generateSequencesRoute');
+const validateLoginRoute = require('./routes/validateLoginRoute');
+const algorithmRoute = require('./routes/algorithmsRoute');
 // ====================================================================
 
 // ---------------------------------------------------------------------
@@ -45,8 +46,9 @@ app.use((req, res, next) => {
 // ExpressJS middleware used to forward HTTP request to their proper router files
 // ---------------------------------------------------------------------
 // Forwarding the initial requests from the user to generate their ideal Schedule
-app.use("/api/generateSequences", genSequenceRoutes);
-app.use("/home", );
+app.use("/api/generateSequences", genSequenceRoute);
+app.use("/home", validateLoginRoute );
+app.use("/algorithms", algorithmRoute );
 
 // middleware handling http request that has no specific routing path by sending error message as response
 app.use((req, res, next) => {

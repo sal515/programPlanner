@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const genIdealController = require('../controllers/generateSequences');
+const genIdealController = require('../controllers/generateSequencesController');
 
 // TODO: FIX ROUTE - Doesn't make sense now since test is done
 router.post("", genIdealController.saveCourse );

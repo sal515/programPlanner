@@ -7,7 +7,7 @@
 // The foreach loop is used to get the objects in the array and save them separately
 // save the model with the data
 function makeSchema_SaveExample() {
-  const connectionVar = require("../databaseHandlers/dbConnection");
+  const connectionVar = require("./dbConnectionHelper");
   const mongoose = require('mongoose');
 
   let schema = mongoose.Schema;

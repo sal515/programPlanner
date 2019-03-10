@@ -58,9 +58,9 @@ exports.parseCSVAndSaveToDB = function (csvFilePath, collectionName, modelName) 
 };
 
 function saveParsedData(data, error, meta, collectionName, modelName) {
-  const dbHelpers = require("./dbHelpers");
-  const dataHandlers = require("../dataHandlers/objectGenerators");
-  const connectionVar = require("../databaseHandlers/dbConnection");
+  const dbHelpers = require("./dbHelper");
+  const dataHandlers = require("../dataHandlers/objectGenerator");
+  const connectionVar = require("./dbConnectionHelper");
 
   // creating a model of courseSchema
   const preReqORModel = dbHelpers.generateModelDbSchema(collectionName, modelName, connectionVar.connection1);
