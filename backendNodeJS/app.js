@@ -16,6 +16,7 @@ const corsHelper = require('./server/corsHelper');
 // ---------------------------------------------------------------------
 // importing routes files from the routes directory for simplification of this files
 const genSequenceRoutes = require('./routes/generateSequences');
+const validateLogin = require('./routes/validateLogin');
 // ====================================================================
 
 // ---------------------------------------------------------------------
@@ -45,6 +46,7 @@ app.use((req, res, next) => {
 // ---------------------------------------------------------------------
 // Forwarding the initial requests from the user to generate their ideal Schedule
 app.use("/api/generateSequences", genSequenceRoutes);
+app.use("/home", );
 
 // middleware handling http request that has no specific routing path by sending error message as response
 app.use((req, res, next) => {
