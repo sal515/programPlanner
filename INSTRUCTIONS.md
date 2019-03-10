@@ -27,3 +27,9 @@ Note: To run the servers
     BackEnd-Server
     In the Webstorm Terminal type "nodemon server.js" (without quotes)
 
+
+## Populate your Database
+
+1. start the backend server
+2. go to localhost:3000/api/generateSequences/populateDatabase
+3. DO NOT REFRESH THE PAGE IT WILL CREATE DUPLICATES

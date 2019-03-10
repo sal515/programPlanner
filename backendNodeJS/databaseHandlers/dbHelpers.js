@@ -17,6 +17,12 @@ exports.generateModel = function (collectionNameInDB, schemaFileNameInModelsDir,
   return connectionVar.model(collectionNameInDB, mongoDBSchema);
 };
 
+exports.generateModelDbSchema = function (collectionNameInDb, schemaFileNameInModelsDir, connectionVar) {
+    let schemaDirectoryPath = '../models/DbSchemas/' + schemaFileNameInModelsDir;
+    const mongoDbSchema = require(schemaDirectoryPath);
+    return connectionVar.model(collectionNameInDb, mongoDbSchema);
+};
+
 // Example : code to close connection ( not working as intended )
 // Warning:: be cautious using the close, because the request was not completed when I tried using close
 // exports.closeConnection = function (connectionVar) {
