@@ -17,7 +17,7 @@ const corsHelper = require('./server/corsHelper');
 // importing routes files from the routes directory for simplification of this files
 const genSequenceRoute = require('./routes/generateSequencesRoute');
 const validateLoginRoute = require('./routes/validateLoginRoute');
-const algorithmRoute = require('./routes/validateLoginRoute');
+const algorithmRoute = require('./routes/algorithmsRoute');
 // ====================================================================
 
 // ---------------------------------------------------------------------
