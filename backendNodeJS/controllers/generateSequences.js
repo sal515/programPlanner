@@ -54,16 +54,49 @@ exports.retrieveCourse = (req, res, next) => {
   });
 };
 
-exports.generatePreReqORList= (req, res, next) => {
+exports.populateDatabase = (req, res, next) => {
 
-  parser.parseCSVAndSaveToDB('backendNodeJS/csv/preReqOR.csv');
+  generateCoReqOnlyList(req, res, next);
+  generateNotTakenList(req, res, next);
+  generatePreReqOnlyList(req, res, next);
+  generatePreReqORList(req, res, next);
+  generateScheduleList(req, res, next);
 
   res.status(200).json({
-    message: "Course fetched successfully",
-    title: "SOEN",
-    code: "341"
-  });
+    message: "Courses inserted successfully"
+  })
+
 };
+
+function generateScheduleList (req, res, next) {
+
+  parser.parseCSVAndSaveToDB('backendNodeJS/csv/schedule.csv', 'schedule', 'scheduleSchema');
+
+}
+
+function generateNotTakenList (req, res, next) {
+
+  parser.parseCSVAndSaveToDB('backendNodeJS/csv/nt.csv', 'notTaken', 'notTakenSchemas');
+
+}
+
+function generateCoReqOnlyList (req, res, next) {
+
+  parser.parseCSVAndSaveToDB('backendNodeJS/csv/coReqOnly.csv', 'coReqOnly', "coReqOnlySchema");
+
+}
+
+function generatePreReqOnlyList (req, res, next) {
+
+  parser.parseCSVAndSaveToDB('backendNodeJS/csv/preReqOnly.csv', "preReqOnly", "preReqOnlySchema");
+
+}
+
+function generatePreReqORList (req, res, next) {
+
+  parser.parseCSVAndSaveToDB('backendNodeJS/csv/preReqOR.csv', "preReqOr", "preReqORSchema");
+
+}
 
 //
 // exports.saveCourse = (req, res, next) => {

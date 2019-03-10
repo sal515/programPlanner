@@ -7,7 +7,7 @@ const fs = require('fs');
 var exports = module.exports = {};
 
 // exports.parseCSVAndSaveToDB = function () {
-exports.parseCSVAndSaveToDB = function (csvFilePath) {
+exports.parseCSVAndSaveToDB = function (csvFilePath, collectionName, modelName) {
   // The file path should be -->   parser.parseCSVAndSaveToDB('backendNodeJS/csv/preReqOR.csv');
   let file = fs.createReadStream(csvFilePath);
   papaParser.parse(file, {
@@ -41,7 +41,7 @@ exports.parseCSVAndSaveToDB = function (csvFilePath) {
       // Number of columns in the Parsed Json file
       // console.log(results.data.length);
 
-      saveParsedData(results.data, results.errors, results.meta);
+      saveParsedData(results.data, results.errors, results.meta, collectionName, modelName);
     },
     // error: undefined,
     // download: false,
@@ -57,13 +57,13 @@ exports.parseCSVAndSaveToDB = function (csvFilePath) {
   });
 };
 
-function saveParsedData(data, error, meta) {
+function saveParsedData(data, error, meta, collectionName, modelName) {
   const dbHelpers = require("./dbHelpers");
   const dataHandlers = require("../dataHandlers/objectGenerators");
   const connectionVar = require("../databaseHandlers/dbConnection");
 
   // creating a model of courseSchema
-  const preReqORModel = dbHelpers.generateModel('preReqOR', 'preReqORSchema', connectionVar.connection1);
+  const preReqORModel = dbHelpers.generateModelDbSchema(collectionName, modelName, connectionVar.connection1);
 
   // Extracting every object from the data array and saving it to the database
   data.forEach(function (dataObj) {
