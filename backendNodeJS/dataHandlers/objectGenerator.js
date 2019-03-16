@@ -14,11 +14,4 @@ exports.generateCourseObject = function (CourseModel,
 };
 
 
-exports.generatePreReqObject = function (preReqORModel, dataObj) {
-return new preReqORModel({
-  object: dataObj
-})
-};
-
-
 
