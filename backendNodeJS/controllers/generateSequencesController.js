@@ -51,9 +51,3 @@ function generatePreReqORList (req, res, next) {
   parser.parseCSVAndSaveToDB('backendNodeJS/csv/preReqOR.csv', preReqORModel);
 
 }
-
-
-
-// Refactored the Back-end: From Multiple DB Connection --> Single DB Connection
-//
-// Refactored all the back-end files, so that the default single mongoose connection is used , rather than the function to connect to multiple databases simultaneously.
