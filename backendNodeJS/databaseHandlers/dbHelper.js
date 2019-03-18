@@ -23,6 +23,7 @@ exports.saveData = function (ModelObject) {
     }
   });
 };
+
 //
 // // FIXME The fetch all function was not completely tested
 // exports.findAllDocuments = function (Model) {
