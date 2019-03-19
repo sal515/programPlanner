@@ -4,8 +4,7 @@ const dbHelpers = require("../databaseHandlers/dbHelper");
 const userProfileModel = require('../models/userSchema');
 const userLoginModel = require('../models/loginSchema');
 
-var username = userLoginModel.get["loginUsername"];
-var password = userLoginModel.get["loginPassword"];
+
 
 var exports = module.exports = {};
 
@@ -23,7 +22,10 @@ var exports = module.exports = {};
 
 exports.saveUserInfo = (req, res, next) => {
 
-    let newUserLoginModel = new model({
+    // connecting to the database using the default connection method
+    dbHelpers.defaultConnectionToDB();
+
+    let newUserLoginModel = new userLoginModel({
         username: "claudia",
         password: "123"
     });
