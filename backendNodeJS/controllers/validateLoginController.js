@@ -4,7 +4,6 @@ const dbHelpers = require("../databaseHandlers/dbHelper");
 const userProfileModel = require('../models/userSchema');
 const userLoginModel = require('../models/loginSchema');
 
-
 var exports = module.exports = {};
 
 /**
@@ -20,32 +19,55 @@ exports.validateLogin = (req, res, next) => {
 
     dbHelpers.defaultConnectionToDB();
 
-    // const loginCredentials = req.body;
-    const loginCredentials = userLoginModel;
-    loginCredentials.loginUsername = "popo";
-    loginCredentials.loginPassword = "123";
+    const loginCredentials = req.body;
+    // const loginCredentials = userLoginModel;
+    // loginCredentials.loginUsername = "claudia";
+    // loginCredentials.loginPassword = "123";
 
-    let validUser = userLoginModel.find({
+    let validUser = userLoginModel.findOne({
         loginUsername: loginCredentials.loginUsername,
         loginPassword: loginCredentials.loginPassword
     });
 
-    console.log(validUser);
-
-    if (!validUser) {
-        return null;
-    }
-
-    let newUserProfileModel = userProfileModel.find({
-        userID: loginCredentials.loginUsername,
-        userPassword: loginCredentials.loginPassword
+    validUser.exec(function (er, userLoginModel) {
+        try {
+            if (userLoginModel.loginUsername) {
+                getUserInfo(userLoginModel.loginUsername, userLoginModel.loginPassword);
+            }
+        } catch (er) {
+            console.log("Invalid Credentials");
+            return null;
+        }
     });
 
     res.status(200).json({
-        newUserProfileModel,
-        message: "valid Credentials"
+        message: "information processed successfully"
     })
 };
+
+/**
+ * To return the user information once the credentials have been validated
+ * @param username
+ * @param password
+ */
+function getUserInfo(username, password) {
+
+    let user = userProfileModel.findOne({
+        userID: username,
+        userPassword: password
+    });
+
+    user.exec(function (er, userProfileModel) {
+        try {
+            if (userProfileModel.userID) {
+                return user;
+            }
+        } catch (er) {
+            console.log("Unable to fetch information");
+            return null;
+        }
+    })
+}
 
 /**
  * for testing purposes
@@ -66,4 +88,30 @@ exports.validateLogin = (req, res, next) => {
 //         message: "user added"
 //     });
 //
+// };
+
+// /**
+//  * for testing purposes
+//  */
+// exports.saveUserInfo = (req, res, next) => {
+//
+//     // connecting to the database using the default connection method
+//     dbHelpers.defaultConnectionToDB();
+//
+//     var courseHistory = ["SOEN 341", "COMP 346", "ENGR 213"];
+//
+//     let newUserProfileModel = new userProfileModel({
+//
+//         userID: "claudia",
+//         userPassword: "123",
+//         coop: true,
+//         courseHistory: courseHistory,
+//         completedCredits: 20
+//     });
+//
+//     dbHelpers.saveData(newUserProfileModel);
+//
+//     res.status(200).json({
+//         message: "user added"
+//     });
 // };
