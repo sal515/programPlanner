@@ -3,7 +3,6 @@ const router = express.Router();
 
 const validateLoginController = require('../controllers/validateLoginController');
 
-router.get("/validateLogin", validateLoginController.saveUserInfo);
-
+router.get("/validateLogin", validateLoginController.validateLogin());
 
 module.exports = router;
