@@ -3,7 +3,6 @@ const router = express.Router();
 
 const validateLoginController = require('../controllers/validateLoginController');
 
-// router.get("/validateLogin", validateLoginController.populateDatabase);
-
+router.get("", validateLoginController.validateLogin);
 
 module.exports = router;

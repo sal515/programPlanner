@@ -47,7 +47,7 @@ app.use((req, res, next) => {
 // ---------------------------------------------------------------------
 // Forwarding the initial requests from the user to generate their ideal Schedule
 app.use("/api/generateSequences", genSequenceRoute);
-app.use("/home", validateLoginRoute );
+app.use("/validateLogin", validateLoginRoute);
 app.use("/algorithms", algorithmRoute );
 
 // middleware handling http request that has no specific routing path by sending error message as response
