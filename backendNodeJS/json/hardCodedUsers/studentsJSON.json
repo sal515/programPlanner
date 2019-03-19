@@ -1,0 +1,333 @@
+{
+  "students": {
+    "Year1": [
+      {
+        "userID": "1aaaaaaa",
+        "userPassword": "pass-aaaa",
+        "coop": true,
+        "courseHistory": [
+          "COMP232",
+          "COMP248",
+          "ENGR201",
+          "ENGR213",
+          "???General???Education???",
+          "COMP249",
+          "ENGR233",
+          "SOEN228",
+          "SOEN287",
+          "???BASIC???SCIENCE???",
+          "COMP348",
+          "COMP352",
+          "ENCS282",
+          "ENGR202",
+          "???BASIC???SCIENCE???"
+        ],
+        "completedCredits": 44,
+        "fallSequence": [
+          {},
+          {}
+        ],
+        "winterSequence": [
+          {},
+          {}
+        ],
+        "summerSequence": [
+          {},
+          {}
+        ],
+        "tempFallSequence": [
+          {},
+          {}
+        ],
+        "tempWinterSequence": [
+          {},
+          {}
+        ],
+        "tempSummerSequence": [
+          {},
+          {}
+        ],
+        "careerOption": "general"
+      },
+      {
+        "userID": "1bbbbbbb",
+        "userPassword": "pass-bbbb",
+        "coop": false,
+        "courseHistory": [
+          "COMP232",
+          "COMP248",
+          "ENGR201",
+          "ENGR213",
+          "???General???Education???",
+          "COMP249",
+          "ENGR233",
+          "SOEN228",
+          "SOEN287",
+          "???BASIC???SCIENCE???"
+        ],
+        "completedCredits": 30.5,
+        "fallSequence": [
+          {},
+          {}
+        ],
+        "winterSequence": [
+          {},
+          {}
+        ],
+        "summerSequence": [
+          {},
+          {}
+        ],
+        "tempFallSequence": [
+          {},
+          {}
+        ],
+        "tempWinterSequence": [
+          {},
+          {}
+        ],
+        "tempSummerSequence": [
+          {},
+          {}
+        ],
+        "careerOption": "general"
+      }
+    ],
+    "Year2": [
+      {
+        "userID": "2aaaaaaa",
+        "userPassword": "pass-aaaa",
+        "coop": true,
+        "courseHistory": [
+          "COMP232",
+          "COMP248",
+          "ENGR201",
+          "ENGR213",
+          "???General???Education???",
+          "COMP249",
+          "ENGR233",
+          "SOEN228",
+          "SOEN287",
+          "???BASIC???SCIENCE???",
+          "COMP348",
+          "COMP352",
+          "ENCS282",
+          "ENGR202",
+          "???BASIC???SCIENCE???",
+          "COMP346",
+          "ELEC275",
+          "ENGR371",
+          "SOEN331",
+          "SOEN341"
+        ],
+        "completedCredits": 60.5,
+        "fallSequence": [
+          {},
+          {}
+        ],
+        "winterSequence": [
+          {},
+          {}
+        ],
+        "summerSequence": [
+          {},
+          {}
+        ],
+        "tempFallSequence": [
+          {},
+          {}
+        ],
+        "tempWinterSequence": [
+          {},
+          {}
+        ],
+        "tempSummerSequence": [
+          {},
+          {}
+        ],
+        "careerOption": "general"
+      },
+      {
+        "userID": "2bbbbbbb",
+        "userPassword": "pass-bbbb",
+        "coop": false,
+        "courseHistory": [
+          "COMP232",
+          "COMP248",
+          "ENGR201",
+          "ENGR213",
+          "???General???Education???",
+          "COMP249",
+          "ENGR233",
+          "SOEN228",
+          "SOEN287",
+          "???BASIC???SCIENCE???",
+          "COMP348",
+          "COMP352",
+          "ENCS282",
+          "ENGR202",
+          "???BASIC???SCIENCE???",
+          "COMP346",
+          "ELEC275",
+          "ENGR371",
+          "SOEN331",
+          "SOEN341"
+        ],
+        "completedCredits": 60.5,
+        "fallSequence": [
+          {},
+          {}
+        ],
+        "winterSequence": [
+          {},
+          {}
+        ],
+        "summerSequence": [
+          {},
+          {}
+        ],
+        "tempFallSequence": [
+          {},
+          {}
+        ],
+        "tempWinterSequence": [
+          {},
+          {}
+        ],
+        "tempSummerSequence": [
+          {},
+          {}
+        ],
+        "careerOption": "general"
+      }
+    ],
+    "Year3": [
+      {
+        "userID": "3aaaaaaa",
+        "userPassword": "pass-aaaa",
+        "coop": true,
+        "courseHistory": [
+          "COMP232",
+          "COMP248",
+          "ENGR201",
+          "ENGR213",
+          "???General???Education???",
+          "COMP249",
+          "ENGR233",
+          "SOEN228",
+          "SOEN287",
+          "???BASIC???SCIENCE???",
+          "COMP348",
+          "COMP352",
+          "ENCS282",
+          "ENGR202",
+          "???BASIC???SCIENCE???",
+          "COMP346",
+          "ELEC275",
+          "ENGR371",
+          "SOEN331",
+          "SOEN341",
+          "COMP335",
+          "ENGR391",
+          "SOEN342",
+          "SOEN343",
+          "SOEN384",
+          "SOEN344",
+          "SOEN345",
+          "SOEN357",
+          "SOEN390",
+          "???ELECTIVE???"
+        ],
+        "completedCredits": 88,
+        "fallSequence": [
+          {},
+          {}
+        ],
+        "winterSequence": [
+          {},
+          {}
+        ],
+        "summerSequence": [
+          {},
+          {}
+        ],
+        "tempFallSequence": [
+          {},
+          {}
+        ],
+        "tempWinterSequence": [
+          {},
+          {}
+        ],
+        "tempSummerSequence": [
+          {},
+          {}
+        ],
+        "careerOption": "general"
+      },
+      {
+        "userID": "3bbbbbbb",
+        "userPassword": "pass-bbbb",
+        "coop": false,
+        "courseHistory": [
+          "COMP232",
+          "COMP248",
+          "ENGR201",
+          "ENGR213",
+          "???BASIC???SCIENCE???",
+          "COMP249",
+          "ENGR233",
+          "SOEN228",
+          "SOEN287",
+          "???BASIC???SCIENCE???",
+          "COMP348",
+          "COMP352",
+          "ENCS282",
+          "ENGR202",
+          "???BASIC???SCIENCE???",
+          "COMP346",
+          "ELEC275",
+          "ENGR371",
+          "SOEN331",
+          "SOEN341",
+          "COMP335",
+          "ENGR391",
+          "SOEN342",
+          "SOEN343",
+          "SOEN384",
+          "SOEN344",
+          "SOEN345",
+          "SOEN357",
+          "SOEN390",
+          "???ELECTIVE???"
+        ],
+        "completedCredits": 88,
+        "fallSequence": [
+          {},
+          {}
+        ],
+        "winterSequence": [
+          {},
+          {}
+        ],
+        "summerSequence": [
+          {},
+          {}
+        ],
+        "tempFallSequence": [
+          {},
+          {}
+        ],
+        "tempWinterSequence": [
+          {},
+          {}
+        ],
+        "tempSummerSequence": [
+          {},
+          {}
+        ],
+        "careerOption": "general"
+      }
+    ]
+  }
+}
