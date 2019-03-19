@@ -13,26 +13,27 @@ var exports = module.exports = {};
  * @param req
  * @param res
  * @param next
- * @returns {*}
+ * @returns {userProfileModel}
  */
 exports.validateLogin = (req, res, next) => {
 
     dbHelpers.defaultConnectionToDB();
 
     const loginCredentials = req.body;
-    // const loginCredentials = userLoginModel;
-    // loginCredentials.loginUsername = "claudia";
-    // loginCredentials.loginPassword = "123";
+    // const loginCredentials = userProfileModel;
+    // loginCredentials.userID = "popo";
+    // loginCredentials.userPassword = "123";
 
-    let validUser = userLoginModel.findOne({
-        loginUsername: loginCredentials.loginUsername,
-        loginPassword: loginCredentials.loginPassword
+    let user = userProfileModel.findOne({
+        userID: loginCredentials.userID,
+        userPassword: loginCredentials.userPassword
     });
 
-    validUser.exec(function (er, userLoginModel) {
+    user.exec(function (er, userProfileModel) {
         try {
-            if (userLoginModel.loginUsername) {
-                getUserInfo(userLoginModel.loginUsername, userLoginModel.loginPassword);
+            if (userProfileModel.userID) {
+                console.log("Successfully fetched user information");
+                return userProfileModel;
             }
         } catch (er) {
             console.log("Invalid Credentials");
@@ -44,30 +45,6 @@ exports.validateLogin = (req, res, next) => {
         message: "information processed successfully"
     })
 };
-
-/**
- * To return the user information once the credentials have been validated
- * @param username
- * @param password
- */
-function getUserInfo(username, password) {
-
-    let user = userProfileModel.findOne({
-        userID: username,
-        userPassword: password
-    });
-
-    user.exec(function (er, userProfileModel) {
-        try {
-            if (userProfileModel.userID) {
-                return user;
-            }
-        } catch (er) {
-            console.log("Unable to fetch information");
-            return null;
-        }
-    })
-}
 
 /**
  * for testing purposes
@@ -90,9 +67,9 @@ function getUserInfo(username, password) {
 //
 // };
 
-// /**
-//  * for testing purposes
-//  */
+/**
+ * for testing purposes
+ */
 // exports.saveUserInfo = (req, res, next) => {
 //
 //     // connecting to the database using the default connection method
