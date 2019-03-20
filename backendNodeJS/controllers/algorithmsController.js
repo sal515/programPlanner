@@ -2,6 +2,9 @@
 const dbHelpers = require("../databaseHandlers/dbHelper");
 // variables holding the references of the object creation helper methods
 const dataHandlers = require("../dataHandlers/objectGenerator");
+//importing lodash library
+var _ = require('lodash');
+
 
 // importing schema to save data to the default database
 const coReqOnlyModel = require('../models/DbSchemas/coReqOnlySchema2Model');
@@ -26,10 +29,62 @@ const userProfileModel = require('../models/userSchema2Model');
 
 exports.addCourseToSequence = (req, res, next) => {
   // user input should have the following:
-  //  - userID
-  //  - Semester selected
-  //  - Course Subject
-  //  - Course Code
+  //  -> userID
+  //  -> Semester selected
+  //  -> Course Subject
+  //  -> Course Code
+
+  // postman choose: x-www-form-urlencoded  to test data flow from front to backend
+  const userInput = req.body;
+
+  // setting the mongoose debugging to true
+  // const mongoose = require("mongoose");
+  // mongoose.set('debug', true);
+
+  // connect to database
+  dbHelpers.defaultConnectionToDB();
+
+  const query = scheduleModel.find();
+  query.setOptions({lean: true});
+  query.collection(scheduleModel.collection);
+  // example to do the query in one line
+  // query.where('object.courseSubject').equals(userInput.courseSubject).exec(function (err, scheduleModel) {
+  // building a query with multiple where statements
+  query.where('object.courseSubject').equals(userInput.courseSubject);
+  query.where('object.courseCatalog').equals(userInput.courseCatalog);
+  // query.where('object.termTitle').equals(userInput.termTitle);
+  query.where('object.termDescription').equals(userInput.termDescription);
+  query.exec(function (err, scheduleModel) {
+    try {
+      if(scheduleModel != null ) {
+        if (scheduleModel.length === 0) {
+            scheduleModel = null;
+        }
+      }
+        res.status(200).json({
+          userInput,
+          scheduleModel,
+          message: "addCourseToSequence executed"
+        })
+    } catch (err) {
+      console.log("Error finding the course provided by the user");
+      res.status(500).json({
+        message: "Internal Server Error: Course not found"
+      })
+    }
+  });
+};
+
+
+
+
+// This is an example function not used anywhere in the project
+function testQueryBuilder() {
+  // user input should have the following:
+  //  -> userID
+  //  -> Semester selected
+  //  -> Course Subject
+  //  -> Course Code
   const userInput = req.body;
   // Example or Test statement from postman --> in the body ->> x-www-form-urlencoded was selected
   // let testTitle = userInput.COEN;
@@ -52,15 +107,11 @@ exports.addCourseToSequence = (req, res, next) => {
   query.where('object.courseCatalog').equals(userInput.courseCatalog);
   query.exec(function (err, scheduleModel) {
     try {
-      // if (scheduleModel == null) {
-      //   return null;
-      // } else {
-        res.status(200).json({
-          userInput,
-          scheduleModel,
-          // testTitle,
-          message: "addCourseToSequence executed"
-        })
+      res.status(200).json({
+        userInput,
+        scheduleModel,
+        message: "addCourseToSequence executed"
+      })
       // }
     } catch (err) {
       console.log("Error finding the course provided by the user");
@@ -69,5 +120,4 @@ exports.addCourseToSequence = (req, res, next) => {
       })
     }
   });
-};
-
+}
