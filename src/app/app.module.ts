@@ -24,6 +24,7 @@ import {
   MatIconModule,
   MatOptionModule,
   MatSelectModule,
+  MatSidenavModule,
   MatExpansionModule
 } from '@angular/material';
 // angular imports
@@ -41,7 +42,8 @@ import {CourseCreateComponent} from './Courses/course_create/course_create.compo
 import {CourseListComponent} from './Courses/course_list/course_list.component';
 import {HomeComponent} from './home/home';
 import {CourseCreateListContainerComponent} from './Courses/course_create_list_container';
-import { ProfileComponent } from './profile/profile.component';
+import {CalendarViewComponent} from './calendar-view/calendar-view.component';
+import {ClassesService} from './classes.service';
 
 // imports of my custom components
 
@@ -53,7 +55,7 @@ import { ProfileComponent } from './profile/profile.component';
     CourseListComponent,
     HomeComponent,
     CourseCreateListContainerComponent,
-    ProfileComponent
+    CalendarViewComponent
   ],
   imports: [
     BrowserModule,
@@ -70,11 +72,11 @@ import { ProfileComponent } from './profile/profile.component';
     MatOptionModule,
     MatSelectModule,
     MatExpansionModule,
+    MatSidenavModule,
     HttpClientModule
   ],
   providers: [
-    // if the decorator wasn't used in the service class declaration : @Injectable({providedIn: 'root'})
-    // CourseService
+    ClassesService
   ],
   bootstrap: [AppComponent]
 })
