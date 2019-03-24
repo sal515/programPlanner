@@ -31,5 +31,11 @@ Note: To run the servers
 ## Populate your Database
 
 1. start the backend server
-2. go to localhost:3000/api/generateSequences/generateCoursesSchedules
-3. DO NOT REFRESH THE PAGE IT WILL CREATE DUPLICATES
+2. go to localhost:3000/api/generateData/generateCoursesSchedules
+3. go to localhost:3000/api/generateData/generateTestStudents
+4. DO NOT REFRESH THE PAGES IT WILL CREATE DUPLICATES
+
+## Updates March 24, 2019
+
+1. The database setting were modified - copy the databaseSettingTemplate and write your db name for databaseURL
+2. The endpoint to populate your db with dummy users has been added to the populate your database section
