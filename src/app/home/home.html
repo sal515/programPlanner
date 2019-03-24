@@ -1,10 +1,3 @@
 <mat-card>
-  <p>Enter a Course Name: <input type="text" [(ngModel)] = "courseName"></p>
-  <p>Enter a Day (eg. monday) <input type="text" [(ngModel)] = "day"></p>
-  <p>Enter a Start Time (8am-10pm)(minute must be multiple of 5) <input type="number" [(ngModel)] = "startHour"> : <input type="number" [(ngModel)] = "startMinute"></p>
-  <p>Enter an End Time(8am-10pm)(minute must be multiple of 5) <input type="number" [(ngModel)] = "endHour"> : <input type="number" [(ngModel)] = "endMinute"></p>
-  <p>adding only works on mondays now cuz im lazy</p>
-  <p><button (click)="onClickMe()">Send Course</button> Click a few times! &nbsp;&nbsp;&nbsp;&nbsp; {{success}}</p>
-
   <app-calendar-view></app-calendar-view>
 </mat-card>
