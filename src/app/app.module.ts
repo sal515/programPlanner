@@ -25,7 +25,8 @@ import {
   MatOptionModule,
   MatSelectModule,
   MatSidenavModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatAutocompleteModule
 } from '@angular/material';
 // angular imports
 
@@ -37,24 +38,20 @@ import {
 
 
 // imports of my custom components
-import {HeaderComponent} from './header/header.component';
-import {CourseCreateComponent} from './Courses/course_create/course_create.component';
-import {CourseListComponent} from './Courses/course_list/course_list.component';
-import {HomeComponent} from './home/home';
-import {CourseCreateListContainerComponent} from './Courses/course_create_list_container';
+import {HeaderViewComponent} from './header-view/header-view.component';
+import {HomeViewContainerComponent} from './home-view-container/home-view-container.component';
 import {CalendarViewComponent} from './calendar-view/calendar-view.component';
-import {ClassesService} from './classes.service';
+import {ClassesService} from './classes-service/classes.service';
+import {AddCourseViewComponent} from './add-course-view/add-course-view.component';
 
 // imports of my custom components
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
-    CourseCreateComponent,
-    CourseListComponent,
-    HomeComponent,
-    CourseCreateListContainerComponent,
+    HeaderViewComponent,
+    HomeViewContainerComponent,
+    AddCourseViewComponent,
     CalendarViewComponent
   ],
   imports: [
@@ -73,7 +70,8 @@ import {ClassesService} from './classes.service';
     MatSelectModule,
     MatExpansionModule,
     MatSidenavModule,
-    HttpClientModule
+    HttpClientModule,
+    MatAutocompleteModule
   ],
   providers: [
     ClassesService

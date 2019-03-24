@@ -1,7 +1,11 @@
 <app-header></app-header>
 <main>
   <mat-sidenav-container class="example-container">
-    <mat-sidenav mode="side" opened><app-course-create-list-container></app-course-create-list-container></mat-sidenav>
-    <mat-sidenav-content><router-outlet></router-outlet></mat-sidenav-content>
+    <mat-sidenav mode="side" opened>
+      <app-add-course-view-component></app-add-course-view-component>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
   </mat-sidenav-container>
 </main>

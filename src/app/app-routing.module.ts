@@ -1,14 +1,12 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from './home/home';
-import {CourseCreateListContainerComponent} from './Courses/course_create_list_container';
+import {HomeViewContainerComponent} from './home-view-container/home-view-container.component';
 
 const routes: Routes = [
   // the root page routing path
   // example: local path - http://localhost:4200/
   // example: if not local path - http://programplanner.com/
-  {path: '', component: HomeComponent},
-  {path: 'course_create_list', component: CourseCreateListContainerComponent}
+  {path: '', component: HomeViewContainerComponent}
 
   // The code below is used for having sub directories in the url, might be useful
   // path: 'course_create_list', component: CourseCreateComponent, children: [

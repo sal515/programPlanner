@@ -1,16 +1,16 @@
 import {Component, HostListener, OnInit} from '@angular/core';
-import {ClassesService} from '../classes.service';
-import {ClassInfo, ClassInfoArray} from '../ClassInfo';
+import {ClassesService} from '../classes-service/classes.service';
+import {ClassInfo, ClassInfoArray} from '../classes-service/class-info.model';
 
 @Component({
-  selector: 'app-calendar-view',
+  selector: 'app-calendar-view-component',
   templateUrl: './calendar-view.component.html',
   styleUrls: ['./calendar-view.component.css']
 })
 export class CalendarViewComponent implements OnInit {
   constructor(private classesService: ClassesService) {
     let i: number;
-    for (i = 0; i < 144/3; i++) {
+    for (i = 0; i < 144 / 3; i++) {
       this.timeColumn[i] = i;
       this.times = [5 * i ];
     }

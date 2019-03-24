@@ -1,20 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {ClassesService} from '../classes.service';
-import {ClassInfo, ClassInfoArray, Day} from '../ClassInfo';
+import {ClassesService} from '../classes-service/classes.service';
+import {ClassInfo, ClassInfoArray, Day} from '../classes-service/class-info.model';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.html',
-  styleUrls: ['./home.css']
+  templateUrl: './home-view-container.component.html',
+  styleUrls: ['./home-view-container.component.css']
 })
-export class HomeComponent implements  OnInit{
-  courseName = 'ENGR';
-  day = 'monday';
-  startHour = 8;
-  startMinute = 30;
-  endHour = 9;
-  endMinute = 10;
-  success = '';
+export class HomeViewContainerComponent implements  OnInit {
 
   classes: ClassInfoArray = new ClassInfoArray();
   constructor (private classesService: ClassesService) {
@@ -34,10 +27,6 @@ export class HomeComponent implements  OnInit{
     this.classes.classInfo.push(new ClassInfo(540, 580, 'ELEC490', Day.Friday));
 
     this.classesService.editUser(this.classes);
-  }
-
-  onClickMe() {
-
   }
 }
 
