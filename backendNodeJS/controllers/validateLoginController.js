@@ -1,7 +1,8 @@
 const dbHelpers = require("../databaseHandlers/dbHelper");
 
 //imported schema
-const userProfileModel = require('../models/userSchema');
+const userProfileModel = require('../models/userSchema2Model');
+const userLoginModel = require('../models/loginSchema2Model');
 
 var exports = module.exports = {};
 

@@ -31,5 +31,5 @@ Note: To run the servers
 ## Populate your Database
 
 1. start the backend server
-2. go to localhost:3000/api/generateSequences/populateDatabase
+2. go to localhost:3000/api/generateSequences/generateCoursesSchedules
 3. DO NOT REFRESH THE PAGE IT WILL CREATE DUPLICATES
