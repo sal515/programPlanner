@@ -4,7 +4,6 @@ import {NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
-
 // import the following in service
 // import {HttpClient} from '@angular/common/http';
 
@@ -26,7 +25,8 @@ import {
   MatSelectModule,
   MatSidenavModule,
   MatExpansionModule,
-  MatAutocompleteModule
+  MatAutocompleteModule,
+  MatChipsModule
 } from '@angular/material';
 // angular imports
 
@@ -71,7 +71,8 @@ import {AddCourseViewComponent} from './add-course-view/add-course-view.componen
     MatExpansionModule,
     MatSidenavModule,
     HttpClientModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatChipsModule
   ],
   providers: [
     ClassesService

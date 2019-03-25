@@ -7,7 +7,7 @@ export const COURSELIST: Course[] = [
   },
   { semester: 'Summer 2019',
     name: 'SOEN',
-    code: '248'
+    code: '331'
   },
   { semester: 'Summer 2019',
     name: 'COMP',

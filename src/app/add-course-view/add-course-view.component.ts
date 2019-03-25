@@ -13,6 +13,7 @@ export class AddCourseViewComponent implements OnInit {
   semesterList: Course[] = [];
   nameList: Course[] = [];
   codeList: Course[] = [];
+  basket: Course[] = [];
   input: string;
   /** Method to return a list from a source list with no duplicate object attributes. For example, if the source list has two course with
    * the 'COMP' name, only one of them will be included in the returned list. The selected course is also included int eh returned list.
@@ -71,12 +72,68 @@ export class AddCourseViewComponent implements OnInit {
     this.codeList = AddCourseViewComponent.filter(this.courses,  this.selectedCourse.name, 'name');
     this.codeList = AddCourseViewComponent.genList(this.codeList, this.selectedCourse, 'code');
   }
-  genAutocompleteList(input: string) {
+  /** Method that is executed upon selecting a semester. Calls onSelect, resets the code input and empties the basket.
+   *
+   * @param course - The selected semester.
+   * @returns void
+   */
+  onSemesterSelect(course: Course): void {
+    this.onSelect(course);
+    this.clearInput();
+    this.emptyBasket();
+  }
+  /** Method that adds a course to the basket. The course is added if it is not already in the basket.
+   *
+   * @param course - The course to add.
+   * @returns void
+   */
+  addToBasket(course: Course): void {
+    if (!this.basket.includes(course)) {
+      this.basket.push(course);
+    }
+  }
+  /** Method that removes a course to the basket.
+   *
+   * @param course - The course to remove.
+   * @returns void
+   */
+  removeFromBasket(course: Course): void {
+    const index = this.basket.indexOf(course);
+    if (index >= 0) {
+      this.basket.splice(index, 1);
+    }
+  }
+  /** Method generates a list of course for the autocomplete dropdown list of the code input.
+   *
+   * @param input - Text in the course code input field.
+   * @returns void
+   */
+  genAutocompleteList(input: string): void{
     let list = AddCourseViewComponent.filter(this.courses,  this.selectedCourse.name, 'name');
     list = AddCourseViewComponent.genList(list, this.selectedCourse, 'code');
     this.codeList = AddCourseViewComponent.filter(list,  input, 'code');
   }
+  /** Clear the input of the course code.
+   * @returns void
+   */
+  clearInput(): void {
+    this.input = null;
+  }
+  /** Empties the basket.
+   *
+   * @returns void
+   */
+  emptyBasket(): void {
+    this.basket = [];
+  }
+  /** Return the code of the passed course. Useful for the autocomplete field.
+   *
+   * @param course - The course from which the code will be returned.
+   * @returns string - The course's code.
+   */
   displayCode(course: Course): string {
-    return course.code;
+    if (course) {
+      return course.code;
+    }
   }
 }
