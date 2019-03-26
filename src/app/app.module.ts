@@ -26,7 +26,7 @@ import {
   MatSelectModule,
   MatSidenavModule,
   MatExpansionModule,
-  MatAutocompleteModule
+  MatAutocompleteModule, MatDialogModule
 } from '@angular/material';
 // angular imports
 
@@ -43,6 +43,7 @@ import {HomeViewContainerComponent} from './home-view-container/home-view-contai
 import {CalendarViewComponent} from './calendar-view/calendar-view.component';
 import {ClassesService} from './classes-service/classes.service';
 import {AddCourseViewComponent} from './add-course-view/add-course-view.component';
+import {CourseHistoryComponent, CourseHistoryDialogComponent} from './course-history/course-history.component';
 
 // imports of my custom components
 
@@ -52,7 +53,9 @@ import {AddCourseViewComponent} from './add-course-view/add-course-view.componen
     HeaderViewComponent,
     HomeViewContainerComponent,
     AddCourseViewComponent,
-    CalendarViewComponent
+    CalendarViewComponent,
+    CourseHistoryComponent,
+    CourseHistoryDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -64,6 +67,7 @@ import {AddCourseViewComponent} from './add-course-view/add-course-view.componen
     MatGridListModule,
     MatButtonModule,
     MatToolbarModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
     MatOptionModule,
@@ -76,7 +80,10 @@ import {AddCourseViewComponent} from './add-course-view/add-course-view.componen
   providers: [
     ClassesService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent
+  ],
+  entryComponents: [CourseHistoryComponent, CourseHistoryDialogComponent],
 })
 export class AppModule {
 }

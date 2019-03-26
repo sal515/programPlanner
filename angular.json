@@ -131,6 +131,41 @@
           }
         }
       }
+    },
+    "courseHistory": {
+      "root": "projects/course-history",
+      "sourceRoot": "projects/course-history/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/course-history/tsconfig.lib.json",
+            "project": "projects/course-history/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/course-history/src/test.ts",
+            "tsConfig": "projects/course-history/tsconfig.spec.json",
+            "karmaConfig": "projects/course-history/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/course-history/tsconfig.lib.json",
+              "projects/course-history/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "programPlanner"

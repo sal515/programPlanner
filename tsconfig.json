@@ -17,6 +17,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "course-history": [
+        "dist/course-history"
+      ],
+      "course-history/*": [
+        "dist/course-history/*"
+      ]
+    }
   }
 }

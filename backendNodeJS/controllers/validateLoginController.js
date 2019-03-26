@@ -74,14 +74,14 @@ exports.validateLogin = (req, res, next) => {
 //     // connecting to the database using the default connection method
 //     dbHelpers.defaultConnectionToDB();
 //
-//     var courseHistory = ["SOEN 341", "COMP 346", "ENGR 213"];
+//     var course-history = ["SOEN 341", "COMP 346", "ENGR 213"];
 //
 //     let newUserProfileModel = new userProfileModel({
 //
 //         userID: "claudia",
 //         userPassword: "123",
 //         coop: true,
-//         courseHistory: courseHistory,
+//         course-history: course-history,
 //         completedCredits: 20
 //     });
 //
