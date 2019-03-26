@@ -1,0 +1,53 @@
+
+<mat-card>
+  <form (ngSubmit)="addToBasket(selectedCourse)" #addForm="ngForm">
+    <!-- Dropdown list to select the semester of the course. -->
+    <mat-form-field>
+      <mat-label>Select Semester:</mat-label>
+        <mat-select (selectionChange)="onSemesterSelect($event.value)">
+            <mat-option *ngFor="let course of semesterList" [value]="course" >
+              {{course.semester}}
+            </mat-option>
+         </mat-select>
+    </mat-form-field>
+    <div *ngIf="selectedCourse" >
+      <!-- Dropdown list to select the name of the course based on the selected semester. -->
+        <mat-form-field>
+          <mat-label>Course Name:</mat-label>
+            <mat-select [(value)]="selectedCourse" (selectionChange)="onSelect($event.value)">
+              <mat-option *ngFor="let course of nameList" [value]="course" >
+                {{course.name}}
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+      <!-- Dropdown list to select the code of the course based on the selected name. -->
+        <mat-form-field>
+          <mat-label>Course Code:</mat-label>
+          <input required matInput  [matAutocomplete]="auto"
+                 name="courseName" #course="ngModel" [(ngModel)]="input"
+                 (ngModelChange)="genAutocompleteList(input)" />
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event.option.value)" [displayWith]="displayCode">
+            <mat-option *ngFor="let course of codeList" [value]="course" >
+              {{course.code}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      <div>
+        <button [disabled]="!addForm.form.valid" type="submit">Add</button>
+      </div>
+    </div>
+  </form>
+  <form #enrollform="ngForm" *ngIf="selectedCourse">
+    <mat-label>Course Basket</mat-label>
+    <mat-form-field>
+      <mat-chip-list>
+        <mat-chip *ngFor="let course of basket" [selectable]="true"
+                  [removable]="true" (removed)="removeFromBasket(course)">
+          {{course.name}}-{{course.code}}
+          <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+        </mat-chip>
+      </mat-chip-list>
+    </mat-form-field>
+    <input type="submit" value="Enroll">
+  </form >
+</mat-card>

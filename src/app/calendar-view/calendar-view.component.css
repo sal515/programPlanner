@@ -1,0 +1,13 @@
+.wrapper{
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr 2fr 2fr 2fr;
+  text-align: center;
+  /*grid-template-rows: repeat(96, 1fr);*/
+}
+.wrapper > div{
+  background:#eee;
+  border: 1px dashed black;
+  padding:1em;
+  /*height: 10px;*/
+  overflow: hidden;
+}
