@@ -7,7 +7,10 @@ const courseSchema2Model = mongoose.Schema({
   // courseCatalog example: 311
   courseCatalog: {type: Number, required: true},
 
-  // courseTitle example: Molecular and General Genetics
+  // example : Fall 2017
+  termDescription:{type: String, required: true},
+
+    // courseTitle example: Molecular and General Genetics
   courseTitle: {type: String, required: true},
 
   // classNumber: the specific code for each lecture, tutorial, and lab
