@@ -1,3 +1,13 @@
-<mat-card>
-  <app-calendar-view-component></app-calendar-view-component>
-</mat-card>
+<app-header></app-header>
+<main>
+  <mat-sidenav-container class="example-container">
+    <mat-sidenav mode="side" opened>
+      <app-add-course-view-component></app-add-course-view-component>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <mat-card>
+        <app-calendar-view-component></app-calendar-view-component>
+      </mat-card>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</main>
