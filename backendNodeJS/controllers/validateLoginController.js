@@ -18,11 +18,11 @@ exports.validateLogin = (req, res, next) => {
 
     dbHelpers.defaultConnectionToDB();
 
-    const loginCredentials = req.body;
-    // const loginCredentials = userProfileModel;
-    // loginCredentials.userID = "popo";
-    // loginCredentials.userPassword = "123";
-
+    const loginCredentials = req.query;
+    //const loginCredentials = userProfileModel;
+    //loginCredentials.userID = "popo";
+    //loginCredentials.userPassword = "123";
+    console.log(loginCredentials);
     let user = userProfileModel.findOne({
         userID: loginCredentials.userID,
         userPassword: loginCredentials.userPassword
@@ -31,19 +31,20 @@ exports.validateLogin = (req, res, next) => {
     user.exec(function (er, userProfileModel) {
         try {
             if (userProfileModel.userID) {
-                console.log("Successfully fetched user information");
-                return userProfileModel;
+              console.log("Successfully fetched user information");
+              res.status(200).json({
+                studentProfile: userProfileModel
+              })
             }
-        } catch (er) {
-            console.log("Invalid Credentials");
-            return null;
+        }
+        catch (er) {
+          console.log("Invalid Credentials");
+          res.status(200).json({
+            studentProfile: null
+          })
         }
     });
-
-    res.status(200).json({
-        message: "information processed successfully"
-    })
-};
+}
 
 /**
  * for testing purposes
@@ -69,25 +70,25 @@ exports.validateLogin = (req, res, next) => {
 /**
  * for testing purposes
  */
-// exports.saveUserInfo = (req, res, next) => {
+exports.saveUserInfo = (req, res, next) => {
 //
 //     // connecting to the database using the default connection method
-//     dbHelpers.defaultConnectionToDB();
+    dbHelpers.defaultConnectionToDB();
 //
-//     var courseHistory = ["SOEN 341", "COMP 346", "ENGR 213"];
+   var courseHistory = ["SOEN 341", "COMP 346", "ENGR 213"];
 //
-//     let newUserProfileModel = new userProfileModel({
+    let newUserProfileModel = new userProfileModel({
 //
-//         userID: "claudia",
-//         userPassword: "123",
-//         coop: true,
-//         courseHistory: courseHistory,
-//         completedCredits: 20
-//     });
+       userID: "test",
+        userPassword: "123",
+         coop: true,
+         courseHistory: courseHistory,
+         completedCredits: 20
+    });
 //
-//     dbHelpers.saveData(newUserProfileModel);
+    dbHelpers.saveData(newUserProfileModel);
 //
-//     res.status(200).json({
-//         message: "user added"
-//     });
-// };
+    res.status(200).json({
+        message: "user added"
+    });
+ }
