@@ -14,14 +14,12 @@ export class AddCourseComponent implements OnInit {
   semesterList: AddCourseModel[] = [];
   nameList: AddCourseModel[] = [];
   codeList: AddCourseModel[] = [];
-  basket: AddCourseModel[] = [];
   input: string;
   // Local subscription object to manipulate subscription and !PREVENT MEMORY LEAKS!
   // This is a local service property that is set equal to the service that is injected below
   courseService: CourseService;
   constructor(courseService: CourseService) {
     this.courseService = courseService;
-    this.semesterList = AddCourseComponent.genList(this.courses, this.selectedCourse, 'semester');
   }
   /** Method to return a list from a source list with no duplicate object attributes. For example, if the source list has two course with
    * the 'COMP' name, only one of them will be included in the returned list. The selected course is also included int eh returned list.
@@ -65,6 +63,7 @@ export class AddCourseComponent implements OnInit {
    * @returns void
    */
   ngOnInit(): void {
+    this.semesterList = AddCourseComponent.genList(this.courses, this.selectedCourse, 'semester');
   }
   /** Method that is executed upon selecting a course from a drop down list. It will will set the value of the selected course and generate
    * a list of name and codes for this course.
@@ -87,28 +86,6 @@ export class AddCourseComponent implements OnInit {
   onSemesterSelect(course: AddCourseModel): void {
     this.onSelect(course);
     this.clearInput();
-    this.emptyBasket();
-  }
-  /** Method that adds a course to the basket. The course is added if it is not already in the basket.
-   *
-   * @param course - The course to add.
-   * @returns void
-   */
-  addToBasket(course: AddCourseModel): void {
-    if (!this.basket.includes(course)) {
-      this.basket.push(course);
-    }
-  }
-  /** Method that removes a course to the basket.
-   *
-   * @param course - The course to remove.
-   * @returns void
-   */
-  removeFromBasket(course: AddCourseModel): void {
-    const index = this.basket.indexOf(course);
-    if (index >= 0) {
-      this.basket.splice(index, 1);
-    }
   }
   /** Method generates a list of course for the autocomplete dropdown list of the code input.
    *
@@ -125,13 +102,6 @@ export class AddCourseComponent implements OnInit {
    */
   clearInput(): void {
     this.input = null;
-  }
-  /** Empties the basket.
-   *
-   * @returns void
-   */
-  emptyBasket(): void {
-    this.basket = [];
   }
   /** Return the code of the passed course. Useful for the autocomplete field.
    *

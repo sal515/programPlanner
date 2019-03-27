@@ -52,7 +52,20 @@ export class CourseService {
       // REMEMBER : To take care of the proper headers on the server-side response to take care of CORS.
     );
   }
+  addCourse(course: AddCourseModel): void {
+    // the following is sending a http post request to the courseAddURL defined above and gets return data -> message of type string
+    this.httpClient.post<({message: string})>(this.courseAddURL, course).subscribe(
+      (responseData) => {
+        // the response data is the message of type string declared above
+        console.log(responseData.message);
+        // updating the local array with the new object received
+        this._courseArr.push(course);
+        // If data in Service changes,this will pass the updated data by value
+        this.courseUpdated.next([...this._courseArr]);
+      }
+    );
 
+  }
   // This method passes an observable object that can be subscribed in the components
   // This update the data array in this service even though the array is passed by valued
   getCourseUpdateListener(): Observable<AddCourseModel[]> {

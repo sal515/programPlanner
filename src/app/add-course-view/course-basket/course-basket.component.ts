@@ -24,11 +24,6 @@ export class CourseBasketComponent implements OnInit, OnDestroy {
     // !PREVENT MEMORY LEAKS! by unsubscribe when the component is destroyed.
     this.courseSubscription.unsubscribe();
   }
-  /** Method that adds a course to the basket. The course is added if it is not already in the basket.
-   *
-   * @param course - The course to add.
-   * @returns void
-   */
   /** Method that removes a course to the basket.
    *
    * @param course - The course to remove.
