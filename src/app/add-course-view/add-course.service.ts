@@ -19,7 +19,7 @@ import {response} from 'express';
 @Injectable({providedIn: 'root'})
 export class CourseService {
 
-  private courseAddURL = 'http://localhost:3000/api/courses';
+  private courseAddURL = 'http://localhost:3000/frontend/addCourse';
 
   private _courseArr: AddCourseModel[] = [];
   // This is a reference to a Subject (JS_Object) of type AddCourseModel[] which will allow event driven updates
