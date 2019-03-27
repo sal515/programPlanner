@@ -14,7 +14,7 @@
     "@angular/animations": "^7.2.4",
     "@angular/cdk": "~7.2.2",
     "@angular/common": "^7.2.4",
-    "@angular/compiler": "^7.2.4",
+    "@angular/compiler": "^7.2.10",
     "@angular/core": "^7.2.4",
     "@angular/forms": "^7.2.4",
     "@angular/material": "~7.2.2",
@@ -22,6 +22,7 @@
     "@angular/platform-browser-dynamic": "^7.2.4",
     "@angular/router": "^7.2.4",
     "ajv": "^6.9.1",
+    "angular-cookies": "^1.7.8",
     "body-parser": "^1.18.3",
     "core-js": "^2.6.4",
     "express": "^4.16.4",
@@ -29,13 +30,14 @@
     "jsonfile": "^5.0.0",
     "lodash": "^4.17.11",
     "mongoose": "^5.4.11",
+    "nodejs": "0.0.0",
     "papaparse": "^4.6.3",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.12.4",
+    "@angular-devkit/build-angular": "^0.13.6",
     "@angular/cli": "^7.3.1",
     "@angular/compiler-cli": "^7.2.7",
     "@angular/language-service": "^7.2.4",
@@ -55,5 +57,17 @@
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
     "typescript": "~3.2.2"
-  }
+  },
+  "description": "This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.3.",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sal515/programPlanner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sal515/programPlanner/issues"
+  },
+  "homepage": "https://github.com/sal515/programPlanner#readme"
 }

@@ -1,0 +1,62 @@
+@import url('https://unpkg.com/bootstrap@3.3.7/dist/css/bootstrap.min.css');
+
+.background_login{
+  background-color: lightgrey;
+}
+
+.title_login{
+  text-align: center;
+  color: #FFAB1C;
+  text-shadow: 2px 2px 5px #011627, 1px 1px 5px #011627;
+  font-family: "Gill Sans MT", sans-serif;
+  font-size: 28px;
+}
+
+.padding_title_first{
+  padding-top: 100px;
+}
+
+.padding_title_second{
+  padding-bottom: 50px;
+}
+
+.container{
+  background: #E02638;
+  width: 500px;
+  padding: 10px 10px;
+  border-radius: 8px;
+  margin: 0px auto;
+}
+.text_login{
+  color: #FDFFFC;
+  text-shadow: 2px 2px 1px #011627;
+}
+
+.forgot_button{
+  font-family: "Gill Sans MT", sans-serif;
+  font-size: 16px;
+  text-align: right;
+  text-shadow: 0px 0px 1px #011627;
+  text-decoration: underline;
+}
+
+.failed_login_container{
+  width: 400px;
+  margin: 0px auto;
+  padding-bottom: 50px;
+}
+
+.failed_login{
+  text-align: center;
+  font-family: "Gill Sans MT", sans-serif;
+  font-size: 20px;
+  border-color: #E02638;
+  background-color: #E8E8E8;
+  border-style: solid;
+  border-radius: 8px;
+}
+
+.missing_element{
+  font-weight: bold;
+}
+

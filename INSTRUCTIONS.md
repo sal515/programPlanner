@@ -11,7 +11,7 @@
 		{does not matter where the directory is as long as the path is pointing to the bin of the downloaded folder}
 4. Clone git repo using your IDE / GitKraken(preferred)
 6. Install whatever package the IDE wants you to install (might show up on the bottom right of the IDE), say yes
-5. Copy databaseSettingTemplate.js and duplicate the file with new name (call the new file databaseSetting.js !!!VERY IMPORTANT!!!) 
+5. Copy databaseSetting.js and duplicate the file with new name (call the new file databaseSetting.js !!!VERY IMPORTANT!!!) 
             
             To create new databases (as required) --> Change the data databaseURL String values to your "yourname"
 
