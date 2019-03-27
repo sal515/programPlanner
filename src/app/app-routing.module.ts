@@ -1,10 +1,9 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {HomeViewContainerComponent} from './home-view-container/home-view-container.component';
-import {AuthenticationComponent} from "./authentication/authentication.component";
-import {LoginFormComponent} from "./authentication/login-form/login-form.component";
-import {HomeComponent} from "./home/home.component";
-import {AuthenticationGuard} from "./authentication/authentication.guard";
+import {LoginFormComponent} from "./login-view/login-form.component";
+import {AuthenticationGuard} from "./authentication-service-guards/authenticationGuard/authentication.guard";
+import {AlreadyLoggedInGuard} from "./authentication-service-guards/alreadyLoggedInGuard/alreadyLoggedIn.guard";
 
 const routes: Routes = [
   // the root page routing path
@@ -12,12 +11,12 @@ const routes: Routes = [
   // example: if not local path - http://programplanner.com/
   {
     path: 'login',
-    component: AuthenticationComponent,
-    //canActivate: [AlreadyLoggedInGuard],
-    children: [{path: '', component: LoginFormComponent}]
+    component: LoginFormComponent,
+    canActivate: [AlreadyLoggedInGuard]
   },
   {
-    path: '', component: HomeComponent,
+    path: '',
+    component: HomeViewContainerComponent,
     canActivate: [AuthenticationGuard]
   }
 
@@ -29,8 +28,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [RouterModule.forRoot(
+    routes,
+    { enableTracing: true }
+  ),]
 })
 export class AppRoutingModule {
 }

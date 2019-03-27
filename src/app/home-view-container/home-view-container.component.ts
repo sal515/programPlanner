@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ClassesService} from '../classes-service/classes.service';
-import {ClassInfo, ClassInfoArray, Day} from '../classes-service/class-info.model';
+import {ClassInfo, ClassInfoArray, Day} from '../models/class-info.model';
 
 @Component({
   selector: 'app-home',

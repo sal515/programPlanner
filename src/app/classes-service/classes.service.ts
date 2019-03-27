@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {ClassInfoArray} from './class-info.model';
+import {ClassInfoArray} from '../models/class-info.model';
 
 @Injectable({
   providedIn: 'root'

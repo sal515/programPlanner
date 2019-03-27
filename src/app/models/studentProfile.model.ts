@@ -1,6 +1,7 @@
-import {Sequence} from "./sequence.model";
-import {CourseHistory} from "./courseHistory.model";
-
+/**
+ * I intended to use it for the login, ended up being useless. Leaving it here just in case.
+ * Alessandro
+ */
 export class StudentProfile {
   id: string;
   courseHistory: string[];

@@ -1,16 +1,14 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes} from "@angular/router";
+import {RouterModule} from '@angular/router';
 import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http'
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule} from "./app-routing.module";
 // import the following in service
 // import {HttpClient} from '@angular/common/http';
 
-// angular forms input and output 2-way binding module
-import {FormsModule} from '@angular/forms';
-// angular forms input and output 2-way binding module
 
 // angular imports
 import {
@@ -38,36 +36,27 @@ import {
 
 
 // imports of my custom components
-import {HeaderViewComponent} from './header-view/header-view.component';
+import {HeaderViewComponent} from './home-view-container/header-view/header-view.component';
 import {HomeViewContainerComponent} from './home-view-container/home-view-container.component';
-import {CalendarViewComponent} from './calendar-view/calendar-view.component';
+import {CalendarViewComponent} from './home-view-container/calendar-view/calendar-view.component';
 import {ClassesService} from './classes-service/classes.service';
-import {AddCourseViewComponent} from './add-course-view/add-course-view.component';
-import { HeaderComponent } from './header/header.component';
-import { AuthenticationComponent } from './authentication/authentication.component';
-import { AlreadyLoggedInGuard, AuthenticationGuard} from "./authentication/authentication.guard";
-import { LoginFormComponent } from './authentication/login-form/login-form.component';
-import { HomeComponent } from './home/home.component';
+import {AddCourseViewComponent} from './home-view-container/sidebar-view/add-course-view/add-course-view.component';
+import { LoginFormComponent } from './login-view/login-form.component';
+import { SidebarViewComponent } from './home-view-container/sidebar-view/sidebar-view.component';
 
 // imports of my custom components
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
-    AuthenticationComponent,
     LoginFormComponent,
-    HomeComponent,
     HeaderViewComponent,
     HomeViewContainerComponent,
     AddCourseViewComponent,
-    CalendarViewComponent
+    CalendarViewComponent,
+    SidebarViewComponent
   ],
   imports: [
-    RouterModule.forRoot(
-      appRoutes,
-      { enableTracing: true }
-    ),
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -86,7 +75,8 @@ import { HomeComponent } from './home/home.component';
     HttpClientModule,
     MatAutocompleteModule,
     MatChipsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule,
   ],
   providers: [
     ClassesService

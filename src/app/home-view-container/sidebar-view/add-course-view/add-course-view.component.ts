@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {Course} from './course.model';
-import {COURSELIST} from './course-list.model';
+import {Course} from '../../../models/course.model';
+import {COURSELIST} from '../../../models/course-list.model';
 
 @Component({
   selector: 'app-add-course-view-component',
