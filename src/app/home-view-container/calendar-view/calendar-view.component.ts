@@ -1,6 +1,6 @@
-import {Component, HostListener, OnInit} from '@angular/core';
-import {ClassesService} from '../classes-service/classes.service';
-import {ClassInfo, ClassInfoArray} from '../classes-service/class-info.model';
+import {Component, OnInit} from '@angular/core';
+import {ClassesService} from '../../classes-service/classes.service';
+import {ClassInfo, ClassInfoArray} from '../../models/class-info.model';
 
 @Component({
   selector: 'app-calendar-view-component',

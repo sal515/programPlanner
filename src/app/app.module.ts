@@ -1,16 +1,13 @@
-import {AppComponent} from './app.component';
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClientModule} from '@angular/common/http';
-import {AppRoutingModule} from './app-routing.module';
-
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import {RouterModule} from '@angular/router';
+import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http'
+import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule} from "./app-routing.module";
 // import the following in service
 // import {HttpClient} from '@angular/common/http';
-
-// angular forms input and output 2-way binding module
-import {FormsModule} from '@angular/forms';
-// angular forms input and output 2-way binding module
 
 
 // angular imports
@@ -26,7 +23,8 @@ import {
   MatSelectModule,
   MatSidenavModule,
   MatExpansionModule,
-  MatAutocompleteModule, MatDialogModule
+  MatAutocompleteModule,
+  MatChipsModule
 } from '@angular/material';
 // angular imports
 
@@ -38,24 +36,25 @@ import {
 
 
 // imports of my custom components
-import {HeaderViewComponent} from './header-view/header-view.component';
+import {HeaderViewComponent} from './home-view-container/header-view/header-view.component';
 import {HomeViewContainerComponent} from './home-view-container/home-view-container.component';
-import {CalendarViewComponent} from './calendar-view/calendar-view.component';
+import {CalendarViewComponent} from './home-view-container/calendar-view/calendar-view.component';
 import {ClassesService} from './classes-service/classes.service';
-import {AddCourseViewComponent} from './add-course-view/add-course-view.component';
-import {CourseHistoryComponent, CourseHistoryDialogComponent} from './course-history/course-history.component';
+import {AddCourseViewComponent} from './home-view-container/sidebar-view/add-course-view/add-course-view.component';
+import { LoginFormComponent } from './login-view/login-form.component';
+import { SidebarViewComponent } from './home-view-container/sidebar-view/sidebar-view.component';
 
 // imports of my custom components
 
 @NgModule({
   declarations: [
     AppComponent,
+    LoginFormComponent,
     HeaderViewComponent,
     HomeViewContainerComponent,
     AddCourseViewComponent,
     CalendarViewComponent,
-    CourseHistoryComponent,
-    CourseHistoryDialogComponent
+    SidebarViewComponent
   ],
   imports: [
     BrowserModule,
@@ -75,7 +74,10 @@ import {CourseHistoryComponent, CourseHistoryDialogComponent} from './course-his
     MatExpansionModule,
     MatSidenavModule,
     HttpClientModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatChipsModule,
+    ReactiveFormsModule,
+    RouterModule,
   ],
   providers: [
     ClassesService
