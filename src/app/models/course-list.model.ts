@@ -1,4 +1,4 @@
-import {AddCourseModel} from './add-course.model';
+import {AddCourseModel} from './course.model';
 
 export const COURSELIST: AddCourseModel[] = [
   { id: '0',

@@ -4,7 +4,7 @@
 // It must be injected to components that needs to use it
 
 import {Injectable} from '@angular/core';
-import {AddCourseModel} from './add-course.model';
+import {AddCourseModel} from '../../../models/course.model';
 // importing the http client to inject it to the service, Remember: !HttpClientModule! needs to be added in main!
 import {HttpClient} from '@angular/common/http';
 
