@@ -35,5 +35,8 @@
         <button [disabled]="!addForm.form.valid" type="submit">Add</button>
       </div>
     </div>
+    <div *ngIf="showSuccess" class="alert-success">
+      The course has been successfully added 
+    </div>
   </form>
 </mat-card>

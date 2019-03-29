@@ -4,7 +4,7 @@
 // It must be injected to components that needs to use it
 
 import {Injectable} from '@angular/core';
-import {AddCourseModel} from '../../../models/course.model';
+import {AddCourseModel} from '../models/course.model';
 // importing the http client to inject it to the service, Remember: !HttpClientModule! needs to be added in main!
 import {HttpClient} from '@angular/common/http';
 
@@ -52,7 +52,7 @@ export class CourseService {
       // REMEMBER : To take care of the proper headers on the server-side response to take care of CORS.
     );
   }
-  addCourse(course: AddCourseModel): void {
+  addCourse(course: AddCourseModel): string {
     // the following is sending a http post request to the courseAddURL defined above and gets return data -> message of type string
     this.httpClient.post<({message: string})>(this.courseAddURL, course).subscribe(
       (responseData) => {
@@ -62,9 +62,10 @@ export class CourseService {
         this._courseArr.push(course);
         // If data in Service changes,this will pass the updated data by value
         this.courseUpdated.next([...this._courseArr]);
+        return responseData.message;
       }
     );
-
+    return null;
   }
   // This method passes an observable object that can be subscribed in the components
   // This update the data array in this service even though the array is passed by valued

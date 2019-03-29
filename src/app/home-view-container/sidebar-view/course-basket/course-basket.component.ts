@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
-import {AddCourseModel} from '../../../../models/course.model';
+import {AddCourseModel} from '../../../models/course.model';
 import {Subscription} from 'rxjs';
-import {CourseService} from '../add-course.service';
+import {CourseService} from '../../../add-course-service/add-course.service';
 
 @Component({
   selector: 'app-course-basket-component',

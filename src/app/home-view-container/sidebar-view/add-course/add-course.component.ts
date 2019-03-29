@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {AddCourseModel} from '../../../../models/course.model';
-import {COURSELIST} from '../../../../models/course-list.model';
-import {CourseService} from '../add-course.service';
+import {AddCourseModel} from '../../../models/course.model';
+import {COURSELIST} from '../../../models/course-list.model';
+import {CourseService} from '../../../add-course-service/add-course.service';
 
 @Component({
   selector: 'app-add-course-component',
@@ -14,6 +14,8 @@ export class AddCourseComponent implements OnInit {
   semesterList: AddCourseModel[] = [];
   nameList: AddCourseModel[] = [];
   codeList: AddCourseModel[] = [];
+  showSuccess: boolean;
+  showError: boolean;
   input: string;
   // Local subscription object to manipulate subscription and !PREVENT MEMORY LEAKS!
   // This is a local service property that is set equal to the service that is injected below
@@ -114,6 +116,10 @@ export class AddCourseComponent implements OnInit {
     }
   }
   onSubmit(course: AddCourseModel) {
-    this.courseService.addCourse(course);
+    const response: string = this.courseService.addCourse(course);
+    if (response === 'Course received') {
+      this.showSuccess = true;
+      setTimeout(() => { this.showSuccess = false; }, 3000);
+    }
   }
 }
