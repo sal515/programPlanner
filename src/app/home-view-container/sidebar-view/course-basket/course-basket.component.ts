@@ -10,33 +10,27 @@ import {CourseService} from '../../../add-course-service/add-course.service';
 })
 export class CourseBasketComponent implements OnInit, OnDestroy {
   basket: AddCourseModel[] = [];
+  // Local subscription object to manipulate subscription and !PREVENT MEMORY LEAKS!
+  // This is a local service property that is set equal to the service that is injected below
   private courseSubscription: Subscription;
   courseService: CourseService;
   constructor(courseService: CourseService) {
     this.courseService = courseService;
   }
+  /** Subscribes to the course array from addCourse.
+   *
+   * @returns void
+   */
   ngOnInit() {
     this.courseSubscription = this.courseService.getCourseUpdateListener().subscribe((courses: AddCourseModel[]) => {
       this.basket = courses;
     });
   }
+  /** Unsubscribe from the course array to prevent memory leaks when the component is destroyed.
+   *
+   * @returns void
+   */
   ngOnDestroy() {
-    // !PREVENT MEMORY LEAKS! by unsubscribe when the component is destroyed.
     this.courseSubscription.unsubscribe();
   }
-  /** Method that removes a course to the basket.
-   *
-   * @param course - The course to remove.
-   * @returns void
-   */
-  removeFromBasket(course: AddCourseModel): void {
-    const index = this.basket.indexOf(course);
-    if (index >= 0) {
-      this.basket.splice(index, 1);
-    }
-  }
-  /** Empties the basket.
-   *
-   * @returns void
-   */
 }

@@ -24,7 +24,6 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   // This is a local service property that is set equal to the service that is injected below
   private messageSubscription: Subscription;
   courseService: CourseService;
-
   constructor(courseService: CourseService) {
     this.courseService = courseService;
   }
@@ -62,13 +61,13 @@ export class AddCourseComponent implements OnInit, OnDestroy {
    */
   static filter(list: AddCourseModel[], val: string, attribute: string): AddCourseModel[] {
     if (val) {
-      const filterValue = val.toLowerCase();
+      const filterValue = val.toString().toLowerCase();
       return list.filter(course => course[attribute].toLowerCase().startsWith(filterValue));
     }
     return list;
   }
 
-  /** Generates a list of semesters on page load.
+  /** Generates a list of semesters on page load and subscribes to the http response message from addCourse.
    *
    * @returns void
    */
@@ -101,6 +100,7 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   onSemesterSelect(course: AddCourseModel): void {
     this.onSelect(course);
     this.clearInput();
+    this.courseService.clear();
   }
 
   /** Method generates a list of course for the autocomplete dropdown list of the code input.
@@ -114,14 +114,14 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     this.codeList = AddCourseComponent.filter(list, input, 'code');
   }
 
-  /** Clear the input of the course code.
+  /** Clears the input of the course code.
    * @returns void
    */
   clearInput(): void {
     this.input = null;
   }
 
-  /** Return the code of the passed course. Useful for the autocomplete field.
+  /** Returns the code of the passed course. Useful for the autocomplete field.
    *
    * @param course - The course from which the code will be returned.
    * @returns string - The course's code.
@@ -131,7 +131,12 @@ export class AddCourseComponent implements OnInit, OnDestroy {
       return course.code;
     }
   }
-
+  /** Add an input course to the basket using the service method addCourse. Displays an appropriate message based on the input or the
+   * result of addCourse.
+   *
+   * @param course - The course to add to the basket.
+   * @returns void
+   */
   onSubmit(course: AddCourseModel) {
     if (!this.courseService.checkIfIncluded(course)) {
       this.courseService.addCourse(course);
@@ -149,8 +154,11 @@ export class AddCourseComponent implements OnInit, OnDestroy {
       }, 3000);
     }
   }
+  /** Unsubscribe from the message to prevent memory leaks when the component is destroyed.
+   *
+   * @returns void
+   */
   ngOnDestroy() {
-    // !PREVENT MEMORY LEAKS! by unsubscribe when the component is destroyed.
     this.messageSubscription.unsubscribe();
   }
 }

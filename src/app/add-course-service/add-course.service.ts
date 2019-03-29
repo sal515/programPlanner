@@ -18,9 +18,7 @@ import {response} from 'express';
 // The @Injectable({providedIn: 'root'}) === Importing the service in the module.ts file in the provided array
 @Injectable({providedIn: 'root'})
 export class CourseService {
-
   private courseAddURL = 'http://localhost:3000/frontend/addCourse';
-
   private _courseArr: AddCourseModel[] = [];
   // This is a reference to a Subject (JS_Object) of type AddCourseModel[] which will allow event driven updates
   private courseUpdated = new Subject<AddCourseModel[]>();
@@ -79,7 +77,32 @@ export class CourseService {
   getMessageUpdateListener(): Observable<string> {
     return this.messageUpdated.asObservable();
   }
+  /** Checks if a course is included in the array.
+   *
+   * @param course - The course to check.
+   * @returns boolean - true if included, false if not.
+   */
   checkIfIncluded(course: AddCourseModel): boolean {
     return this._courseArr.includes(course);
+  }
+  /** Removes a course from the course array.
+   *
+   * @param course - The course to be removed.
+   * @returns void
+   */
+  remove(course: AddCourseModel): void {
+    const index = this._courseArr.indexOf(course);
+    if (index >= 0) {
+      this._courseArr.splice(index, 1);
+    }
+    this.courseUpdated.next([...this._courseArr]);
+  }
+  /** Clears the course array, notably when the user change the semester.
+   *
+   * @returns void
+   */
+  clear() : void {
+    this._courseArr = [];
+    this.courseUpdated.next([...this._courseArr]);
   }
 }
