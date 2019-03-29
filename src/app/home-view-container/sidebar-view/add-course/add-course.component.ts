@@ -19,6 +19,7 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   showError: boolean;
   input: string;
   response: string;
+  errMessage: string;
   // Local subscription object to manipulate subscription and !PREVENT MEMORY LEAKS!
   // This is a local service property that is set equal to the service that is injected below
   private messageSubscription: Subscription;
@@ -132,11 +133,19 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(course: AddCourseModel) {
-    this.courseService.addCourse(course);
-    if (this.response === 'Course received') {
-      this.showSuccess = true;
+    if (!this.courseService.checkIfIncluded(course)) {
+      this.courseService.addCourse(course);
+      if (this.response === 'Course received') {
+        this.showSuccess = true;
+        setTimeout(() => {
+          this.showSuccess = false;
+        }, 3000);
+      }
+    } else {
+      this.errMessage = 'Error: Already in basket';
+      this.showError = true;
       setTimeout(() => {
-        this.showSuccess = false;
+        this.showError = false;
       }, 3000);
     }
   }

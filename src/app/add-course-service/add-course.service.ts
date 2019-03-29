@@ -79,4 +79,7 @@ export class CourseService {
   getMessageUpdateListener(): Observable<string> {
     return this.messageUpdated.asObservable();
   }
+  checkIfIncluded(course: AddCourseModel): boolean {
+    return this._courseArr.includes(course);
+  }
 }
