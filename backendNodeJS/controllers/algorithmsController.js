@@ -100,6 +100,15 @@ async function asyncAddCourseController(userInput, req, res, next) {
   let notTakenCoursesMap = new Map();
   // contains all the pre-req courses that needs to be done for the user requested course
   let preReqCoursesArr = [];
+  let preReqORCoursesArr = [];
+
+  // let arr = [1, 2, 3];
+  // console.log(arr);
+  // arr = [];
+  // console.log(arr);
+  // console.log(arr.length);
+  //
+
 
   let debug = 4;
 
@@ -107,8 +116,8 @@ async function asyncAddCourseController(userInput, req, res, next) {
 
     // ========== Retrieve user courseHistory from user profile ==========
     // Check => If the array is populated in the function call --> Passed
+    // if (debug === 1) {
     if (debug >= 1) {
-      // console.log(userCourseHistoryArr);
       await populateUserCourseHistory(userInput, req, res, next, userCourseHistoryArr, userCourseHistoryMap);
       // This case should not apply since user has to login and verify thyself before adding courses
       if (!(userCourseHistoryMap.size || userCourseHistoryArr.length)) {
@@ -119,21 +128,19 @@ async function asyncAddCourseController(userInput, req, res, next) {
     }
 
     // ==========  checking if the course is provided during the semester  ==========
-    // console.log(statusObj);
-    if (debug >= 2) {
+    if (debug === 2) {
+      // if (debug >= 2) {
       await checkIfCourseIsProvidedDuringSemester(userInput, req, res, next, statusObj);
       if (!(statusObj.getIsCourseGivenDuringSemesterBool())) {
-        // console.log("The requested course wasn't found");
         throw "break : Course is not given during selected Semester";
       }
       // console.log(statusObj);
     }
 
     // =============== Retrieve all the Not taken list for the provided list ============
-    if (debug >= 3) {
-      // let courseSubCat2Check = userInput.courseSubject + userInput.courseCatalog;
+    if (debug === 3) {
+      // if (debug >= 3) {
       // Check => If the Map is populated in the function call --> Passed
-      // console.log(notTakenCoursesMap);
       await populateNotTakenCourseMap(userInput, req, res, next, notTakenCoursesMap);
       // console.log(notTakenCoursesMap);
 
@@ -141,7 +148,6 @@ async function asyncAddCourseController(userInput, req, res, next) {
       statusObj.setNotTakenBool(true);
       userCourseHistoryArr.forEach((userTakenCourse) => {
         if (notTakenCoursesMap.has(userTakenCourse)) {
-          // FIXME : DON"T Know what logic we should be using
           // If user have a courses in their course history that matches any course in the Not taken List
           // Setting the notTaken flag to false --> Means taken???
           // TODO: Does that affect anything????
@@ -151,23 +157,18 @@ async function asyncAddCourseController(userInput, req, res, next) {
         // FIXME : DON"T Know what logic we should be using
         // console.log("User did NOT take a similar course");
       });
-      // console.log(notTakenCoursesMap);
-      // console.log(notTakenKeys);
-      // console.log(notTakenPromise.length);
-      // console.log(statusObj);
-
     }
 
     // =============== Retrieve all the pre req-courses for the selected course ============
-    if (debug >= 4) {
+    if (debug === 4) {
+      // if (debug >= 4) {
       await getPreReqArr(userInput, req, res, next, preReqCoursesArr);
       console.log(preReqCoursesArr);
-      // console.log(userCourseHistoryMap);
-
+      console.log(userCourseHistoryMap);
 
       // ============== Checking if the user has all the pre-req for the course ===================
       statusObj.setHasPreReqBool(true);
-      if (!(preReqCoursesArr == null)) {
+      if (preReqCoursesArr.length) {
         preReqCoursesArr.forEach((preReqCourseKey) => {
           if (!(userCourseHistoryMap.has(preReqCourseKey))) {
             statusObj.setHasPreReqBool(false);
@@ -179,6 +180,33 @@ async function asyncAddCourseController(userInput, req, res, next) {
       // console.log("User Has pre-req");
       // console.log(statusObj);
     }
+
+    // =============== Retrieve all the pre req OR  courses for the selected course ============
+    if (debug === 5) {
+      // if (debug >= 5) {
+      await getPreReqOrArr(userInput, req, res, next, preReqORCoursesArr);
+      console.log(preReqORCoursesArr);
+      console.log(userCourseHistoryMap);
+
+      // ============== Checking if the user has all the pre-req OR for the course ===================
+      statusObj.setHasPreReqBool(false);
+      if (!(preReqORCoursesArr.length)) {
+        statusObj.setHasPreReqBool(true);
+      }
+      else if (preReqORCoursesArr.length) {
+        preReqORCoursesArr.forEach((preReqORCourseKey) => {
+          if ((userCourseHistoryMap.has(preReqORCourseKey))) {
+            statusObj.setHasPreReqBool(true);
+          }
+        });
+      }
+      if (!(statusObj.getHasPreReqBool())) {
+        console.log(statusObj);
+        throw "break : User doesn't have the pre-req OR to take the course";
+      }
+      console.log(statusObj);
+    }
+
 
   } catch
     (condition) {
@@ -206,26 +234,40 @@ async function asyncAddCourseController(userInput, req, res, next) {
 // ====================== Logic Functions =============================================
 
 
+async function getPreReqOrArr(userInput, req, res, next, preReqORCoursesArr) {
+  const preReqORPromise = await preReqORFunc(userInput, req, res, next).catch((err) => {
+    console.log("Error occurred in the database function" + err);
+  });
+  // FIXME: Kind of cheque is required???
+  if (preReqORPromise == null) {
+    console.log("No preReqOR list found");
+    preReqORCoursesArr = [];
+    return;
+  }
+  let preReqORObjKeysArr = Object.keys(preReqORPromise.object);
+  preReqORObjKeysArr.splice(0, 3);
+  preReqORObjKeysArr.forEach((key) => {
+    if (!(preReqORPromise.object[key] === "")) {
+      preReqORCoursesArr.push(preReqORPromise.object[key]);
+    }
+  });
+  // });
+}
+
 async function getPreReqArr(userInput, req, res, next, preReqCoursesArr) {
   const preReqPromise = await preReqFunc(userInput, req, res, next).catch((err) => {
     console.log("Error occurred in the database function" + err);
   });
-  // console.log(preReqPromise);
-  // preReqPromise.forEach((notTakenObj) => {
   // FIXME: Kind of cheque is required???
   if (preReqPromise == null) {
     console.log("No preReq list found");
-    preReqCoursesArr = null;
+    preReqCoursesArr = [];
     return;
   }
   let preReqObjKeysArr = Object.keys(preReqPromise.object);
   preReqObjKeysArr.splice(0, 3);
-  // console.log(notTakenObj);
-  // console.log(preReqObjKeysArr);
   preReqObjKeysArr.forEach((key) => {
     if (!(preReqPromise.object[key] === "")) {
-      // console.log(notTakenObj.object[key]);
-      // preReqCoursesArr.set(preReqPromise.object[key], "");
       preReqCoursesArr.push(preReqPromise.object[key]);
     }
   });
@@ -246,16 +288,11 @@ async function populateNotTakenCourseMap(userInput, req, res, next, notTakenCour
     notTakenCoursesMap.clear();
     return;
   }
-  // let tempNotTakenObj;
-  // let notTakenKeys = Object.keys(notTakenPromise[0].object);
   notTakenPromise.forEach((notTakenObj) => {
     let notTakenObjKeysArr = Object.keys(notTakenObj.object);
     notTakenObjKeysArr.splice(0, 3);
-    // console.log(notTakenObj);
-    // console.log(notTakenObjKeysArr);
     notTakenObjKeysArr.forEach((key) => {
       if (!(notTakenObj.object[key] === "")) {
-        // console.log(notTakenObj.object[key]);
         notTakenCoursesMap.set(notTakenObj.object[key], "");
       }
     });
@@ -267,34 +304,23 @@ async function populateUserCourseHistory(userInput, req, res, next, userCourseHi
   const userProfilesPromise = await findUserProfileFunc(userInput, req, res, next).catch((error) => {
     console.log("Error occurred in the database function: " + error)
   });
-  // console.log(typeof userProfilesPromise);
 
   if (userProfilesPromise == null) {
-    userCourseHistoryMap = null;
+    userCourseHistoryMap.clear();
     userCourseHistoryArr = null;
-    // console.log("Profile Not Found");
     return;
-    // throw "break: Profile Not Found";
   }
   let semesterKeysArr = Object.keys(userProfilesPromise.courseHistory);
   let tmpCoursesArr = [];
   // console.log(userProfilesPromise.courseHistory["Fall 2016"][0]);
   semesterKeysArr.forEach((semesterKey) => {
-      // console.log(semesterKey);
-      // console.log(userProfilesPromise.courseHistory[semesterKey][0]);
       tmpCoursesArr = userProfilesPromise.courseHistory[semesterKey];
       tmpCoursesArr.forEach((course) => {
-        // console.log(course);
-        // if ((courseSubCat2Check === course)) {
-        // statusObj.setAlreadyInCartBool(true);
-        // throw "break2: The student is already registered for the course";
-        // }
         userCourseHistoryArr.push(course);
         userCourseHistoryMap.set(course, "");
       });
     }
   );
-  // statusObj.setAlreadyInCartBool(false);
 }
 
 
@@ -305,20 +331,11 @@ async function checkIfCourseIsProvidedDuringSemester(userInput, req, res, next, 
   if (foundRandomSectionOfRequestedCoursePromise == null) {
     // console.log("The requested course wasn't found");
     statusObj.setIsCourseGivenDuringSemesterBool(false);
-    // throw "break : Course is not given during selected Semester";
     return;
   }
   statusObj.setIsCourseGivenDuringSemesterBool(true);
   // Test print to see if the course was found or not. -> PASSED
   // console.log(statusObj.getIsCourseGivenDuringSemesterBool());
-
-  // testing if the passed status object is being modified from inside the function
-  // Test Passed
-  // statusObj.setIsCourseGivenDuringSemesterBool(true);
-  // statusObj.setAlreadyInCartBool(true);
-  // statusObj.setNotTakenBool(true);
-  // statusObj.setHasPreReqBool(true);
-  // statusObj.setHasCoReqBool(true);
 
 }
 
@@ -330,9 +347,31 @@ async function connect2DB() {
 
 // ====================== Database Query Functions =============================================
 
+function preReqORFunc(userInput, req, res, next) {
+  return new Promise((resolve, reject) => {
+    // ======== Check if the course Exists =======================
+    const query = preReqORModel.findOne();
+    // const query = preReqOnlyModel.find();
+    query.setOptions({lean: true});
+    query.collection(preReqORModel.collection);
+    // example to do the query in one line
+    // query.where('object.courseSubject').equals(userInput.courseSubject).exec(function (err, scheduleModel) {
+    // building a query with multiple where statements
+    // query.where('userID').equals(userInput.userID);
+    // query.where('object').equals(userInput.courseSubject);
+    query.where('object.courseSubject').equals(userInput.courseSubject);
+    query.where('object.courseCatalog').equals(userInput.courseCatalog);
+    // query.where('object.termTitle').equals(userInput.termTitle);
+    // query.where('object.termDescription').equals(userInput.termDescription);
+    query.exec((err, result) => {
+      resolve(result);
+      reject(err);
+    })
+  });
+}
+
 function preReqFunc(userInput, req, res, next) {
   return new Promise((resolve, reject) => {
-    // ============= How to do query ===================================
     // ======== Check if the course Exists =======================
     const query = preReqOnlyModel.findOne();
     // const query = preReqOnlyModel.find();
@@ -348,7 +387,6 @@ function preReqFunc(userInput, req, res, next) {
     // query.where('object.termTitle').equals(userInput.termTitle);
     // query.where('object.termDescription').equals(userInput.termDescription);
     query.exec((err, result) => {
-      // console.log("From the sub function: " + query);
       resolve(result);
       reject(err);
     })
@@ -358,7 +396,6 @@ function preReqFunc(userInput, req, res, next) {
 
 function notTakenFunc(userInput, req, res, next) {
   return new Promise((resolve, reject) => {
-    // ============= How to do query ===================================
     // ======== Check if the course Exists =======================
     // const query = scheduleModel.find();
     const query = notTakenModel.find();
@@ -374,7 +411,6 @@ function notTakenFunc(userInput, req, res, next) {
     // query.where('object.termTitle').equals(userInput.termTitle);
     // query.where('object.termDescription').equals(userInput.termDescription);
     query.exec((err, result) => {
-      // console.log("From the sub function: " + query);
       resolve(result);
       reject(err);
     })
@@ -384,7 +420,6 @@ function notTakenFunc(userInput, req, res, next) {
 
 function findUserProfileFunc(userInput, req, res, next) {
   return new Promise((resolve, reject) => {
-    // ============= How to do query ===================================
     // ======== Check if the course Exists =======================
     // const query = scheduleModel.find();
     const query = userProfileModel.findOne();
@@ -398,7 +433,6 @@ function findUserProfileFunc(userInput, req, res, next) {
     // query.where('object.termTitle').equals(userInput.termTitle);
     // query.where('object.termDescription').equals(userInput.termDescription);
     query.exec((err, result) => {
-      // console.log("From the sub function: " + query);
       resolve(result);
       reject(err);
     })
@@ -407,7 +441,6 @@ function findUserProfileFunc(userInput, req, res, next) {
 
 function isCourseGivenDuringSemesterFunc(userInput, req, res, next) {
   return new Promise((resolve, reject) => {
-    // ============= How to do query ===================================
     // ======== Check if the course Exists =======================
     // const query = scheduleModel.find();
     const query = scheduleModel.findOne();
@@ -422,7 +455,6 @@ function isCourseGivenDuringSemesterFunc(userInput, req, res, next) {
     // query.where('object.termTitle').equals(userInput.termTitle);
     query.where('object.termDescription').equals(userInput.termDescription);
     query.exec((err, result) => {
-      // console.log("From the sub function: " + query);
       resolve(result);
       reject(err);
     })
