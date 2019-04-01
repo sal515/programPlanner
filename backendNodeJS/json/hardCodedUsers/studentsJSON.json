@@ -5,23 +5,29 @@
         "userID": "1aaaaaaa",
         "userPassword": "pass-aaaa",
         "coop": true,
-        "courseHistory": [
-          "COMP232",
-          "COMP248",
-          "ENGR201",
-          "ENGR213",
-          "ECON201",
-          "COMP249",
-          "ENGR233",
-          "SOEN228",
-          "SOEN287",
-          "ENGR251",
-          "COMP348",
-          "COMP352",
-          "ENCS282",
-          "ENGR202",
-          "BIOL206"
-        ],
+        "courseHistory": {
+          "Fall 2016": [
+            "COMP232",
+            "COMP248",
+            "ENGR201",
+            "ENGR213",
+            "ECON201"
+          ],
+          "Winter 2017": [
+            "COMP249",
+            "ENGR233",
+            "SOEN228",
+            "SOEN287",
+            "ENGR251"
+          ],
+          "Summer 2017": [
+            "COMP348",
+            "COMP352",
+            "ENCS282",
+            "ENGR202",
+            "BIOL206"
+          ]
+        },
         "completedCredits": 44,
         "fallSequence": [
           {},
@@ -53,18 +59,22 @@
         "userID": "1bbbbbbb",
         "userPassword": "pass-bbbb",
         "coop": false,
-        "courseHistory": [
-          "COMP232",
-          "COMP248",
-          "ENGR201",
-          "ENGR213",
-          "ECON201",
-          "COMP249",
-          "ENGR233",
-          "SOEN228",
-          "SOEN287",
-          "ENGR251"
-        ],
+        "courseHistory": {
+          "Fall 2016": [
+            "COMP232",
+            "COMP248",
+            "ENGR201",
+            "ENGR213",
+            "ECON201"
+          ],
+          "Winter 2017": [
+            "COMP249",
+            "ENGR233",
+            "SOEN228",
+            "SOEN287",
+            "ENGR251"
+          ]
+        },
         "completedCredits": 30.5,
         "fallSequence": [
           {},
@@ -98,28 +108,36 @@
         "userID": "2aaaaaaa",
         "userPassword": "pass-aaaa",
         "coop": true,
-        "courseHistory": [
-          "COMP232",
-          "COMP248",
-          "ENGR201",
-          "ENGR213",
-          "ECON201",
-          "COMP249",
-          "ENGR233",
-          "SOEN228",
-          "SOEN287",
-          "ENGR251",
-          "COMP348",
-          "COMP352",
-          "ENCS282",
-          "ENGR202",
-          "BIOL206",
-          "COMP346",
-          "ELEC275",
-          "ENGR371",
-          "SOEN331",
-          "SOEN341"
-        ],
+        "courseHistory": {
+          "Fall 2015": [
+            "COMP232",
+            "COMP248",
+            "ENGR201",
+            "ENGR213",
+            "ECON201"
+          ],
+          "Winter 2016": [
+            "COMP249",
+            "ENGR233",
+            "SOEN228",
+            "SOEN287",
+            "ENGR251"
+          ],
+          "Summer 2016": [
+            "COMP348",
+            "COMP352",
+            "ENCS282",
+            "ENGR202",
+            "BIOL206"
+          ],
+          "Winter 2017": [
+            "COMP346",
+            "ELEC275",
+            "ENGR371",
+            "SOEN331",
+            "SOEN341"
+          ]
+        },
         "completedCredits": 60.5,
         "fallSequence": [
           {},
@@ -151,28 +169,36 @@
         "userID": "2bbbbbbb",
         "userPassword": "pass-bbbb",
         "coop": false,
-        "courseHistory": [
-          "COMP232",
-          "COMP248",
-          "ENGR201",
-          "ENGR213",
-          "ECON201",
-          "COMP249",
-          "ENGR233",
-          "SOEN228",
-          "SOEN287",
-          "ENGR251",
-          "COMP348",
-          "COMP352",
-          "ENCS282",
-          "ENGR202",
-          "BIOL206",
-          "COMP346",
-          "ELEC275",
-          "ENGR371",
-          "SOEN331",
-          "SOEN341"
-        ],
+        "courseHistory": {
+          "Fall 2015": [
+            "COMP232",
+            "COMP248",
+            "ENGR201",
+            "ENGR213",
+            "ECON201"
+          ],
+          "Winter 2016": [
+            "COMP249",
+            "ENGR233",
+            "SOEN228",
+            "SOEN287",
+            "ENGR251"
+          ],
+          "Fall 2016": [
+            "COMP348",
+            "COMP352",
+            "ENCS282",
+            "ENGR202",
+            "BIOL206"
+          ],
+          "Winter 2017": [
+            "COMP346",
+            "ELEC275",
+            "ENGR371",
+            "SOEN331",
+            "SOEN341"
+          ]
+        },
         "completedCredits": 60.5,
         "fallSequence": [
           {},
@@ -206,38 +232,50 @@
         "userID": "3aaaaaaa",
         "userPassword": "pass-aaaa",
         "coop": true,
-        "courseHistory": [
-          "COMP232",
-          "COMP248",
-          "ENGR201",
-          "ENGR213",
-          "ECON201",
-          "COMP249",
-          "ENGR233",
-          "SOEN228",
-          "SOEN287",
-          "ENGR251",
-          "COMP348",
-          "COMP352",
-          "ENCS282",
-          "ENGR202",
-          "BIOL206",
-          "COMP346",
-          "ELEC275",
-          "ENGR371",
-          "SOEN331",
-          "SOEN341",
-          "COMP335",
-          "ENGR391",
-          "SOEN342",
-          "SOEN343",
-          "SOEN384",
-          "SOEN344",
-          "SOEN345",
-          "SOEN357",
-          "SOEN390",
-          "COMP345"
-        ],
+        "courseHistory": {
+          "Fall 2014": [
+            "COMP232",
+            "COMP248",
+            "ENGR201",
+            "ENGR213",
+            "ECON201"
+          ],
+          "Winter 2015": [
+            "COMP249",
+            "ENGR233",
+            "SOEN228",
+            "SOEN287",
+            "ENGR251"
+          ],
+          "Summer 2015": [
+            "COMP348",
+            "COMP352",
+            "ENCS282",
+            "ENGR202",
+            "BIOL206"
+          ],
+          "Winter 2016": [
+            "COMP346",
+            "ELEC275",
+            "ENGR371",
+            "SOEN331",
+            "SOEN341"
+          ],
+          "Fall 2016": [
+            "COMP335",
+            "ENGR391",
+            "SOEN342",
+            "SOEN343",
+            "SOEN384"
+          ],
+          "Winter 2017": [
+            "SOEN344",
+            "SOEN345",
+            "SOEN357",
+            "SOEN390",
+            "COMP345"
+          ]
+        },
         "completedCredits": 88,
         "fallSequence": [
           {},
@@ -269,38 +307,50 @@
         "userID": "3bbbbbbb",
         "userPassword": "pass-bbbb",
         "coop": false,
-        "courseHistory": [
-          "COMP232",
-          "COMP248",
-          "ENGR201",
-          "ENGR213",
-          "ECON201",
-          "COMP249",
-          "ENGR233",
-          "SOEN228",
-          "SOEN287",
-          "ENGR251",
-          "COMP348",
-          "COMP352",
-          "ENCS282",
-          "ENGR202",
-          "BIOL206",
-          "COMP346",
-          "ELEC275",
-          "ENGR371",
-          "SOEN331",
-          "SOEN341",
-          "COMP335",
-          "ENGR391",
-          "SOEN342",
-          "SOEN343",
-          "SOEN384",
-          "SOEN344",
-          "SOEN345",
-          "SOEN357",
-          "SOEN390",
-          "COMP353"
-        ],
+        "courseHistory": {
+          "Fall 2014": [
+            "COMP232",
+            "COMP248",
+            "ENGR201",
+            "ENGR213",
+            "ECON201"
+          ],
+          "Winter 2015": [
+            "COMP249",
+            "ENGR233",
+            "SOEN228",
+            "SOEN287",
+            "ENGR251"
+          ],
+          "Summer 2015": [
+            "COMP348",
+            "COMP352",
+            "ENCS282",
+            "ENGR202",
+            "BIOL206"
+          ],
+          "Winter 2016": [
+            "COMP346",
+            "ELEC275",
+            "ENGR371",
+            "SOEN331",
+            "SOEN341"
+          ],
+          "Fall 2016": [
+            "COMP335",
+            "ENGR391",
+            "SOEN342",
+            "SOEN343",
+            "SOEN384"
+          ],
+          "Winter 2017": [
+            "SOEN344",
+            "SOEN345",
+            "SOEN357",
+            "SOEN390",
+            "COMP345"
+          ]
+        },
         "completedCredits": 88,
         "fallSequence": [
           {},
