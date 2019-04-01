@@ -77,61 +77,98 @@ async function asyncAddCourseSubController(userInput, req, res, next) {
   // alreadyInCartBool = false;
   var statusObj = new addCourseStatus(false, false, false, false, false);
 
+  // function variables declared
+  let courseSubCat2Check = userInput.courseSubject + userInput.courseCatalog;
+  let allCoursesTakenByUserArr = [];
+  let allNotTakenCoursesToCheckMap = new Map();
+
   // ==========  checking if the course is provided during the semester  ==========
   try {
 
+
+    // ==========  checking if the student has the course in cart already  ==========
+    const userProfilesPromise = await findUserProfileFunc(userInput, req, res, next).catch((error) => {
+      console.log("Error occurred in the database function: " + error)
+    });
+    // console.log(typeof userProfilesPromise);
+    let semesterKeysArr = Object.keys(userProfilesPromise.courseHistory);
+    let tmpCoursesArr = [];
+    // console.log(userProfilesPromise.courseHistory["Fall 2016"][0]);
+    semesterKeysArr.forEach((semesterKey) => {
+        // console.log(semesterKey);
+        // console.log(userProfilesPromise.courseHistory[semesterKey][0]);
+        tmpCoursesArr = userProfilesPromise.courseHistory[semesterKey];
+        tmpCoursesArr.forEach((course) => {
+          // console.log(course);
+          // if ((courseSubCat2Check === course)) {
+          // statusObj.setAlreadyInCartBool(true);
+          // throw "break2: The student is already registered for the course";
+          // }
+          allCoursesTakenByUserArr.push(course);
+        });
+      }
+    );
+    // statusObj.setAlreadyInCartBool(false);
+    console.log(allCoursesTakenByUserArr);
+
+
+    debug = false;
+    if (debug) {
+
+      const foundRandomSectionOfRequestedCoursePromise = await isCourseGivenDuringSemesterFunc(userInput, req, res, next).catch((error) => {
+        console.log("Error occurred in the database function: " + error)
+      });
+      if (foundRandomSectionOfRequestedCoursePromise == null) {
+        console.log("The requested course wasn't found");
+        throw "break1 : Course is not given during selected Semester";
+      }
+      statusObj.setIsCourseGivenDuringSemesterBool(true);
+      // Test print to see if the course was found or not. -> PASSED
+      // console.log(statusObj.getIsCourseGivenDuringSemesterBool());
+
+    }
+
+
     // ==========  checking if the student already took a similar course from the Not taken list before ==========
+    let courseSub2Check = userInput.courseSubject;
+    let courseCat2Check = userInput.courseCatalog;
+    // let courseSubCat2Check = userInput.courseSubject + userInput.courseCatalog;
+
     const notTakenPromise = await notTakenFunc(userInput, req, res, next).catch((err) => {
       console.log("Error occurred in the database function" + err);
     });
-    console.log(notTakenPromise);
 
-
-
-
-
-    const foundRandomSectionOfRequestedCoursePromise = await isCourseGivenDuringSemesterFunc(userInput, req, res, next).catch((error) => {
-      console.log("Error occurred in the database function: " + error)
+    // let tempNotTakenObj;
+    // let notTakenKeys = Object.keys(notTakenPromise[0].object);
+    notTakenPromise.forEach((notTakenObj) => {
+      notTakenObjKeysArr = Object.keys(notTakenObj.object);
+      notTakenObjKeysArr.splice(0, 3);
+      // console.log(notTakenObj);
+      // console.log(notTakenObjKeysArr);
+      notTakenObjKeysArr.forEach((key) => {
+        if (!(notTakenObj.object[key] === "")) {
+          // console.log(notTakenObj.object[key]);
+          allNotTakenCoursesToCheckMap.set(notTakenObj.object[key], "");
+        }
+      });
     });
-    if (foundRandomSectionOfRequestedCoursePromise == null) {
-      console.log("The requested course wasn't found");
-      throw "break1 : Course is not given during selected Semester";
-    }
-    statusObj.setIsCourseGivenDuringSemesterBool(true);
-    // Test print to see if the course was found or not. -> PASSED
-    // console.log(statusObj.getIsCourseGivenDuringSemesterBool());
+    // console.log(allNotTakenCoursesToCheckMap);
+    // ============== Checking if the user has taken any course from the Not taken list ===================
+    allCoursesTakenByUserArr.forEach((userTakenCourse) => {
+      if (allNotTakenCoursesToCheckMap.has(userTakenCourse)) {
+        console.log("User took a similar course");
+      }
+      // console.log("User did NOT take a similar course");
+    })
+
+    // console.log(allNotTakenCoursesToCheckMap);
+    // console.log(notTakenKeys);
+    // console.log(notTakenPromise.length);
 
 
 
 
 
-
-    // ==========  checking if the student has the course in cart already  ==========
-    // let courseSubCat2Check = userInput.courseSubject + userInput.courseCatalog;
-    // const alreadyInCartPromise = await alreadyInCart(userInput, req, res, next).catch((error) => {
-    //   console.log("Error occurred in the database function: " + error)
-    // });
-    // // console.log(typeof alreadyInCartPromise);
-    // let semesterKeys = Object.keys(alreadyInCartPromise.courseHistory);
-    // let allCoursesTakenByUser = [];
-    // let tmpCoursesArr = [];
-    // // console.log(alreadyInCartPromise.courseHistory["Fall 2016"][0]);
-    // semesterKeys.forEach((semesterKey) => {
-    //     // console.log(semesterKey);
-    //     // console.log(alreadyInCartPromise.courseHistory[semesterKey][0]);
-    //     tmpCoursesArr = alreadyInCartPromise.courseHistory[semesterKey];
-    //     tmpCoursesArr.forEach((course) => {
-    //       console.log(course);
-    //       if ((courseSubCat2Check === course)) {
-    //         // throw break2: The student is already registered for the course;
-    //         statusObj.setAlreadyInCartBool(true);
-    //       }
-    //       // allCoursesTakenByUser.push(course);
-    //     });
-    //   }
-    // );
-    // statusObj.setAlreadyInCartBool(false);
-    // // console.log(allCoursesTakenByUser);
 
 
   } catch (condition) {
@@ -155,6 +192,16 @@ async function asyncAddCourseSubController(userInput, req, res, next) {
   // });
 
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -184,7 +231,7 @@ function notTakenFunc(userInput, req, res, next) {
 }
 
 
-function alreadyInCart(userInput, req, res, next) {
+function findUserProfileFunc(userInput, req, res, next) {
   return new Promise((resolve, reject) => {
     // ============= How to do query ===================================
     // ======== Check if the course Exists =======================
@@ -230,6 +277,18 @@ function isCourseGivenDuringSemesterFunc(userInput, req, res, next) {
     })
   });
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // ============================ Classes ======================================
