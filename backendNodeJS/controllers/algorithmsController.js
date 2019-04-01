@@ -26,12 +26,7 @@ const notTakenModel = require(DbSchemeDirectory + 'notTakenSchemas2Model');
 const userProfileModel = require(modelDirectory + 'userSchema2Model');
 
 
-async function connect2DB() {
-// connect to database
-  await dbHelpers.defaultConnectionToDB();
-}
-
-
+// This function gets called by the REST END point
 exports.addCourseToSequence = (req, res, next) => {
   // postman choose: x-www-form-urlencoded  to test data flow from front to backend
   /*
@@ -48,8 +43,7 @@ exports.addCourseToSequence = (req, res, next) => {
 
   console.log("Print First");
 
-
-  asyncFuncController(userInput, req, res, next);
+  asyncSubController(userInput, req, res, next);
 
 };
 
@@ -59,7 +53,7 @@ exports.addCourseToSequence = (req, res, next) => {
 * This is used to controller the async nature of the JS, ->> to be able to write sequential
 * Allows us to avoid "callback hell"  <<-- NOT SOMETHING I CAME UP WITH
 * */
-async function asyncFuncController(userInput, req, res, next) {
+async function asyncSubController(userInput, req, res, next) {
   await asyncAddCourseController(userInput, req, res, next);
 
   console.log("Print Last");
@@ -99,79 +93,97 @@ async function asyncAddCourseController(userInput, req, res, next) {
 
   // function variables declared
   let courseSubCat2Check = userInput.courseSubject + userInput.courseCatalog;
-  let allCoursesTakenByUserArr = [];
-  let allCoursesTakenByUserMap = new Map();
-  let notTakenCoursesToCheckMap = new Map();
-  // let preReqCoursesToCheckMap = new Map();
-  let preReqCoursesToCheckArr = [];
+  // contains all the courses taken by the user already
+  let userCourseHistoryArr = [];
+  let userCourseHistoryMap = new Map();
+  // contains all the courses in the not taken list against the user requested Course
+  let notTakenCoursesMap = new Map();
+  // contains all the pre-req courses that needs to be done for the user requested course
+  let preReqCoursesArr = [];
+
+  let debug = 4;
 
   try {
 
     // ========== Retrieve user courseHistory from user profile ==========
     // Check => If the array is populated in the function call --> Passed
-    // console.log(allCoursesTakenByUserArr);
-    await getAllCoursesTakenByUser(userInput, req, res, next, allCoursesTakenByUserArr, allCoursesTakenByUserMap);
-    // console.log(allCoursesTakenByUserArr);
+    if (debug >= 1) {
+      // console.log(userCourseHistoryArr);
+      await populateUserCourseHistory(userInput, req, res, next, userCourseHistoryArr, userCourseHistoryMap);
+      // This case should not apply since user has to login and verify thyself before adding courses
+      if (!(userCourseHistoryMap.size || userCourseHistoryArr.length)) {
+        throw "break: Profile Not Found";
+      }
+      // console.log(userCourseHistoryArr.length);
+      // console.log(userCourseHistoryMap.size);
+    }
 
     // ==========  checking if the course is provided during the semester  ==========
-    let debug = false;
     // console.log(statusObj);
-    if (debug) {
+    if (debug >= 2) {
       await checkIfCourseIsProvidedDuringSemester(userInput, req, res, next, statusObj);
+      if (!(statusObj.getIsCourseGivenDuringSemesterBool())) {
+        // console.log("The requested course wasn't found");
+        throw "break : Course is not given during selected Semester";
+      }
+      // console.log(statusObj);
     }
-    // console.log(statusObj);
 
     // =============== Retrieve all the Not taken list for the provided list ============
-    // let courseSubCat2Check = userInput.courseSubject + userInput.courseCatalog;
-    // Check => If the Map is populated in the function call --> Passed
-    // console.log(notTakenCoursesToCheckMap);
-    await getNotTakeCourseMap(userInput, req, res, next, notTakenCoursesToCheckMap);
-    // console.log(notTakenCoursesToCheckMap);
+    if (debug >= 3) {
+      // let courseSubCat2Check = userInput.courseSubject + userInput.courseCatalog;
+      // Check => If the Map is populated in the function call --> Passed
+      // console.log(notTakenCoursesMap);
+      await populateNotTakenCourseMap(userInput, req, res, next, notTakenCoursesMap);
+      // console.log(notTakenCoursesMap);
 
-    // ============== Checking if the user has taken any course from the Not taken list ===================
-    allCoursesTakenByUserArr.forEach((userTakenCourse) => {
-      if (notTakenCoursesToCheckMap.has(userTakenCourse)) {
-        // FIXME : DON"T Know what logic we should be using
-        statusObj.setNotTakenBool(false);
-        console.log("User took a similar course");
-      }
-      // FIXME : DON"T Know what logic we should be using
+      // ============== Checking if the user has taken any course from the Not taken list ===================
       statusObj.setNotTakenBool(true);
-      // console.log("User did NOT take a similar course");
-    });
-    // console.log(notTakenCoursesToCheckMap);
-    // console.log(notTakenKeys);
-    // console.log(notTakenPromise.length);
+      userCourseHistoryArr.forEach((userTakenCourse) => {
+        if (notTakenCoursesMap.has(userTakenCourse)) {
+          // FIXME : DON"T Know what logic we should be using
+          // If user have a courses in their course history that matches any course in the Not taken List
+          // Setting the notTaken flag to false --> Means taken???
+          // TODO: Does that affect anything????
+          statusObj.setNotTakenBool(false);
+          // console.log("User took a similar course");
+        }
+        // FIXME : DON"T Know what logic we should be using
+        // console.log("User did NOT take a similar course");
+      });
+      // console.log(notTakenCoursesMap);
+      // console.log(notTakenKeys);
+      // console.log(notTakenPromise.length);
+      // console.log(statusObj);
 
+    }
 
     // =============== Retrieve all the pre req-courses for the selected course ============
-    await getPreReqArr(userInput, req, res, next, preReqCoursesToCheckArr);
-    // console.log(preReqCoursesToCheckArr);
-    // console.log(allCoursesTakenByUserMap);
+    if (debug >= 4) {
+      await getPreReqArr(userInput, req, res, next, preReqCoursesArr);
+      console.log(preReqCoursesArr);
+      // console.log(userCourseHistoryMap);
 
 
-    // ============== Checking if the user has all the pre-req for the course ===================
-    statusObj.setHasPreReqBool(true);
-    preReqCoursesToCheckArr.forEach((preReqCourseKey) => {
-      if (!(allCoursesTakenByUserMap.has(preReqCourseKey))) {
-        statusObj.setHasPreReqBool(false);
-        throw "break2 : User doesn't have the pre-req to take the course";
+      // ============== Checking if the user has all the pre-req for the course ===================
+      statusObj.setHasPreReqBool(true);
+      if (!(preReqCoursesArr == null)) {
+        preReqCoursesArr.forEach((preReqCourseKey) => {
+          if (!(userCourseHistoryMap.has(preReqCourseKey))) {
+            statusObj.setHasPreReqBool(false);
+            // console.log(statusObj);
+            throw "break2 : User doesn't have the pre-req to take the course";
+          }
+        });
       }
-    });
+      // console.log("User Has pre-req");
+      // console.log(statusObj);
+    }
 
-    // console.log("User Has pre-req");
-    // console.log(statusObj);
-
-
-
-
-
-
-
-  } catch (condition) {
+  } catch
+    (condition) {
     console.log(condition);
   }
-
 
   res.status(200).json({
     "status": 200,
@@ -194,7 +206,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
 // ====================== Logic Functions =============================================
 
 
-async function getPreReqArr(userInput, req, res, next, preReqCoursesToCheckArr) {
+async function getPreReqArr(userInput, req, res, next, preReqCoursesArr) {
   const preReqPromise = await preReqFunc(userInput, req, res, next).catch((err) => {
     console.log("Error occurred in the database function" + err);
   });
@@ -203,7 +215,7 @@ async function getPreReqArr(userInput, req, res, next, preReqCoursesToCheckArr) 
   // FIXME: Kind of cheque is required???
   if (preReqPromise == null) {
     console.log("No preReq list found");
-    preReqCoursesToCheckArr = null;
+    preReqCoursesArr = null;
     return;
   }
   let preReqObjKeysArr = Object.keys(preReqPromise.object);
@@ -213,21 +225,25 @@ async function getPreReqArr(userInput, req, res, next, preReqCoursesToCheckArr) 
   preReqObjKeysArr.forEach((key) => {
     if (!(preReqPromise.object[key] === "")) {
       // console.log(notTakenObj.object[key]);
-      // preReqCoursesToCheckArr.set(preReqPromise.object[key], "");
-      preReqCoursesToCheckArr.push(preReqPromise.object[key]);
+      // preReqCoursesArr.set(preReqPromise.object[key], "");
+      preReqCoursesArr.push(preReqPromise.object[key]);
     }
   });
   // });
 }
 
-async function getNotTakeCourseMap(userInput, req, res, next, notTakenCoursesToCheckMap) {
+async function populateNotTakenCourseMap(userInput, req, res, next, notTakenCoursesMap) {
   const notTakenPromise = await notTakenFunc(userInput, req, res, next).catch((err) => {
     console.log("Error occurred in the database function" + err);
   });
   // FIXME : DIDN'T do a check to check if the Not taken list was found or not -- Must have a throw or some kind of check
   if (notTakenPromise == null) {
-    console.log("Not taken list was not found");
-    notTakenCoursesToCheckMap = null;
+    // console.log("Not taken list was not found");
+    notTakenCoursesMap.clear();
+    return;
+  } else if (notTakenPromise.length === 0) {
+    // console.log("Not taken list was not found");
+    notTakenCoursesMap.clear();
     return;
   }
   // let tempNotTakenObj;
@@ -240,22 +256,25 @@ async function getNotTakeCourseMap(userInput, req, res, next, notTakenCoursesToC
     notTakenObjKeysArr.forEach((key) => {
       if (!(notTakenObj.object[key] === "")) {
         // console.log(notTakenObj.object[key]);
-        notTakenCoursesToCheckMap.set(notTakenObj.object[key], "");
+        notTakenCoursesMap.set(notTakenObj.object[key], "");
       }
     });
   });
 }
 
 
-async function getAllCoursesTakenByUser(userInput, req, res, next, allCoursesTakenByUserArr, allCoursesTakenByUserMap) {
+async function populateUserCourseHistory(userInput, req, res, next, userCourseHistoryArr, userCourseHistoryMap) {
   const userProfilesPromise = await findUserProfileFunc(userInput, req, res, next).catch((error) => {
     console.log("Error occurred in the database function: " + error)
   });
   // console.log(typeof userProfilesPromise);
+
   if (userProfilesPromise == null) {
-    allCoursesTakenByUserMap = null;
-    allCoursesTakenByUserArr = null;
-    throw "break: Profile Not Found";
+    userCourseHistoryMap = null;
+    userCourseHistoryArr = null;
+    // console.log("Profile Not Found");
+    return;
+    // throw "break: Profile Not Found";
   }
   let semesterKeysArr = Object.keys(userProfilesPromise.courseHistory);
   let tmpCoursesArr = [];
@@ -270,8 +289,8 @@ async function getAllCoursesTakenByUser(userInput, req, res, next, allCoursesTak
         // statusObj.setAlreadyInCartBool(true);
         // throw "break2: The student is already registered for the course";
         // }
-        allCoursesTakenByUserArr.push(course);
-        allCoursesTakenByUserMap.set(course, "");
+        userCourseHistoryArr.push(course);
+        userCourseHistoryMap.set(course, "");
       });
     }
   );
@@ -284,9 +303,10 @@ async function checkIfCourseIsProvidedDuringSemester(userInput, req, res, next, 
     console.log("Error occurred in the database function: " + error)
   });
   if (foundRandomSectionOfRequestedCoursePromise == null) {
-    console.log("The requested course wasn't found");
+    // console.log("The requested course wasn't found");
     statusObj.setIsCourseGivenDuringSemesterBool(false);
-    throw "break : Course is not given during selected Semester";
+    // throw "break : Course is not given during selected Semester";
+    return;
   }
   statusObj.setIsCourseGivenDuringSemesterBool(true);
   // Test print to see if the course was found or not. -> PASSED
@@ -302,6 +322,11 @@ async function checkIfCourseIsProvidedDuringSemester(userInput, req, res, next, 
 
 }
 
+async function connect2DB() {
+// connect to database
+  await dbHelpers.defaultConnectionToDB();
+}
+
 
 // ====================== Database Query Functions =============================================
 
@@ -309,7 +334,7 @@ function preReqFunc(userInput, req, res, next) {
   return new Promise((resolve, reject) => {
     // ============= How to do query ===================================
     // ======== Check if the course Exists =======================
-    const query = scheduleModel.findOne();
+    const query = preReqOnlyModel.findOne();
     // const query = preReqOnlyModel.find();
     query.setOptions({lean: true});
     query.collection(preReqOnlyModel.collection);
