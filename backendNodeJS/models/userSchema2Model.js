@@ -13,6 +13,7 @@ const userSchema2Model = mongoose.Schema({
   // course should include catalog number and subject for now: ELEC 311
   // courseHistory: {tags: [{type: String}]},
   courseHistory: {type: Map, of: [String]},
+  tempCourseHistory: {type: Map, of: [String]},
 
   // courseCredits example: 33.5   --> Note: In JS float are also referred as of type "Number"
   completedCredits: {type: Number, required: true},
@@ -25,7 +26,11 @@ const userSchema2Model = mongoose.Schema({
   // temporary sequences used to hold all the courses added by the user
   // and  generating combinations of sections
   // then saving the final schedules to the sequences above
-  tempFallSequence: {type: [mongoose.Mixed]},
+  // tempFallSequence: {type: [mongoose.Mixed]},
+  // tempWinterSequence: {type: [mongoose.Mixed]},
+  // tempSummerSequence: {type: [mongoose.Mixed]}
+
+  tempFallSequence: {type: [Map]},
   tempWinterSequence: {type: [mongoose.Mixed]},
   tempSummerSequence: {type: [mongoose.Mixed]}
 
