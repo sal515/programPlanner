@@ -3,18 +3,62 @@
 * !!! Nothing to do with the project itself !!!
 *
 * */
+const modelDirectory = '../models/';
+const userProfileModel = require(modelDirectory + 'userSchema2Model');
 
 var exports = module.exports = {};
+
+function saveMap2UsingUserSchemaModel(res) {
+  let testMap = new Map();
+  let testNumArr = [0, 1, 2, 3, 4, 5, 6];
+  let testStrArr = ["COEN352", "ENGR391"];
+  testMap.set("testStrArr", testStrArr);
+  testMap.set("testNumArr", testNumArr);
+  testStringMap = new Map();
+  testStringMap.set("heelo", "yes");
+
+  let tempMapArr = [testMap];
+
+  let saveMap = mapToJson(testMap);
+  // console.log(testMap);
+  let userProfileModelAA = new userProfileModel({
+    userID: "test",
+    userPassword: "123",
+    coop: true,
+    completedCredits: 20,
+    courseHistory: testMap,
+    tempFallSequence: tempMapArr
+    // courseHistory: testStringMap
+    // courseHistory: saveMap
+    // courseHistory: {"hello": "yay"}
+  });
+  console.log(userProfileModelAA.get("userID"));
+  console.log(userProfileModelAA.get("courseHistory"));
+  // console.log(jsonToMap(userProfileModelAA.get("courseHistory")));
+  console.log(typeof userProfileModelAA);
+  console.log(userProfileModelAA["userID"]);
+
+  res.status(200).json({
+    "testMap": userProfileModelAA
+    // "testMap2JSON": testMap2Json,
+    // "testArr": testArr,
+    // "testObj": testObj
+
+  });
+}
 
 /*
 * copy and run the commented out codes below the test function to test it,
 * To run the testingFunc() - run it in a controller with REST End point exposed
 * */
-exports.testingFunc = function () {
+exports.testingFunc = function (res) {
+
+  // MapAndJSONTesting(res);
+  // saveMap2UsingUserSchemaModel(res);
 
   // --------------------------------------------------------
   // testing the async and await functions
-  asyncAwait().catch();
+  // asyncAwait().catch();
 
 
   // --------------------------------------------------------
@@ -42,6 +86,33 @@ exports.testingFunc = function () {
 
 
 };
+
+// Testing how to save the course in the tempCourseHistory of the DB
+function MapAndJSONTesting(res) {
+  let testMap = new Map();
+  let testArr = [0, 1, 2, 3, 4, 5, 6];
+  testMap.set("Schedule1", testArr);
+  console.log(testMap.toString());
+  console.log(testMap);
+  let testObj = {
+    "ya": "okay"
+  };
+
+  let testMap2Json = mapToJson(testMap);
+  console.log(testMap2Json);
+  console.log(jsonToMap(testMap2Json));
+
+
+  console.log(typeof testObj);
+  res.status(200).json({
+    "testMap": testMap,
+    "testMap2JSON": testMap2Json,
+    "testArr": testArr,
+    "testObj": testObj
+
+  });
+}
+
 
 
 // ================================ Promise Examples ==================================================
@@ -272,3 +343,9 @@ function testQueryBuilder() {
 
 // ============== Database test query ===================================================
 
+function mapToJson(map) {
+  return JSON.stringify([...map]);
+}
+function jsonToMap(jsonStr) {
+  return new Map(JSON.parse(jsonStr));
+}

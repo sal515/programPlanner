@@ -43,6 +43,54 @@ exports.addCourseToSequence = (req, res, next) => {
 
   console.log("Print First");
 
+  // examples.testingFunc(res);
+
+  // saving test courses to the user profiles
+  // let tempCourseHistoryMap = new Map();
+  // let fallCourses = ["COMP348", "COMP352", "ENCS282", "ENGR202", "BIOL206"];
+  // let winterCourses = ["COMP346", "ELEC275", "ENGR371", "SOEN331", "SOEN341"];
+  //
+  // tempCourseHistoryMap.set("Fall 2016", fallCourses);
+  // tempCourseHistoryMap.set("Winter 2017", winterCourses);
+  //
+  // // console.log(tempCourseHistoryMap);
+  //
+  // let query = {userID: "atestUser"};
+  //
+  //
+  // let updateUserObj = new userProfileModel({
+  //   "userID": "aaaa",
+  //   "tempCourseHistory": tempCourseHistoryMap
+  // });
+  //
+
+  //
+  // let searchCondition = {userID: "aaaa"};
+  // let userQuery = userProfileModel.findOneAndUpdate({_id: "5ca2db071c9d440000214cbf"}, {$set:{userPassword: "helloWork"}}, {upsert: false, new:true}, function (err, doc) {
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  //   console.log(doc);
+  // });
+  // userQuery.exec();
+
+  // let userQuery = userProfileModel.findOneAndUpdate();
+  // userQuery.where('userID').equals('aaaa');
+
+
+  // let updateQuery = userProfileModel.where('userID').equals("aaaa");
+  // updateQuery.setOptions({upsert: false});
+  // updateQuery.collection(userProfileModel.collection);
+  // updateQuery.collection(userProfileModel.collection);
+  // updateQuery.updateOne({"tempCourseHistory": tempCourseHistoryMap});
+  // updateQuery.exec((err, result)=>{
+  //   console.log(result);
+  //   console.log(err);
+  // });
+  // res.status(200).json({
+  // "updateUser": updateUserObj
+  // });
+
   asyncSubController(userInput, req, res, next);
 
 };
@@ -54,11 +102,29 @@ exports.addCourseToSequence = (req, res, next) => {
 * Allows us to avoid "callback hell"  <<-- NOT SOMETHING I CAME UP WITH
 * */
 async function asyncSubController(userInput, req, res, next) {
-  await asyncAddCourseController(userInput, req, res, next);
 
+  // const doc = userProfileModel.findOne();
+  // doc.setOptions({lean: true});
+  // doc.collection(userProfileModel.collection);
+  // doc.where('userID').equals("1aaaaaaa");
+  // doc.exec((err, docRes) => {
+  //   console.log(docRes);
+  // });
+  //
+  //
+  // await afunc();
+
+
+  
+
+  await asyncAddCourseController(userInput, req, res, next);
   console.log("Print Last");
 }
 
+
+// async function afunc() {
+//   console.log('print');
+// }
 
 /*
 * @param req
@@ -110,7 +176,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
   //
 
 
-  let debug = 4;
+  let debug = 6;
 
   try {
 
@@ -128,8 +194,8 @@ async function asyncAddCourseController(userInput, req, res, next) {
     }
 
     // ==========  checking if the course is provided during the semester  ==========
-    if (debug === 2) {
-      // if (debug >= 2) {
+    // if (debug === 2) {
+    if (debug >= 2) {
       await checkIfCourseIsProvidedDuringSemester(userInput, req, res, next, statusObj);
       if (!(statusObj.getIsCourseGivenDuringSemesterBool())) {
         throw "break : Course is not given during selected Semester";
@@ -138,8 +204,8 @@ async function asyncAddCourseController(userInput, req, res, next) {
     }
 
     // =============== Retrieve all the Not taken list for the provided list ============
-    if (debug === 3) {
-      // if (debug >= 3) {
+    // if (debug === 3) {
+    if (debug >= 3) {
       // Check => If the Map is populated in the function call --> Passed
       await populateNotTakenCourseMap(userInput, req, res, next, notTakenCoursesMap);
       // console.log(notTakenCoursesMap);
@@ -160,8 +226,8 @@ async function asyncAddCourseController(userInput, req, res, next) {
     }
 
     // =============== Retrieve all the pre req-courses for the selected course ============
-    if (debug === 4) {
-      // if (debug >= 4) {
+    // if (debug === 4) {
+    if (debug >= 4) {
       await getPreReqArr(userInput, req, res, next, preReqCoursesArr);
       console.log(preReqCoursesArr);
       console.log(userCourseHistoryMap);
@@ -182,8 +248,8 @@ async function asyncAddCourseController(userInput, req, res, next) {
     }
 
     // =============== Retrieve all the pre req OR  courses for the selected course ============
-    if (debug === 5) {
-      // if (debug >= 5) {
+    // if (debug === 5) {
+    if (debug >= 5) {
       await getPreReqOrArr(userInput, req, res, next, preReqORCoursesArr);
       console.log(preReqORCoursesArr);
       console.log(userCourseHistoryMap);
@@ -192,8 +258,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
       statusObj.setHasPreReqBool(false);
       if (!(preReqORCoursesArr.length)) {
         statusObj.setHasPreReqBool(true);
-      }
-      else if (preReqORCoursesArr.length) {
+      } else if (preReqORCoursesArr.length) {
         preReqORCoursesArr.forEach((preReqORCourseKey) => {
           if ((userCourseHistoryMap.has(preReqORCourseKey))) {
             statusObj.setHasPreReqBool(true);
@@ -515,4 +580,14 @@ class addCourseStatus {
   setAlreadyInCartBool(value) {
     this._alreadyInCartBool = value;
   }
+}
+
+
+// ============================== Helper functions =============================
+function mapToJson(map) {
+  return JSON.stringify([...map]);
+}
+
+function jsonToMap(jsonStr) {
+  return new Map(JSON.parse(jsonStr));
 }
