@@ -17,12 +17,12 @@ const userSchema2Model = mongoose.Schema({
   // courseCredits example: 33.5   --> Note: In JS float are also referred as of type "Number"
   completedCredits: {type: Number, required: true},
 
-  // saved sequences with the classNumbers of each lecture, tutorial, and lab
+  // saved sections with the classNumbers of each lecture, tutorial, and lab
   fallSequence: {type: [mongoose.Mixed]},
   winterSequence: {type: [mongoose.Mixed]},
   summerSequence: {type: [mongoose.Mixed]},
 
-  // temporary sequences used to hold all the courses added by the user
+  // temporary sequences used to hold all of the schedule permutations based on the courses added by the user
   // and  generating combinations of sections
   // then saving the final schedules to the sequences above
   tempFallSequence: {type: [mongoose.Mixed]},
