@@ -12,7 +12,7 @@ const userSchema2Model = mongoose.Schema({
 
   // course should include catalog number and subject for now: ELEC 311
   // courseHistory: {tags: [{type: String}]},
-  courseHistory: {type: [String]},
+  courseHistory: {type: Map, of: [String]},
 
   // courseCredits example: 33.5   --> Note: In JS float are also referred as of type "Number"
   completedCredits: {type: Number, required: true},

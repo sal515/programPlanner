@@ -49,7 +49,7 @@ exports.genTestStudents = (req, res, next) => {
             // sequence should tell user when they started and if coop. Example: Fall start year 2 SOEN
             coop: studentVal.coop,
             // course should include catalog number and subject for now: ELEC 311
-            // courseHistory: {tags: [{type: String}]},
+            // courseHistory: type {[String]},
             courseHistory: studentVal.courseHistory,
             // courseCredits example: 33.5   --> Note: In JS float are also referred as of type "Number"
             completedCredits: studentVal.completedCredits,
