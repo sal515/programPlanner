@@ -115,8 +115,6 @@ async function asyncSubController(userInput, req, res, next) {
   // await afunc();
 
 
-  
-
   await asyncAddCourseController(userInput, req, res, next);
   console.log("Print Last");
 }
@@ -149,6 +147,11 @@ async function asyncAddCourseController(userInput, req, res, next) {
   * */
   await connect2DB();
 
+
+  const user = await findUser(userInput, req, res, next);
+  console.log(user);
+
+
   // Logic control variables Initialization
   // isCourseGivenDuringSemesterBool = false;
   // hasPreReqBool = false;
@@ -176,7 +179,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
   //
 
 
-  let debug = 6;
+  let debug = 0;
 
   try {
 
@@ -501,6 +504,39 @@ function findUserProfileFunc(userInput, req, res, next) {
       resolve(result);
       reject(err);
     })
+  });
+}
+
+function findUser(userInput, req, res, next) {
+  return new Promise(async (resolve, reject) => {
+    // ======== Check if the course Exists =======================
+    // const query = scheduleModel.find();
+    // const query = userProfileModel.findOne();
+    // query.setOptions({lean: true});
+    // query.collection(userProfileModel.collection);
+    // // example to do the query in one line
+    // // query.where('object.courseSubject').equals(userInput.courseSubject).exec(function (err, scheduleModel) {
+    // // building a query with multiple where statements
+    // query.where('userID').equals("aaaa");
+    // // query.where('object.courseCatalog').equals(userInput.courseCatalog);
+    // // query.where('object.termTitle').equals(userInput.termTitle);
+    // // query.where('object.termDescription').equals(userInput.termDescription);
+    // const resultQuery = query.exec((err, result) => {
+    //
+    //   resolve(result);
+    //   reject(err);
+    // });
+
+    const resultQuery = await userProfileModel.findOne({userID: "aaaa"}, function (err, result) {
+      console.log(result);
+      resolve(result);
+    });
+
+    resultQuery.userPassword = "changed";
+    await resultQuery.save();
+    resolve(resultQuery);
+    reject(resultQuery);
+
   });
 }
 
