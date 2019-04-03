@@ -37,10 +37,9 @@
     </div>
   </form>
   <!-- Alert messages from the results of addCourse -->
-  <div *ngIf="showSuccess" class="alert-success">
-    The course has been successfully added.
-  </div>
-  <div *ngIf="showError" class="alert-success">
-    {{errMessage}}
-  </div>
+  <mat-chip-list>
+    <mat-chip *ngFor="let message of messages">
+      {{message}}
+    </mat-chip>
+  </mat-chip-list>
 </mat-card>

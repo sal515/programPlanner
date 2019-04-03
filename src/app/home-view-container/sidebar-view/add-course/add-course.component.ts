@@ -15,11 +15,8 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   semesterList: AddCourseModel[] = [];
   nameList: AddCourseModel[] = [];
   codeList: AddCourseModel[] = [];
-  showSuccess: boolean;
-  showError: boolean;
   input: string;
-  response: string;
-  errMessage: string;
+  messages: string[];
   // Local subscription object to manipulate subscription and !PREVENT MEMORY LEAKS!
   // This is a local service property that is set equal to the service that is injected below
   private messageSubscription: Subscription;
@@ -67,14 +64,14 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     return list;
   }
 
-  /** Generates a list of semesters on page load and subscribes to the http response message from addCourse.
+  /** Generates a list of semesters on page load and subscribes to the http response messages from addCourse.
    *
    * @returns void
    */
   ngOnInit(): void {
     this.semesterList = AddCourseComponent.genList(this.courses, this.selectedCourse, 'semester');
-    this.messageSubscription = this.courseService.getMessageUpdateListener().subscribe((message: string) => {
-      this.response = message;
+    this.messageSubscription = this.courseService.getMessageUpdateListener().subscribe((message: string[]) => {
+      this.messages = message;
     });
   }
 
@@ -100,7 +97,7 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   onSemesterSelect(course: AddCourseModel): void {
     this.onSelect(course);
     this.clearInput();
-    this.courseService.clear();
+    this.courseService.clearCourse();
   }
 
   /** Method generates a list of course for the autocomplete dropdown list of the code input.
@@ -138,21 +135,7 @@ export class AddCourseComponent implements OnInit, OnDestroy {
    * @returns void
    */
   onSubmit(course: AddCourseModel) {
-    if (!this.courseService.checkIfIncluded(course)) {
       this.courseService.addCourse(course);
-      if (this.response === 'Course received') {
-        this.showSuccess = true;
-        setTimeout(() => {
-          this.showSuccess = false;
-        }, 3000);
-      }
-    } else {
-      this.errMessage = 'Error: Already in basket';
-      this.showError = true;
-      setTimeout(() => {
-        this.showError = false;
-      }, 3000);
-    }
   }
   /** Unsubscribe from the message to prevent memory leaks when the component is destroyed.
    *

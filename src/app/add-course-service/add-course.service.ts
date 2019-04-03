@@ -24,8 +24,8 @@ export class CourseService {
   private courseUpdated = new Subject<AddCourseModel[]>();
   // reference to the http module imported in the service, !Remember HttpClientModule needs to be added in main!
   private httpClient: HttpClient;
-  private message = '';
-  private messageUpdated = new Subject<string>();
+  private messages: string[] = [];
+  private messagesUpdated = new Subject<string[]>();
 
   // Injecting the HttpClient in this service file using the constructor(varName: HttpClient)
   constructor(httpClient: HttpClient) {
@@ -43,7 +43,7 @@ export class CourseService {
     // Angular http clients uses observables, so needs to be subscribed to listen
     // We don't have to unsubscribe observables that are build into Angular to prevent memory leaks, its Handled!
     // We only need to unsubscribe observables that are created by us
-    this.httpClient.get <{ message: string, courses: AddCourseModel[] }>(this.courseAddURL).subscribe((courseData) => {
+    this.httpClient.get <{ messages: string, courses: AddCourseModel[] }>(this.courseAddURL).subscribe((courseData) => {
         // The json will be extracted automatically by the get function
         this._courseArr = courseData.courses;
         // adding our own observable to the coursesArray
@@ -53,17 +53,31 @@ export class CourseService {
     );
   }
   addCourse(course: AddCourseModel): void {
-    // the following is sending a http post request to the courseAddURL defined above and gets return data -> message of type string
-    this.httpClient.post<({message: string})>(this.courseAddURL, course).subscribe(
+    // the following is sending a http post request to the courseAddURL defined above and gets return data -> messages of type string
+    this.httpClient.post<({messages: string})>(this.courseAddURL, course).subscribe(
       (responseData) => {
-        // the response data is the message of type string declared above
-        console.log(responseData.message);
-        this.message = responseData.message;
-        this.messageUpdated.next(this.message);
-        // updating the local array with the new object received
-        this._courseArr.push(course);
-        // If data in Service changes,this will pass the updated data by value
-        this.courseUpdated.next([...this._courseArr]);
+        // the response data is the messages of type string declared above
+        console.log(responseData.messages);
+        this.clearMessages();
+        if (!this.checkIfIncluded(course)) {
+          if (responseData.messages === 'Course received') {
+            this.messages.push(responseData.messages);
+            this.messagesUpdated.next([...this.messages]);
+          }
+          // updating the local array with the new object received
+          this._courseArr.push(course);
+          // If data in Service changes,this will pass the updated data by value
+          this.courseUpdated.next([...this._courseArr]);
+          setTimeout(() => {
+            this.clearMessages();
+          }, 3000);
+        } else {
+          this.messages.push('Error: Course Already In Basket');
+          this.messagesUpdated.next([...this.messages]);
+          setTimeout(() => {
+            this.clearMessages();
+          }, 3000);
+        }
       }
     );
   }
@@ -74,8 +88,8 @@ export class CourseService {
     // And the data from the service will be updated in the components subscribed
     return this.courseUpdated.asObservable();
   }
-  getMessageUpdateListener(): Observable<string> {
-    return this.messageUpdated.asObservable();
+  getMessageUpdateListener(): Observable<string[]> {
+    return this.messagesUpdated.asObservable();
   }
   /** Checks if a course is included in the array.
    *
@@ -97,12 +111,20 @@ export class CourseService {
     }
     this.courseUpdated.next([...this._courseArr]);
   }
-  /** Clears the course array, notably when the user change the semester.
+  /** Clears the course array.
    *
    * @returns void
    */
-  clear() : void {
+  clearCourse(): void {
     this._courseArr = [];
     this.courseUpdated.next([...this._courseArr]);
+  }
+  /** Clears the messages array.
+   *
+   * @returns void
+   */
+  clearMessages(): void {
+    this.messages = [];
+    this.messagesUpdated.next([...this.messages]);
   }
 }
