@@ -127,6 +127,8 @@ async function asyncAddCourseController(userInput, req, res, next) {
 
   let courseCartArr = [];
 
+  let userProfile;
+
   // let arr = [1, 2, 3];
   // console.log(arr);
   // arr = [];
@@ -135,7 +137,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
   //
 
 
-  let debug = 6;
+  let debug = 9;
 
   try {
 
@@ -146,7 +148,8 @@ async function asyncAddCourseController(userInput, req, res, next) {
       // console.log(userInput);
 
       // assuming the user profile exists, since the user has to login first before accessing this ENDPOINT
-      const userProfile = await findUserProfileDocument(userInput, req, res, next);
+      // const userProfile = await findUserProfileDocument(userInput, req, res, next);
+      userProfile = await findUserProfileDocument(userInput, req, res, next);
       // console.log(userProfile);
 
       try {
@@ -257,9 +260,14 @@ async function asyncAddCourseController(userInput, req, res, next) {
         console.log(statusObj);
         throw "break : User doesn't have the pre-req OR to take the course";
       }
-      console.log(statusObj);
+      // console.log(statusObj);
     }
 
+
+
+
+
+    // ================= Check for Co Req
 
     //FIXME:  Don't Know what should be the logic for CO-Req
     // if (debug === 6) {
@@ -285,6 +293,50 @@ async function asyncAddCourseController(userInput, req, res, next) {
     //     }
     //   }
     // }
+
+
+    // =================== Saving the course in the courseCart Variable ==============
+
+    // if (debug === 0) {
+    if (debug >= 7) {
+
+      if (!statusObj.getAlreadyInCartBool() && statusObj.getIsCourseGivenDuringSemesterBool() &&
+        statusObj.getHasPreReqBool()) {
+
+        // const userProfile = await findUserProfileDocument(userInput, req, res, next);
+        console.log(userProfile);
+        // userProfile.courseCart = {"Test_Semester1": ["COEN244", "SOEN311"]};
+
+        arr = userProfile.courseCart.get("Test_Semester1").push("AERO111");
+        // userProfile.courseCart.set("Test_Semester1", arr);
+
+        
+        await userProfile.save();
+
+        // try {
+        //   if (userProfile.courseCart.has(userInput.termDescription)) {
+        //     courseCartArr = userProfile.courseCart.get(userInput.termDescription);
+        //     courseCartArr.forEach((course) => {
+        //       // console.log(course);
+        //       if (course === (userInput.courseSubject + userInput.courseCatalog)) {
+        //         statusObj.setAlreadyInCartBool(true);
+        //         throw "Breaking the add request";
+        //       }
+        //     });
+        //     // console.log(courseCartArr);
+        //   }
+        // } catch (err) {
+        //   throw "break: Course is already in course cart or User Profile Not found ";
+        // }
+
+
+      }
+    }
+
+
+
+
+
 
 
   } catch
