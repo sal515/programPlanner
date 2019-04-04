@@ -71,6 +71,7 @@ exports.addCourseToSequence = async (req, res, next) => {
 * hasNotTakenBool
 * hasPreReqBool
 * hasCoReqBool
+* notifyCalenderBool
 * */
 async function asyncAddCourseController(userInput, req, res, next) {
 
@@ -82,29 +83,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
   await connect2DB();
 
 
-  // let updatingUserCourseCart = new userProfileModel({});
-
-  // userProfileDoc.courseCart = tempCourseCartMap;
-  // userProfileDoc.courseCart = tempCourseCartMap;
-
-  // userProfileDoc.courseCart = {
-
-  // "changed": null
-  // "changed": "abc"
-  // "changed": "abc",
-  //   "anotherItem": "yes"
-
-// };
-
-  // let mapIter = (userProfileDoc.courseCart.keys());
-  // console.log((userProfileDoc.courseCart.keys()));
-  // console.log(mapIter.next().value);
-  // console.log(mapIter.next());
-  // saving the modified course cart to the userProfile
-  // await userProfileDoc.save();
-
-
-  // =====================================================================================
+  // =============================  Logic to add course and Send Responses ===============================================
   // Logic control variables Initialization
   // isCourseGivenDuringSemesterBool = false;
   // hasPreReqBool = false;
@@ -129,12 +108,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
 
   let userProfile;
 
-  // let arr = [1, 2, 3];
-  // console.log(arr);
-  // arr = [];
-  // console.log(arr);
-  // console.log(arr.length);
-  //
+
 
 
   let debug = 9;
@@ -267,7 +241,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
 
 
 
-    // ================= Check for Co Req
+    // ================= Check for Co Req ==========================
 
     //FIXME:  Don't Know what should be the logic for CO-Req
     // if (debug === 6) {
@@ -294,49 +268,45 @@ async function asyncAddCourseController(userInput, req, res, next) {
     //   }
     // }
 
-
     // =================== Saving the course in the courseCart Variable ==============
 
     // if (debug === 0) {
     if (debug >= 7) {
 
+      statusObj.setNotifyCalenderBool(false);
+
       if (!statusObj.getAlreadyInCartBool() && statusObj.getIsCourseGivenDuringSemesterBool() &&
         statusObj.getHasPreReqBool()) {
 
         // const userProfile = await findUserProfileDocument(userInput, req, res, next);
-        console.log(userProfile);
+        // console.log(userProfile);
         // userProfile.courseCart = {"Test_Semester1": ["COEN244", "SOEN311"]};
 
-        arr = userProfile.courseCart.get("Test_Semester1").push("AERO111");
+        // console.log(userProfile.courseCart.get("Test_Semester1"));
+        // let coursesArr = (userProfile.courseCart.get("Test_Semester1"));
+
+        let coursesArr = [];
+
+        // if the course cart for the semester exists, get those values
+        if (userProfile.courseCart.has(userInput.termDescription)) {
+          coursesArr = (userProfile.courseCart.get(userInput.termDescription));
+        }
+        // push the new value into the course cart of the current semester
+        coursesArr.push(userInput.courseSubject + userInput.courseCatalog);
+
+        // coursesArr.push("COEN444");
+        // arr = userProfile.courseCart.get("Test_Semester1").push("AERO111");
         // userProfile.courseCart.set("Test_Semester1", arr);
 
-        
+        // userProfile.courseCart.set("Test_Semester1", coursesArr);
+        userProfile.courseCart.set(userInput.termDescription, coursesArr);
+
         await userProfile.save();
-
-        // try {
-        //   if (userProfile.courseCart.has(userInput.termDescription)) {
-        //     courseCartArr = userProfile.courseCart.get(userInput.termDescription);
-        //     courseCartArr.forEach((course) => {
-        //       // console.log(course);
-        //       if (course === (userInput.courseSubject + userInput.courseCatalog)) {
-        //         statusObj.setAlreadyInCartBool(true);
-        //         throw "Breaking the add request";
-        //       }
-        //     });
-        //     // console.log(courseCartArr);
-        //   }
-        // } catch (err) {
-        //   throw "break: Course is already in course cart or User Profile Not found ";
-        // }
-
+        // FIXME : Uncomment Notify Calendar line below
+        statusObj.setNotifyCalenderBool(true);
 
       }
     }
-
-
-
-
-
 
 
   } catch
@@ -362,7 +332,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
 }
 
 
-// ====================== Logic Functions =============================================
+// ====================== Data Handling Functions =============================================
 
 
 async function getPreReqOrArr(userInput, req, res, next, preReqORCoursesArr) {
