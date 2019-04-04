@@ -25,9 +25,14 @@ const notTakenModel = require(DbSchemeDirectory + 'notTakenSchemas2Model');
 // importing the user profiles
 const userProfileModel = require(modelDirectory + 'userSchema2Model');
 
-
-// This function gets called by the REST END point
-exports.addCourseToSequence = (req, res, next) => {
+/*
+*  This function gets called by the REST END point
+*
+* This is the async controller that lets me call all the functions sequentially
+* This is used to control the async nature of the JS, ->> to be able to write sequential
+* Allows us to avoid "callback hell"  <<-- NOT SOMETHING I CAME UP WITH
+* */
+exports.addCourseToSequence = async (req, res, next) => {
   // postman choose: x-www-form-urlencoded  to test data flow from front to backend
   /*
   * userInput has:
@@ -45,84 +50,13 @@ exports.addCourseToSequence = (req, res, next) => {
 
   // examples.testingFunc(res);
 
-  // saving test courses to the user profiles
-  // let tempCourseHistoryMap = new Map();
-  // let fallCourses = ["COMP348", "COMP352", "ENCS282", "ENGR202", "BIOL206"];
-  // let winterCourses = ["COMP346", "ELEC275", "ENGR371", "SOEN331", "SOEN341"];
-  //
-  // tempCourseHistoryMap.set("Fall 2016", fallCourses);
-  // tempCourseHistoryMap.set("Winter 2017", winterCourses);
-  //
-  // // console.log(tempCourseHistoryMap);
-  //
-  // let query = {userID: "atestUser"};
-  //
-  //
-  // let updateUserObj = new userProfileModel({
-  //   "userID": "aaaa",
-  //   "tempCourseHistory": tempCourseHistoryMap
-  // });
-  //
+  // logic function to add course
+  await asyncAddCourseController(userInput, req, res, next);
+  console.log("Print Last");
 
-  //
-  // let searchCondition = {userID: "aaaa"};
-  // let userQuery = userProfileModel.findOneAndUpdate({_id: "5ca2db071c9d440000214cbf"}, {$set:{userPassword: "helloWork"}}, {upsert: false, new:true}, function (err, doc) {
-  //   if (err) {
-  //     console.log(err);
-  //   }
-  //   console.log(doc);
-  // });
-  // userQuery.exec();
-
-  // let userQuery = userProfileModel.findOneAndUpdate();
-  // userQuery.where('userID').equals('aaaa');
-
-
-  // let updateQuery = userProfileModel.where('userID').equals("aaaa");
-  // updateQuery.setOptions({upsert: false});
-  // updateQuery.collection(userProfileModel.collection);
-  // updateQuery.collection(userProfileModel.collection);
-  // updateQuery.updateOne({"tempCourseHistory": tempCourseHistoryMap});
-  // updateQuery.exec((err, result)=>{
-  //   console.log(result);
-  //   console.log(err);
-  // });
-  // res.status(200).json({
-  // "updateUser": updateUserObj
-  // });
-
-  asyncSubController(userInput, req, res, next);
 
 };
 
-
-/*
-* This is the async controller that lets me call all the functions sequentially
-* This is used to controller the async nature of the JS, ->> to be able to write sequential
-* Allows us to avoid "callback hell"  <<-- NOT SOMETHING I CAME UP WITH
-* */
-async function asyncSubController(userInput, req, res, next) {
-
-  // const doc = userProfileModel.findOne();
-  // doc.setOptions({lean: true});
-  // doc.collection(userProfileModel.collection);
-  // doc.where('userID').equals("1aaaaaaa");
-  // doc.exec((err, docRes) => {
-  //   console.log(docRes);
-  // });
-  //
-  //
-  // await afunc();
-
-
-  await asyncAddCourseController(userInput, req, res, next);
-  console.log("Print Last");
-}
-
-
-// async function afunc() {
-//   console.log('print');
-// }
 
 /*
 * @param req
@@ -148,17 +82,37 @@ async function asyncAddCourseController(userInput, req, res, next) {
   await connect2DB();
 
 
-  const user = await findUser(userInput, req, res, next);
-  console.log(user);
+  // let updatingUserCourseCart = new userProfileModel({});
+
+  // userProfileDoc.courseCart = tempCourseCartMap;
+  // userProfileDoc.courseCart = tempCourseCartMap;
+
+  // userProfileDoc.courseCart = {
+
+  // "changed": null
+  // "changed": "abc"
+  // "changed": "abc",
+  //   "anotherItem": "yes"
+
+// };
+
+  // let mapIter = (userProfileDoc.courseCart.keys());
+  // console.log((userProfileDoc.courseCart.keys()));
+  // console.log(mapIter.next().value);
+  // console.log(mapIter.next());
+  // saving the modified course cart to the userProfile
+  // await userProfileDoc.save();
 
 
+  // =====================================================================================
   // Logic control variables Initialization
   // isCourseGivenDuringSemesterBool = false;
   // hasPreReqBool = false;
   // hasCoReqBool = false;
   // notTakenBeforeBool = false;
   // alreadyInCartBool = false;
-  var statusObj = new addCourseStatus(false, false, false, false, false);
+  let statusObj = new addCourseStatus(false, false,
+    false, false, false, false);
 
   // function variables declared
   let courseSubCat2Check = userInput.courseSubject + userInput.courseCatalog;
@@ -171,6 +125,8 @@ async function asyncAddCourseController(userInput, req, res, next) {
   let preReqCoursesArr = [];
   let preReqORCoursesArr = [];
 
+  let courseCartArr = [];
+
   // let arr = [1, 2, 3];
   // console.log(arr);
   // arr = [];
@@ -179,9 +135,38 @@ async function asyncAddCourseController(userInput, req, res, next) {
   //
 
 
-  let debug = 0;
+  let debug = 6;
 
   try {
+
+    // checking if the requested course is already in CourseCard
+    // if (debug === 0) {
+    if (debug >= 0) {
+      statusObj.setAlreadyInCartBool(false);
+      // console.log(userInput);
+
+      // assuming the user profile exists, since the user has to login first before accessing this ENDPOINT
+      const userProfile = await findUserProfileDocument(userInput, req, res, next);
+      // console.log(userProfile);
+
+      try {
+        if (userProfile.courseCart.has(userInput.termDescription)) {
+          courseCartArr = userProfile.courseCart.get(userInput.termDescription);
+          courseCartArr.forEach((course) => {
+            // console.log(course);
+            if (course === (userInput.courseSubject + userInput.courseCatalog)) {
+              statusObj.setAlreadyInCartBool(true);
+              throw "Breaking the add request";
+            }
+          });
+          // console.log(courseCartArr);
+        }
+      } catch (err) {
+        throw "break: Course is already in course cart or User Profile Not found ";
+      }
+    }
+
+    // console.log("Working");
 
     // ========== Retrieve user courseHistory from user profile ==========
     // Check => If the array is populated in the function call --> Passed
@@ -232,8 +217,8 @@ async function asyncAddCourseController(userInput, req, res, next) {
     // if (debug === 4) {
     if (debug >= 4) {
       await getPreReqArr(userInput, req, res, next, preReqCoursesArr);
-      console.log(preReqCoursesArr);
-      console.log(userCourseHistoryMap);
+      // console.log(preReqCoursesArr);
+      // console.log(userCourseHistoryMap);
 
       // ============== Checking if the user has all the pre-req for the course ===================
       statusObj.setHasPreReqBool(true);
@@ -254,8 +239,8 @@ async function asyncAddCourseController(userInput, req, res, next) {
     // if (debug === 5) {
     if (debug >= 5) {
       await getPreReqOrArr(userInput, req, res, next, preReqORCoursesArr);
-      console.log(preReqORCoursesArr);
-      console.log(userCourseHistoryMap);
+      // console.log(preReqORCoursesArr);
+      // console.log(userCourseHistoryMap);
 
       // ============== Checking if the user has all the pre-req OR for the course ===================
       statusObj.setHasPreReqBool(false);
@@ -276,6 +261,32 @@ async function asyncAddCourseController(userInput, req, res, next) {
     }
 
 
+    //FIXME:  Don't Know what should be the logic for CO-Req
+    // if (debug === 6) {
+    //   // if (debug >= 6) {
+    //   let courseCartArr;
+    //   statusObj.setHasCoReqBool(true);
+    //   preReqCoursesArr = ["ENGR371"];
+    //   if (!(statusObj.getHasPreReqBool())) {
+    //     console.log(preReqCoursesArr);
+    //     // console.log(userInput);
+    //     await creatingTestData(userInput, req, res, next);
+    //     const modifiedUserProfileDoc = await findUserProfileDocument(userInput, req, res, next);
+    //     // console.log(modifiedUserProfileDoc);
+    //     // console.log(modifiedUserProfileDoc.courseCart);
+    //     // console.log(modifiedUserProfileDoc.courseCart.keys());
+    //     // console.log(modifiedUserProfileDoc.courseCart.has(userInput.termDescription));
+    //     if (modifiedUserProfileDoc.courseCart.has(userInput.termDescription)) {
+    //       // console.log(modifiedUserProfileDoc.courseCart.get(userInput.termDescription));
+    //       courseCartArr = modifiedUserProfileDoc.courseCart.get(userInput.termDescription);
+    //       courseCartArr.forEach((courseItem) => {
+    //         console.log(courseItem);
+    //       });
+    //     }
+    //   }
+    // }
+
+
   } catch
     (condition) {
     console.log(condition);
@@ -285,10 +296,10 @@ async function asyncAddCourseController(userInput, req, res, next) {
     "status": 200,
     "isCourseGivenDuringSemesterBool": statusObj.getIsCourseGivenDuringSemesterBool(),
     "hasPreReqBool": statusObj.getHasPreReqBool(),
-    "hasCoReqBool": statusObj.getHasCoReqBool(),
+    // "hasCoReqBool": statusObj.getHasCoReqBool(),
     "notTakenBool": statusObj.getNotTakenBool(),
-    "alreadyInCartBool": statusObj.getAlreadyInCartBool()
-
+    "alreadyInCartBool": statusObj.getAlreadyInCartBool(),
+    "notifyCalenderBool": statusObj.getNotifyCalenderBool()
   });
 
 
@@ -507,36 +518,13 @@ function findUserProfileFunc(userInput, req, res, next) {
   });
 }
 
-function findUser(userInput, req, res, next) {
+function findUserProfileDocument(userInput, req, res, next) {
   return new Promise(async (resolve, reject) => {
     // ======== Check if the course Exists =======================
-    // const query = scheduleModel.find();
-    // const query = userProfileModel.findOne();
-    // query.setOptions({lean: true});
-    // query.collection(userProfileModel.collection);
-    // // example to do the query in one line
-    // // query.where('object.courseSubject').equals(userInput.courseSubject).exec(function (err, scheduleModel) {
-    // // building a query with multiple where statements
-    // query.where('userID').equals("aaaa");
-    // // query.where('object.courseCatalog').equals(userInput.courseCatalog);
-    // // query.where('object.termTitle').equals(userInput.termTitle);
-    // // query.where('object.termDescription').equals(userInput.termDescription);
-    // const resultQuery = query.exec((err, result) => {
-    //
-    //   resolve(result);
-    //   reject(err);
-    // });
-
-    const resultQuery = await userProfileModel.findOne({userID: "aaaa"}, function (err, result) {
-      console.log(result);
+    let userObject = await userProfileModel.findOne({userID: userInput.userID}, function (err, result) {
+      // console.log(result);
       resolve(result);
     });
-
-    resultQuery.userPassword = "changed";
-    await resultQuery.save();
-    resolve(resultQuery);
-    reject(resultQuery);
-
   });
 }
 
@@ -563,17 +551,36 @@ function isCourseGivenDuringSemesterFunc(userInput, req, res, next) {
 }
 
 
+// ======================== Test Data functions ==========================
+async function creatingTestData(userInput, req, res, next) {
+  const userProfileDoc = await findUserProfileDocument(userInput, req, res, next);
+  // console.log(userProfileDoc);
+
+  let tempCourseCartMap = new Map();
+  let fallCourses = ["ENGR371"];
+  // let winterCourses = ["COMP346", "ELEC275", "ENGR371", "SOEN331", "SOEN341"];
+  tempCourseCartMap.set("Test_Semester1", fallCourses);
+
+  // tempCourseCartMap = null;
+
+  // saving test courses to test preReqOr
+  userProfileDoc.courseCart = tempCourseCartMap;
+  await userProfileDoc.save();
+  // saving test data : Passed
+}
+
+
 // ============================ Classes ======================================
 
 class addCourseStatus {
 
-  constructor(isCourseGivenDuringSemesterBool, hasPreReqBool, hasCoReqBool, notTakenBool, alreadyInCartBool) {
+  constructor(isCourseGivenDuringSemesterBool, hasPreReqBool, hasCoReqBool, notTakenBool, alreadyInCartBool, notifyCalenderBool) {
     this._isCourseGivenDuringSemesterBool = isCourseGivenDuringSemesterBool;
     this._hasPreReqBool = hasPreReqBool;
     this._hasCoReqBool = hasCoReqBool;
     this._notTakenBool = notTakenBool;
     this._alreadyInCartBool = alreadyInCartBool;
-
+    this._notifyCalenderBool = notifyCalenderBool;
   }
 
   getIsCourseGivenDuringSemesterBool() {
@@ -615,6 +622,14 @@ class addCourseStatus {
 
   setAlreadyInCartBool(value) {
     this._alreadyInCartBool = value;
+  }
+
+  getNotifyCalenderBool() {
+    return this._notifyCalenderBool;
+  }
+
+  setNotifyCalenderBool(value) {
+    this._notifyCalenderBool = value;
   }
 }
 

@@ -17,8 +17,8 @@ const userSchema2Model = mongoose.Schema({
   // courseHistory: {type: Map, of: [String]},
   courseHistory: {type: Map},
   // courseHistory: {type: String},
-  tempCourseHistory: {type: Map},
-  // tempCourseHistory: {type: Map, of: [String]},
+  courseCart: {type: Map},
+  // courseCart: {type: Map, of: [String]},
 
   // courseCredits example: 33.5   --> Note: In JS float are also referred as of type "Number"
   completedCredits: {type: Number},

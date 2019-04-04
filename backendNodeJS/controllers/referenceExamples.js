@@ -87,7 +87,7 @@ exports.testingFunc = function (res) {
 
 };
 
-// Testing how to save the course in the tempCourseHistory of the DB
+// Testing how to save the course in the courseCart of the DB
 function MapAndJSONTesting(res) {
   let testMap = new Map();
   let testArr = [0, 1, 2, 3, 4, 5, 6];
