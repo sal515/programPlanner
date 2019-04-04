@@ -24,7 +24,7 @@ import {
   MatSidenavModule,
   MatExpansionModule,
   MatAutocompleteModule,
-  MatChipsModule
+  MatChipsModule, MatDialogModule
 } from '@angular/material';
 // angular imports
 
@@ -43,6 +43,7 @@ import {ClassesService} from './classes-service/classes.service';
 import {AddCourseViewComponent} from './home-view-container/sidebar-view/add-course-view/add-course-view.component';
 import { LoginFormComponent } from './login-view/login-form.component';
 import { SidebarViewComponent } from './home-view-container/sidebar-view/sidebar-view.component';
+import {CourseHistoryComponent, CourseHistoryDialogComponent} from './course-history/course-history.component';
 
 // imports of my custom components
 
@@ -54,7 +55,9 @@ import { SidebarViewComponent } from './home-view-container/sidebar-view/sidebar
     HomeViewContainerComponent,
     AddCourseViewComponent,
     CalendarViewComponent,
-    SidebarViewComponent
+    SidebarViewComponent,
+    CourseHistoryComponent,
+    CourseHistoryDialogComponent
   ],
   imports: [
     BrowserModule,
