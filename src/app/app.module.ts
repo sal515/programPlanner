@@ -43,7 +43,7 @@ import {ClassesService} from './classes-service/classes.service';
 import {AddCourseViewComponent} from './home-view-container/sidebar-view/add-course-view/add-course-view.component';
 import { LoginFormComponent } from './login-view/login-form.component';
 import { SidebarViewComponent } from './home-view-container/sidebar-view/sidebar-view.component';
-import {CourseHistoryComponent, CourseHistoryDialogComponent} from './course-history/course-history.component';
+import {CourseHistoryComponent, CourseHistoryDialogComponent} from './home-view-container/course-history/course-history.component';
 
 // imports of my custom components
 
