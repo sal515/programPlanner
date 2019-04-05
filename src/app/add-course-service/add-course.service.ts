@@ -66,24 +66,19 @@ export class CourseService {
           || !responseData.hasCoReqBool || !responseData.notTakenBool
           || !responseData.alreadyInCartBool) {
           if (!responseData.isCourseGivenDuringSemesterBool) {
-            this.messages.push('Error: Course not available during for this semester.');
-            this.messagesUpdated.next([...this.messages]);
+            this.pushMessage('Error: Course not available for this semester.');
           }
           if (!responseData.hasPreReqBool) {
-            this.messages.push('Error: Missing one or more pre-requisites.');
-            this.messagesUpdated.next([...this.messages]);
+            this.pushMessage('Error: Missing one or more pre-requisites.');
           }
           if (!responseData.hasCoReqBool) {
-            this.messages.push('Error: Missing one or more co-requisites.');
-            this.messagesUpdated.next([...this.messages]);
+            this.pushMessage('Error: Missing one or more co-requisites.');
           }
           if (!responseData.notTakenBool) {
-            this.messages.push('Error: Course has already been taken.');
-            this.messagesUpdated.next([...this.messages]);
+            this.pushMessage('Error: Course has already been taken.');
           }
           if (!responseData.alreadyInCartBool) {
-            this.messages.push('Error: Course already in cart.');
-            this.messagesUpdated.next([...this.messages]);
+            this.pushMessage('Error: Course already in cart.');
           }
           setTimeout(() => {
             this.clearMessages();
@@ -91,8 +86,7 @@ export class CourseService {
         } else {
           this._courseArr.push(course);
           this.courseUpdated.next([...this._courseArr]);
-          this.messages.push('Course successfully added.');
-          this.messagesUpdated.next([...this.messages]);
+          this.pushMessage('Course successfully added.');
           setTimeout(() => {
             this.clearMessages();
           }, 3000);
@@ -109,14 +103,6 @@ export class CourseService {
   }
   getMessageUpdateListener(): Observable<string[]> {
     return this.messagesUpdated.asObservable();
-  }
-  /** Checks if a course is included in the array.
-   *
-   * @param course - The course to check.
-   * @returns boolean - true if included, false if not.
-   */
-  checkIfIncluded(course: AddCourseModel): boolean {
-    return this._courseArr.includes(course);
   }
   /** Removes a course from the course array.
    *
@@ -144,6 +130,15 @@ export class CourseService {
    */
   clearMessages(): void {
     this.messages = [];
+    this.messagesUpdated.next([...this.messages]);
+  }
+  /** Push a string to the message list.
+   *
+   * @param message - the message to push.
+   * @returns void
+   */
+  pushMessage(message: string): void {
+    this.messages.push(message);
     this.messagesUpdated.next([...this.messages]);
   }
 }
