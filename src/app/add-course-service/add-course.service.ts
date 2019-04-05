@@ -18,7 +18,7 @@ import {response} from 'express';
 // The @Injectable({providedIn: 'root'}) === Importing the service in the module.ts file in the provided array
 @Injectable({providedIn: 'root'})
 export class CourseService {
-  private courseAddURL = 'http://localhost:3000/frontend/addCourse';
+  private courseAddURL = 'http://localhost:3000/algorithms/addCourseToSequence';
   private _courseArr: AddCourseModel[] = [];
   // This is a reference to a Subject (JS_Object) of type AddCourseModel[] which will allow event driven updates
   private courseUpdated = new Subject<AddCourseModel[]>();
@@ -53,26 +53,45 @@ export class CourseService {
     );
   }
   addCourse(course: AddCourseModel): void {
-    // the following is sending a http post request to the courseAddURL defined above and gets return data -> messages of type string
-    this.httpClient.post<({messages: string})>(this.courseAddURL, course).subscribe(
-      (responseData) => {
-        // the response data is the messages of type string declared above
-        console.log(responseData.messages);
+    this.httpClient.post<({
+      isCourseGivenDuringSemesterBool: boolean,
+      hasPreReqBool: boolean,
+      hasCoReqBool: boolean,
+      notTakenBool: boolean,
+      alreadyInCartBool: boolean,
+      notifyCalender: boolean
+    })>(this.courseAddURL, course).subscribe((responseData) => {
         this.clearMessages();
-        if (!this.checkIfIncluded(course)) {
-          if (responseData.messages === 'Course received') {
-            this.messages.push(responseData.messages);
+        if (!responseData.isCourseGivenDuringSemesterBool || !responseData.hasPreReqBool
+          || !responseData.hasCoReqBool || !responseData.notTakenBool
+          || !responseData.alreadyInCartBool) {
+          if (!responseData.isCourseGivenDuringSemesterBool) {
+            this.messages.push('Error: Course not available during for this semester.');
             this.messagesUpdated.next([...this.messages]);
           }
-          // updating the local array with the new object received
-          this._courseArr.push(course);
-          // If data in Service changes,this will pass the updated data by value
-          this.courseUpdated.next([...this._courseArr]);
+          if (!responseData.hasPreReqBool) {
+            this.messages.push('Error: Missing one or more pre-requisites.');
+            this.messagesUpdated.next([...this.messages]);
+          }
+          if (!responseData.hasCoReqBool) {
+            this.messages.push('Error: Missing one or more co-requisites.');
+            this.messagesUpdated.next([...this.messages]);
+          }
+          if (!responseData.notTakenBool) {
+            this.messages.push('Error: Course has already been taken.');
+            this.messagesUpdated.next([...this.messages]);
+          }
+          if (!responseData.alreadyInCartBool) {
+            this.messages.push('Error: Course already in cart.');
+            this.messagesUpdated.next([...this.messages]);
+          }
           setTimeout(() => {
             this.clearMessages();
           }, 3000);
         } else {
-          this.messages.push('Error: Course Already In Basket');
+          this._courseArr.push(course);
+          this.courseUpdated.next([...this._courseArr]);
+          this.messages.push('Course successfully added.');
           this.messagesUpdated.next([...this.messages]);
           setTimeout(() => {
             this.clearMessages();
