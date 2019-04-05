@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {MatDialog} from '@angular/material';
 
-
 @Component({
   selector: 'app-course-history-component',
   templateUrl: './course-history.component.html',
@@ -19,8 +18,14 @@ export class CourseHistoryComponent {
   }
 }
 
+
 @Component({
   selector: 'app-course-history-dialog-component',
   templateUrl: 'course-history-dialog.component.html',
 })
-export class CourseHistoryDialogComponent {}
+
+
+// still in progress
+export class CourseHistoryDialogComponent {
+  prinst: Storage['studentProfile'];
+}
