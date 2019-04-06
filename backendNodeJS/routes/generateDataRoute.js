@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const genIdealController = require('../controllers/generateSequencesController');
+const generateDataController = require('../controllers/generateDataController');
 
-router.get("/populateDatabase", genIdealController.populateDatabase);
+router.get("/generateCoursesSchedules", generateDataController.generateCoursesSchedules);
+
+router.get("/generateTestStudents", generateDataController.genTestStudents);
 
 // router.get("/preRequisiteWithOr", genIdealController.generatePreReqORList;
 // router.get("/preReqOnly", genIdealController.generatePreReqOnlyList;
