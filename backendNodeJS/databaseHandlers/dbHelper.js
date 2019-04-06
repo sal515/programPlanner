@@ -46,3 +46,13 @@ exports.saveData = function (ModelObject) {
 exports.onHandleError = function (err) {
   console.log('Error while saving');
 };
+
+
+// ============================== Helper functions =============================
+exports.map2Json = function mapToJson(map) {
+  return JSON.stringify([...map]);
+};
+
+exports.Json2map = function jsonToMap(jsonStr) {
+  return new Map(JSON.parse(jsonStr));
+};

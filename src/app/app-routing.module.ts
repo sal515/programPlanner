@@ -1,9 +1,9 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {HomeViewContainerComponent} from './home-view-container/home-view-container.component';
-import {LoginFormComponent} from "./login-view/login-form.component";
-import {AuthenticationGuard} from "./authentication-service-guards/authenticationGuard/authentication.guard";
-import {AlreadyLoggedInGuard} from "./authentication-service-guards/alreadyLoggedInGuard/alreadyLoggedIn.guard";
+import {LoginFormComponent} from './login-view/login-form.component';
+import {AuthenticationGuard} from './authentication-service-guards/authenticationGuard/authentication.guard';
+import {AlreadyLoggedInGuard} from './authentication-service-guards/alreadyLoggedInGuard/alreadyLoggedIn.guard';
 
 const routes: Routes = [
   // the root page routing path
@@ -31,7 +31,7 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(
     routes,
     { enableTracing: true }
-  ),]
+  ), ]
 })
 export class AppRoutingModule {
 }
