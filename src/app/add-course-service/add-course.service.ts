@@ -26,32 +26,28 @@ export class CourseService {
   private basketUpdated = new Subject<AddCourseModel[]>();
   private coursesUpdated = new Subject<AddCourseModel[]>();
   private messagesUpdated = new Subject<string[]>();
+  private userID: string;
   private httpClient: HttpClient;
 
 
   constructor(httpClient: HttpClient) {
     this.httpClient = httpClient;
+    this.userID = ' ';
   }
-
-
   getCourses(): void {
-    // array passed by value
-    // ( preferred method so that different components doesn't modify the array randomly)
-    // return [...this.basket];
-    // array passed by reference
-    // return this.basket;
-
-    // Angular http clients uses observables, so needs to be subscribed to listen
-    // We don't have to unsubscribe observables that are build into Angular to prevent memory leaks, its Handled!
-    // We only need to unsubscribe observables that are created by us
-    this.httpClient.get <{ coursesArrayOfMaps: string }>(this.getCourseURL).subscribe((courseData) => {
-        const arr = JSON.parse(courseData.coursesArrayOfMaps);
-        this.courses = arr.map(course =>
-          ({semester : course.termDescription, name : course.courseSubject, code : course.courseCatalog}));
-        // adding our own observable to the coursesArray
-        this.coursesUpdated.next([...this.courses]);
+    this.httpClient.get <{ coursesArrayOfMaps: string[] }>(this.getCourseURL).subscribe((courseData) => {
+        for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
+          const map = JSON.parse(courseData.coursesArrayOfMaps[i]);
+          const course: AddCourseModel = {
+            id: this.userID,
+            semester: map.termDescription,
+            name: map.courseSubject,
+            code: map.courseCatalog
+          };
+          this.courses.push(course);
+          this.coursesUpdated.next([...this.courses]);
+        }
       }
-      // REMEMBER : To take care of the proper headers on the server-side response to take care of CORS.
     );
   }
   addCourse(course: AddCourseModel): void {
