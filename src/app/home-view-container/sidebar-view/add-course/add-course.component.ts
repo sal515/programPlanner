@@ -10,7 +10,7 @@ import {Subscription} from 'rxjs';
   styleUrls: ['./add-course.component.css']
 })
 export class AddCourseComponent implements OnInit, OnDestroy {
-  courses = COURSELIST;
+  courses: AddCourseModel[] = [];
   selectedCourse: AddCourseModel;
   semesterList: AddCourseModel[] = [];
   nameList: AddCourseModel[] = [];
