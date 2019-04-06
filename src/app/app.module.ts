@@ -40,7 +40,8 @@ import {HeaderViewComponent} from './home-view-container/header-view/header-view
 import {HomeViewContainerComponent} from './home-view-container/home-view-container.component';
 import {CalendarViewComponent} from './home-view-container/calendar-view/calendar-view.component';
 import {ClassesService} from './classes-service/classes.service';
-import {AddCourseViewComponent} from './home-view-container/sidebar-view/add-course-view/add-course-view.component';
+import {AddCourseComponent} from './home-view-container/sidebar-view/add-course/add-course.component';
+import {CourseBasketComponent} from './home-view-container/sidebar-view/course-basket/course-basket.component';
 import { LoginFormComponent } from './login-view/login-form.component';
 import { SidebarViewComponent } from './home-view-container/sidebar-view/sidebar-view.component';
 
@@ -52,7 +53,8 @@ import { SidebarViewComponent } from './home-view-container/sidebar-view/sidebar
     LoginFormComponent,
     HeaderViewComponent,
     HomeViewContainerComponent,
-    AddCourseViewComponent,
+    AddCourseComponent,
+    CourseBasketComponent,
     CalendarViewComponent,
     SidebarViewComponent
   ],
