@@ -4,7 +4,7 @@
     <mat-form-field>
       <mat-chip-list>
         <mat-chip *ngFor="let course of basket" [selectable]="true"
-                  [removable]="true" (removed)="courseService.remove(course)">
+                  [removable]="true" (removed)="courseService.removeCourse(course)">
           {{course.name}}-{{course.code}}
           <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
         </mat-chip>

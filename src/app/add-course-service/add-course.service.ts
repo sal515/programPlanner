@@ -19,35 +19,36 @@ import {response} from 'express';
 @Injectable({providedIn: 'root'})
 export class CourseService {
   private courseAddURL = 'http://localhost:3000/algorithms/addCourseToSequence';
-  private _courseArr: AddCourseModel[] = [];
-  // This is a reference to a Subject (JS_Object) of type AddCourseModel[] which will allow event driven updates
-  private courseUpdated = new Subject<AddCourseModel[]>();
-  // reference to the http module imported in the service, !Remember HttpClientModule needs to be added in main!
-  private httpClient: HttpClient;
+  private getCourseURL = 'http://localhost:3000/algorithms/getCourses';
+  private basket: AddCourseModel[] = [];
+  private courses: AddCourseModel[] = [];
   private messages: string[] = [];
+  private basketUpdated = new Subject<AddCourseModel[]>();
+  private coursesUpdated = new Subject<AddCourseModel[]>();
   private messagesUpdated = new Subject<string[]>();
+  private httpClient: HttpClient;
 
-  // Injecting the HttpClient in this service file using the constructor(varName: HttpClient)
+
   constructor(httpClient: HttpClient) {
     this.httpClient = httpClient;
   }
 
-// arrays and objects in JS are !!reference types!!
+
   getCourse(): void {
     // array passed by value
     // ( preferred method so that different components doesn't modify the array randomly)
-    // return [...this._courseArr];
+    // return [...this.basket];
     // array passed by reference
-    // return this._courseArr;
+    // return this.basket;
 
     // Angular http clients uses observables, so needs to be subscribed to listen
     // We don't have to unsubscribe observables that are build into Angular to prevent memory leaks, its Handled!
     // We only need to unsubscribe observables that are created by us
     this.httpClient.get <{ messages: string, courses: AddCourseModel[] }>(this.courseAddURL).subscribe((courseData) => {
         // The json will be extracted automatically by the get function
-        this._courseArr = courseData.courses;
+        this.courses = courseData.courses;
         // adding our own observable to the coursesArray
-        this.courseUpdated.next([...this._courseArr]);
+        this.coursesUpdated.next([...this.courses]);
       }
       // REMEMBER : To take care of the proper headers on the server-side response to take care of CORS.
     );
@@ -84,8 +85,8 @@ export class CourseService {
             this.clearMessages();
           }, 3000);
         } else {
-          this._courseArr.push(course);
-          this.courseUpdated.next([...this._courseArr]);
+          this.basket.push(course);
+          this.basketUpdated.next([...this.basket]);
           this.pushMessage('Course successfully added.');
           setTimeout(() => {
             this.clearMessages();
@@ -94,35 +95,34 @@ export class CourseService {
       }
     );
   }
-  // This method passes an observable object that can be subscribed in the components
-  // This update the data array in this service even though the array is passed by valued
-  getCourseUpdateListener(): Observable<AddCourseModel[]> {
-    // This will notify all the components that are subscribed, if courseArr changes
-    // And the data from the service will be updated in the components subscribed
-    return this.courseUpdated.asObservable();
-  }
-  getMessageUpdateListener(): Observable<string[]> {
-    return this.messagesUpdated.asObservable();
-  }
   /** Removes a course from the course array.
    *
    * @param course - The course to be removed.
    * @returns void
    */
-  remove(course: AddCourseModel): void {
-    const index = this._courseArr.indexOf(course);
+  removeCourse(course: AddCourseModel): void {
+    const index = this.basket.indexOf(course);
     if (index >= 0) {
-      this._courseArr.splice(index, 1);
+      this.basket.splice(index, 1);
     }
-    this.courseUpdated.next([...this._courseArr]);
+    this.basketUpdated.next([...this.basket]);
+  }
+  getBasketUpdateListener(): Observable<AddCourseModel[]> {
+    return this.basketUpdated.asObservable();
+  }
+  getCoursesUpdateListener(): Observable<AddCourseModel[]> {
+     return this.coursesUpdated.asObservable();
+  }
+  getMessageUpdateListener(): Observable<string[]> {
+    return this.messagesUpdated.asObservable();
   }
   /** Clears the course array.
    *
    * @returns void
    */
   clearCourse(): void {
-    this._courseArr = [];
-    this.courseUpdated.next([...this._courseArr]);
+    this.basket = [];
+    this.basketUpdated.next([...this.basket]);
   }
   /** Clears the messages array.
    *

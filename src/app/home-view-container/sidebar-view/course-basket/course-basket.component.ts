@@ -22,7 +22,7 @@ export class CourseBasketComponent implements OnInit, OnDestroy {
    * @returns void
    */
   ngOnInit() {
-    this.courseSubscription = this.courseService.getCourseUpdateListener().subscribe((courses: AddCourseModel[]) => {
+    this.courseSubscription = this.courseService.getBasketUpdateListener().subscribe((courses: AddCourseModel[]) => {
       this.basket = courses;
     });
   }
