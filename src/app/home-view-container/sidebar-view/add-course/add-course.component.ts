@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {AddCourseModel} from '../../../models/course.model';
-import {COURSELIST} from '../../../models/course-list.model';
+
 import {CourseService} from '../../../add-course-service/add-course.service';
 import {Subscription} from 'rxjs';
 
@@ -10,18 +10,20 @@ import {Subscription} from 'rxjs';
   styleUrls: ['./add-course.component.css']
 })
 export class AddCourseComponent implements OnInit, OnDestroy {
-  courses: AddCourseModel[] = [];
+  courses: AddCourseModel[];
   selectedCourse: AddCourseModel;
   semesterList: AddCourseModel[] = [];
   nameList: AddCourseModel[] = [];
   codeList: AddCourseModel[] = [];
   input: string;
   messages: string[];
-  // Local subscription object to manipulate subscription and !PREVENT MEMORY LEAKS!
-  // This is a local service property that is set equal to the service that is injected below
+
   private messageSubscription: Subscription;
   private courseSubscription: Subscription;
+  private semesterSubscription: Subscription;
+
   courseService: CourseService;
+
   constructor(courseService: CourseService) {
     this.courseService = courseService;
   }
@@ -65,19 +67,21 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     return list;
   }
 
-  /** Generates a list of semesters on page load and subscribes to the http response messages from addCourse.
+  /** Generate a list of courses and semesters on page load and subscribe to the courses, semester and messages in the addCourse service.
    *
    * @returns void
    */
   ngOnInit(): void {
-    this.semesterList = AddCourseComponent.genList(this.courses, this.selectedCourse, 'semester');
-    this.courseService.getCourses();
-    this.messageSubscription = this.courseService.getMessageUpdateListener().subscribe((message: string[]) => {
-      this.messages = message;
-    });
     this.courseSubscription = this.courseService.getCoursesUpdateListener().subscribe((courses: AddCourseModel[]) => {
       this.courses = courses;
     });
+    this.semesterSubscription = this.courseService.getSemestersUpdateListener().subscribe((semesters: AddCourseModel[]) => {
+      this.semesterList = semesters;
+    });
+    this.messageSubscription = this.courseService.getMessageUpdateListener().subscribe((message: string[]) => {
+      this.messages = message;
+    });
+    this.courseService.getCourses();
   }
 
   /** Method that is executed upon selecting a course from a drop down list. It will will set the value of the selected course and generate
@@ -94,7 +98,7 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     this.codeList = AddCourseComponent.genList(this.codeList, this.selectedCourse, 'code');
   }
 
-  /** Method that is executed upon selecting a semester. Calls onSelect, resets the code input and empties the basket.
+  /** Method that is executed upon selecting a semester. Calls onSelect and reset the user input.
    *
    * @param course - The selected semester.
    * @returns void
@@ -102,7 +106,6 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   onSemesterSelect(course: AddCourseModel): void {
     this.onSelect(course);
     this.clearInput();
-    this.courseService.clearCourse();
   }
 
   /** Method generates a list of course for the autocomplete dropdown list of the code input.
@@ -133,20 +136,25 @@ export class AddCourseComponent implements OnInit, OnDestroy {
       return course.code;
     }
   }
+
   /** Add an input course to the basket using the service method addCourse. Displays an appropriate message based on the input or the
    * result of addCourse.
    *
    * @param course - The course to add to the basket.
    * @returns void
    */
+
   onSubmit(course: AddCourseModel) {
       this.courseService.addCourse(course);
   }
+
   /** Unsubscribe from the message to prevent memory leaks when the component is destroyed.
    *
    * @returns void
    */
   ngOnDestroy() {
     this.messageSubscription.unsubscribe();
+    this.courseSubscription.unsubscribe();
+    this.semesterSubscription.unsubscribe();
   }
 }

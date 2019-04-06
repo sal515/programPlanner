@@ -1,55 +1,64 @@
-// This is a service to handle data from the database or the Courses
-// This service needs to be exported for other components to use it
-// Then to use this service in other components:
-// It must be injected to components that needs to use it
-
 import {Injectable} from '@angular/core';
 import {AddCourseModel} from '../models/course.model';
-// importing the http client to inject it to the service, Remember: !HttpClientModule! needs to be added in main!
 import {HttpClient} from '@angular/common/http';
-
-// rxjs allows us to code event-driven programs,
-// Usage example: update the data array in this service based on changes in other components
-// This allows us to pass the data array in this service by reference
 import {Subject} from 'rxjs';
 import {Observable} from 'rxjs';
-import {response} from 'express';
 
-// The @Injectable({providedIn: 'root'}) === Importing the service in the module.ts file in the provided array
-@Injectable({providedIn: 'root'})
+@Injectable({
+  providedIn: 'root'
+})
+
 export class CourseService {
+
   private courseAddURL = 'http://localhost:3000/algorithms/addCourseToSequence';
   private getCourseURL = 'http://localhost:3000/algorithms/getCourses';
-  private basket: AddCourseModel[] = [];
-  private courses: AddCourseModel[] = [];
-  private messages: string[] = [];
-  private basketUpdated = new Subject<AddCourseModel[]>();
-  private coursesUpdated = new Subject<AddCourseModel[]>();
-  private messagesUpdated = new Subject<string[]>();
-  private userID: string;
+
+  readonly userID: string;
   private httpClient: HttpClient;
 
+  private basket: AddCourseModel[] = [];
+  private courses: AddCourseModel[] = [];
+  private semesters: AddCourseModel[] = [];
+  private messages: string[] = [];
+
+  private basketUpdated = new Subject<AddCourseModel[]>();
+  private coursesUpdated = new Subject<AddCourseModel[]>();
+  private semestersUpdated = new Subject<AddCourseModel[]>();
+  private messagesUpdated = new Subject<string[]>();
 
   constructor(httpClient: HttpClient) {
     this.httpClient = httpClient;
     this.userID = ' ';
   }
+
+  /** Retrieves a course list from the database. Also generates a list of semesters from this list.
+   *
+   * @returns void
+   */
   getCourses(): void {
     this.httpClient.get <{ coursesArrayOfMaps: string[] }>(this.getCourseURL).subscribe((courseData) => {
         for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
-          const map = JSON.parse(courseData.coursesArrayOfMaps[i]);
+          const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
           const course: AddCourseModel = {
             id: this.userID,
-            semester: map.termDescription,
-            name: map.courseSubject,
-            code: map.courseCatalog
+            semester: map.get('termDescription'),
+            name: map.get('courseSubject'),
+            code: map.get('courseCatalog')
           };
           this.courses.push(course);
           this.coursesUpdated.next([...this.courses]);
         }
+        this.genSemesterList(this.courses);
+        this.semestersUpdated.next([...this.semesters]);
       }
     );
   }
+
+  /** Adds a course to the user's profile. Also adds messages to the message array based on the response of the POST request.
+   *
+   * @param course - the course to add.
+   * @returns void
+   */
   addCourse(course: AddCourseModel): void {
     this.httpClient.post<({
       isCourseGivenDuringSemesterBool: boolean,
@@ -92,7 +101,8 @@ export class CourseService {
       }
     );
   }
-  /** Removes a course from the course array.
+
+  /** Removes a course from the course array ***WIP***.
    *
    * @param course - The course to be removed.
    * @returns void
@@ -104,23 +114,39 @@ export class CourseService {
     }
     this.basketUpdated.next([...this.basket]);
   }
+
+  /** Creates an observable for the basket.
+   *
+   * @returns Observable<AddCourseModel[]>
+   */
   getBasketUpdateListener(): Observable<AddCourseModel[]> {
     return this.basketUpdated.asObservable();
   }
+
+  /** Creates an observable for the course list.
+   *
+   * @returns Observable<AddCourseModel[]>
+   */
   getCoursesUpdateListener(): Observable<AddCourseModel[]> {
      return this.coursesUpdated.asObservable();
   }
+
+  /** Creates an observable for the semester list.
+   *
+   * @returns Observable<AddCourseModel[]>
+   */
+  getSemestersUpdateListener(): Observable<AddCourseModel[]> {
+    return this.semestersUpdated.asObservable();
+  }
+
+  /** Creates an observable for the response messages.
+   *
+   * @returns Observable<string[]>
+   */
   getMessageUpdateListener(): Observable<string[]> {
     return this.messagesUpdated.asObservable();
   }
-  /** Clears the course array.
-   *
-   * @returns void
-   */
-  clearCourse(): void {
-    this.basket = [];
-    this.basketUpdated.next([...this.basket]);
-  }
+
   /** Clears the messages array.
    *
    * @returns void
@@ -137,5 +163,20 @@ export class CourseService {
   pushMessage(message: string): void {
     this.messages.push(message);
     this.messagesUpdated.next([...this.messages]);
+  }
+
+  /** Generate a list of unique semesters from a course array.
+   *
+   * @param courses - the source array.
+   * @returns void
+   */
+  genSemesterList(courses: AddCourseModel[]): void {
+    const stringList: string[] = [];
+    for (let i = 0; i < courses.length; i++) {
+      if (!this.semesters.includes(courses[i]) && !stringList.includes(courses[i].semester)) {
+        this.semesters.push(courses[i]);
+        stringList.push(courses[i].semester);
+      }
+    }
   }
 }
