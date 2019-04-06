@@ -34,7 +34,7 @@ export class CourseService {
   }
 
 
-  getCourse(): void {
+  getCourses(): void {
     // array passed by value
     // ( preferred method so that different components doesn't modify the array randomly)
     // return [...this.basket];
@@ -44,9 +44,10 @@ export class CourseService {
     // Angular http clients uses observables, so needs to be subscribed to listen
     // We don't have to unsubscribe observables that are build into Angular to prevent memory leaks, its Handled!
     // We only need to unsubscribe observables that are created by us
-    this.httpClient.get <{ messages: string, courses: AddCourseModel[] }>(this.courseAddURL).subscribe((courseData) => {
-        // The json will be extracted automatically by the get function
-        this.courses = courseData.courses;
+    this.httpClient.get <{ coursesArrayOfMaps: string }>(this.getCourseURL).subscribe((courseData) => {
+        const arr = JSON.parse(courseData.coursesArrayOfMaps);
+        this.courses = arr.map(course =>
+          ({semester : course.termDescription, name : course.courseSubject, code : course.courseCatalog}));
         // adding our own observable to the coursesArray
         this.coursesUpdated.next([...this.courses]);
       }

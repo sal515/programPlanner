@@ -20,6 +20,7 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   // Local subscription object to manipulate subscription and !PREVENT MEMORY LEAKS!
   // This is a local service property that is set equal to the service that is injected below
   private messageSubscription: Subscription;
+  private courseSubscription: Subscription;
   courseService: CourseService;
   constructor(courseService: CourseService) {
     this.courseService = courseService;
@@ -70,8 +71,12 @@ export class AddCourseComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.semesterList = AddCourseComponent.genList(this.courses, this.selectedCourse, 'semester');
+    this.courseService.getCourses();
     this.messageSubscription = this.courseService.getMessageUpdateListener().subscribe((message: string[]) => {
       this.messages = message;
+    });
+    this.courseSubscription = this.courseService.getCoursesUpdateListener().subscribe((courses: AddCourseModel[]) => {
+      this.courses = courses;
     });
   }
 
