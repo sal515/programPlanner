@@ -1,37 +1,37 @@
 import {AddCourseModel} from './course.model';
 
 export const COURSELIST: AddCourseModel[] = [
-  { id: '0',
+  { id: '',
     semester: 'Summer 2019',
     name: 'COMP',
     code: '248'
   },
-  { id: '1',
+  { id: '',
     semester: 'Summer 2019',
     name: 'SOEN',
     code: '331'
   },
-  { id: '2',
+  { id: '',
     semester: 'Summer 2019',
     name: 'COMP',
     code: '249'
   },
-  { id: '3',
+  { id: '',
     semester: 'Summer 2019',
     name: 'COMP',
     code: '346'
   },
-  { id: '4',
+  { id: '',
     semester: 'Fall 2019',
     name: 'SOEN',
     code: '287'
   },
-  { id: '5',
+  { id: '',
     semester: 'Fall 2019',
     name: 'COEN',
     code: '287'
   },
-  { id: '6',
+  { id: '',
     semester: 'Summer 2019',
     name: 'SOEN',
     code: '287'
