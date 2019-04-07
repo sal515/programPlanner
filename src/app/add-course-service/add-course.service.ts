@@ -3,6 +3,7 @@ import {AddCourseModel} from '../models/course.model';
 import {HttpClient} from '@angular/common/http';
 import {Subject} from 'rxjs';
 import {Observable} from 'rxjs';
+import {AuthenticationService} from '../authentication-service-guards/authentication.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,9 +27,11 @@ export class CourseService {
   private semestersUpdated = new Subject<AddCourseModel[]>();
   private messagesUpdated = new Subject<string[]>();
 
-  constructor(httpClient: HttpClient) {
+  AuthenticationService: AuthenticationService;
+
+  constructor(httpClient: HttpClient, service: AuthenticationService) {
     this.httpClient = httpClient;
-    this.userID = ' ';
+    this.AuthenticationService = service;
   }
 
   /** Retrieves a course list from the database. Also generates a list of semesters from this list.
@@ -37,10 +40,11 @@ export class CourseService {
    */
   getCourses(): void {
     this.httpClient.get <{ coursesArrayOfMaps: string[] }>(this.getCourseURL).subscribe((courseData) => {
+        const userID = this.AuthenticationService.getUserId();
         for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
           const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
           const course: AddCourseModel = {
-            id: this.userID,
+            id: userID,
             semester: map.get('termDescription'),
             name: map.get('courseSubject'),
             code: map.get('courseCatalog')
