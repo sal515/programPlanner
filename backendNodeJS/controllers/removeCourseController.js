@@ -1,5 +1,4 @@
 const dbHelpers = require("../databaseHandlers/dbHelper");
-const mongoose = require('mongoose');
 
 //imported schema
 const userProfileModel = require('../models/userSchema2Model');
@@ -13,30 +12,28 @@ var exports = module.exports = {};
  * @param next
  * @returns calls generateSchedule once the process is complete.
  */
-exports.removeCourse = (req, res, next) => {
-
-    // connecting to the database using the default connection method
-    connect2DB();
+exports.removeCourse = async (req, res, next) => {
+    await connect2DB();
 
     const frontEndInput = req.query;
     const userID = frontEndInput.userID;
     const subject = frontEndInput.courseSubject + frontEndInput.courseCatalog;
     const semester = frontEndInput.termDescription;
-    const userProfile = getUserProfile(userID);
-    const courseCart = getSemesterCourseCart(semester, userProfile);
+    const userProfile = await getUserProfile(userID);
+    const semesterCourseCart = getSemesterCourseCart(semester, userProfile.courseCart);
 
-    const success = removeCourse(courseCart, subject);
+    const success = removeCourse(semesterCourseCart, subject);
 
     if (success) {
-        updateCourseCart(userProfile, semester, courseCart);
-
+        updateCourseCart(userProfile, semester, semesterCourseCart);
+        await updateUserProfile(userProfile, userProfile.courseCart);
         //TODO: call generate sequence
+        //scheduleGeneration(semester, userID);
     } else {
         res.status(200).json({
             message: "Unable to remove course"
         })
     }
-    mongoose.disconnect();
 };
 
 /**
@@ -45,18 +42,17 @@ exports.removeCourse = (req, res, next) => {
  * @returns {Query|void}
  */
 function getUserProfile(userID) {
-
     return userProfileModel.findOne({userID: userID});
 }
 
 /**
  * Returns the semester from which the class should be deleted
  * @param semester
- * @param userProfile
+ * @param courseCart
  * @returns [courses]
  */
-function getSemesterCourseCart(semester, userProfile) {
-    return userProfile.get(semester);
+function getSemesterCourseCart(semester, courseCart) {
+    return courseCart.get(semester);
 }
 
 /**
@@ -85,26 +81,37 @@ function updateCourseCart(userProfile, semester, semesterCart) {
     userProfile.courseCart.set(semester, semesterCart);
 }
 
+function updateUserProfile(userProfile, courseCart) {
+    return userProfileModel.findOneAndUpdate({userID: userProfile.userID}, {courseCart: courseCart});
+}
+
+/**
+ * Tests the logic and general functionality of the remove function
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<void>}
+ * @constructor
+ */
 exports.TestRemoveCourse = async (req, res, next) => {
 
-    // connecting to the database using the default connection method
     await connect2DB();
 
     let userID = "1bbbbbbb";
     let userProfile = await getUserProfile(userID);
-    console.log(userProfile);
+    let courseCart = getSemesterCourseCart("Fall 2017", userProfile.courseCart);
+
+    removeCourse(courseCart, "SOEN341");
+    courseCart = getSemesterCourseCart("Fall 2017", userProfile.courseCart);
+    updateCourseCart(userProfile, "Fall 2017", courseCart);
+    console.log(userProfile.courseCart);
+    userProfile = await updateUserProfile(userProfile, userProfile.courseCart);
+
     res.status(200).json({
         message: "ok"
     });
-
-    // const courseCart = getSemesterCourseCart(semester, userProfile);
-    //
-    // const success = removeCourse(courseCart, subject);
-    // updateCourseCart(userProfile, semester, courseCart);
-
 };
 
 async function connect2DB() {
-// connect to database
     await dbHelpers.defaultConnectionToDB();
 }
