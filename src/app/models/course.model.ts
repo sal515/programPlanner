@@ -1,5 +1,6 @@
-export class Course {
-  semester: string;
-  name: string;
-  code: string;
+export class AddCourseModel {
+  id: any;
+  semester: any;
+  name: any;
+  code: any;
 }

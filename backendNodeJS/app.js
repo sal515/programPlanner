@@ -15,9 +15,10 @@ const corsHelper = require('./server/corsHelper');
 // Importing the routing file to execute the required functions
 // ---------------------------------------------------------------------
 // importing routes files from the routes directory for simplification of this files
-const genSequenceRoute = require('./routes/generateSequencesRoute');
+const genDataRoute = require('./routes/generateDataRoute');
 const validateLoginRoute = require('./routes/validateLoginRoute');
 const algorithmRoute = require('./routes/algorithmsRoute');
+const frontendRoute = require('./routes/frontendRoute');
 // ====================================================================
 
 // ---------------------------------------------------------------------
@@ -46,15 +47,16 @@ app.use((req, res, next) => {
 // ExpressJS middleware used to forward HTTP request to their proper router files
 // ---------------------------------------------------------------------
 // Forwarding the initial requests from the user to generate their ideal Schedule
-app.use("/api/generateSequences", genSequenceRoute);
+app.use("/api/generateData", genDataRoute);
 app.use("/validateLogin", validateLoginRoute);
 app.use("/algorithms", algorithmRoute );
+app.use("/frontend",  frontendRoute);
 
 // middleware handling http request that has no specific routing path by sending error message as response
 app.use((req, res, next) => {
   // TODO Cleanup: Remove console log, when test is done
-  console.log('ERROR: Requested REST API Endpoint was not found');
-  console.log('Default Request Handler Executed');
+  // console.log('ERROR: Requested REST API Endpoint was not found');
+  // console.log('Default Request Handler Executed');
   res.send('ERROR: Requested REST API Endpoint was not found - Default Request Handler Executed');
 });
 // ====================================================================

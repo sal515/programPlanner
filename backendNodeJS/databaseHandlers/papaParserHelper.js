@@ -22,7 +22,7 @@ exports.parseCSVAndSaveToDB = function (csvFilePath, model) {
     // transformHeader: undefined,
     // dynamicTyping: false,
     // preview: 0,
-    // encoding: "",
+    encoding: "UTF-8",
     worker: false,
     // comments: false,
     // step: function (row) {
