@@ -16,7 +16,7 @@ var exports = module.exports = {};
 exports.removeCourse = (req, res, next) => {
 
     // connecting to the database using the default connection method
-    dbHelpers.defaultConnectionToDB();
+    connect2DB();
 
     const frontEndInput = req.query;
     const userID = frontEndInput.userID;
@@ -45,22 +45,9 @@ exports.removeCourse = (req, res, next) => {
  * @returns {Query|void}
  */
 function getUserProfile(userID) {
-  dbHelpers.defaultConnectionToDB();
 
-    let userProfile = userProfileModel.findOne({userID: userID});
-
-    userProfile.exec( function (er, userProfileModel) {
-       try {
-         console.log(userProfileModel);
-          if(userProfileModel.userID) {
-               return userProfileModel;
-           }
-       } catch (er) {
-           return null;
-       }
-    });
-    // console.log(userProfile);
-    // return userProfile;
+    dbHelpers.defaultConnectionToDB();
+    return userProfileModel.findOne({userID: userID});
 }
 
 /**
@@ -99,13 +86,13 @@ function updateCourseCart(userProfile, semester, semesterCart) {
     userProfile.courseCart.set(semester, semesterCart);
 }
 
-exports.TestRemoveCourse = (req, res, next) => {
+exports.TestRemoveCourse = async (req, res, next) => {
 
     // connecting to the database using the default connection method
-    dbHelpers.defaultConnectionToDB();
+    await connect2DB();
 
     let userID = "1bbbbbbb";
-    let userProfile = getUserProfile(userID);
+    let userProfile = await getUserProfile(userID);
     console.log(userProfile);
     res.status(200).json({
         message: "ok"
@@ -116,5 +103,9 @@ exports.TestRemoveCourse = (req, res, next) => {
     // const success = removeCourse(courseCart, subject);
     // updateCourseCart(userProfile, semester, courseCart);
 
-    mongoose.disconnect();
 };
+
+async function connect2DB() {
+// connect to database
+    await dbHelpers.defaultConnectionToDB();
+}
