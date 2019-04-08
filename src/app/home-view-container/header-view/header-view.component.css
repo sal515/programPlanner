@@ -1,9 +1,19 @@
-/*.example-icon {*/
-  /*padding: 0 14px;*/
-/*}*/
+span {
+  text-align: center;
+  color: #FFAB1C;
+  text-shadow: 2px 2px 5px #011627, 1px 1px 5px #011627;
+  font-family: "Gill Sans MT", sans-serif;
+  font-size: 28px;
+}
 
 .menu_button {
   margin: 0 5px;
+  background: #E02638;
+  text-align: center;
+  color: #FFAB1C;
+  text-shadow: 2px 2px 5px #011627, 1px 1px 5px #011627;
+  font-family: "Gill Sans MT", sans-serif;
+  font-size: 28px;
 }
 
 .example-spacer {
@@ -12,7 +22,11 @@
 
 a {
   text-decoration: none;
-  color: white;
+  text-align: center;
+  color: #FFAB1C;
+  text-shadow: 2px 2px 5px #011627, 1px 1px 5px #011627;
+  font-family: "Gill Sans MT", sans-serif;
+  font-size: 28px;
 }
 
 ul {

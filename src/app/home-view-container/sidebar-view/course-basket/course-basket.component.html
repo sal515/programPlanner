@@ -1,0 +1,14 @@
+<mat-card>
+  <form #enrollform="ngForm">
+    <mat-label>Course Basket</mat-label>
+    <mat-form-field>
+      <mat-chip-list>
+        <mat-chip *ngFor="let course of basket" [selectable]="true"
+                  [removable]="true" (removed)="courseService.removeCourse(course)">
+          {{course.name}}-{{course.code}}
+          <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+        </mat-chip>
+      </mat-chip-list>
+    </mat-form-field>
+  </form >
+</mat-card>

@@ -1,0 +1,7 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/course-history",
+  "lib": {
+    "entryFile": "src/src/app/courseHistory.ts"
+  }
+}
