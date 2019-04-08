@@ -45,12 +45,14 @@ exports.removeCourse = (req, res, next) => {
  * @returns {Query|void}
  */
 function getUserProfile(userID) {
+  dbHelpers.defaultConnectionToDB();
 
     let userProfile = userProfileModel.findOne({userID: userID});
 
     userProfile.exec( function (er, userProfileModel) {
        try {
-           if(userProfileModel) {
+         console.log(userProfileModel);
+          if(userProfileModel.userID) {
                return userProfileModel;
            }
        } catch (er) {
@@ -103,7 +105,7 @@ exports.TestRemoveCourse = (req, res, next) => {
     dbHelpers.defaultConnectionToDB();
 
     let userID = "1bbbbbbb";
-    const userProfile = getUserProfile(userID);
+    let userProfile = getUserProfile(userID);
     console.log(userProfile);
     res.status(200).json({
         message: "ok"
