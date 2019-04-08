@@ -10,6 +10,7 @@ import {Router} from '@angular/router';
  */
 export class AuthenticationService {
   private validateUserURL = 'http://localhost:3000/validateLogin';
+  private hasLoggedOut = false;
 
   constructor(private http: HttpClient, private router: Router) {}
   // http: HTTP request handler

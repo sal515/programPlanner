@@ -1,16 +1,10 @@
-<mat-toolbar>
-  <span>Program Planner</span>
+<mat-toolbar color="primary">
+  <span >Program Planner</span>
   <span class="example-spacer"></span>
-  <span class="menu_button">
-    <a mat-button routerLink=""> Home </a>
-  </span>
-  <span class="menu_button">
-    <a mat-button routerLink="/course_create_list" routerLinkActive="mat-accent"> Create New Course </a>
+  <span>
+    <app-course-history-component></app-course-history-component>
   </span>
   <span>
-        <app-course-history-component></app-course-history-component>
-  </span>
-  <span>
-    <button mat-button (click)="logout()"> Log out</button>
+    <a><button color="accent" mat-button (click)="logout()">Log Out</button></a>
   </span>
 </mat-toolbar>

@@ -1,12 +1,14 @@
 main {
   margin: 1rem auto;
-  width: 60%;
+  width: 80%;
 }
 .example-container {
   position: absolute;
+  z-index: 1;
   top: 60px;
   bottom: 0;
   left: 0;
   right: 0;
   background: #eee;
 }
+
