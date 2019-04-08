@@ -44,10 +44,10 @@ export class CourseService {
         for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
           const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
           const course: AddCourseModel = {
-            id: userID,
-            semester: map.get('termDescription'),
-            name: map.get('courseSubject'),
-            code: map.get('courseCatalog')
+            userID: userID,
+            termDescription: map.get('termDescription'),
+            courseSubject: map.get('courseSubject'),
+            courseCatalog: map.get('courseCatalog')
           };
           this.courses.push(course);
           this.coursesUpdated.next([...this.courses]);
@@ -67,37 +67,33 @@ export class CourseService {
     this.httpClient.post<({
       isCourseGivenDuringSemesterBool: boolean,
       hasPreReqBool: boolean,
-      hasCoReqBool: boolean,
       notTakenBool: boolean,
       alreadyInCartBool: boolean,
-      notifyCalender: boolean
+      notifyCalenderBool: boolean
     })>(this.courseAddURL, course).subscribe((responseData) => {
         this.clearMessages();
-        if (!responseData.isCourseGivenDuringSemesterBool || !responseData.hasPreReqBool
-          || !responseData.hasCoReqBool || !responseData.notTakenBool
-          || !responseData.alreadyInCartBool) {
-          if (!responseData.isCourseGivenDuringSemesterBool) {
-            this.pushMessage('Error: Course not available for this semester.');
-          }
-          if (!responseData.hasPreReqBool) {
-            this.pushMessage('Error: Missing one or more pre-requisites.');
-          }
-          if (!responseData.hasCoReqBool) {
-            this.pushMessage('Error: Missing one or more co-requisites.');
-          }
-          if (!responseData.notTakenBool) {
-            this.pushMessage('Error: Course has already been taken.');
-          }
-          if (!responseData.alreadyInCartBool) {
+        if (!responseData.isCourseGivenDuringSemesterBool || !responseData.hasPreReqBool || responseData.alreadyInCartBool) {
+          if (responseData.alreadyInCartBool) {
             this.pushMessage('Error: Course already in cart.');
+          } else {
+            if (!responseData.isCourseGivenDuringSemesterBool) {
+              this.pushMessage('Error: Course not available for this semester.');
+            }
+            if (!responseData.hasPreReqBool) {
+              this.pushMessage('Error: Missing one or more pre-requisites.');
+            }
           }
           setTimeout(() => {
             this.clearMessages();
           }, 3000);
         } else {
+
           this.basket.push(course);
           this.basketUpdated.next([...this.basket]);
           this.pushMessage('Course successfully added.');
+          if (!responseData.notTakenBool && !responseData.alreadyInCartBool) {
+            this.pushMessage('Warning: course has already been taken.');
+          }
           setTimeout(() => {
             this.clearMessages();
           }, 3000);
@@ -135,7 +131,7 @@ export class CourseService {
      return this.coursesUpdated.asObservable();
   }
 
-  /** Creates an observable for the semester list.
+  /** Creates an observable for the termDescription list.
    *
    * @returns Observable<AddCourseModel[]>
    */
@@ -177,9 +173,9 @@ export class CourseService {
   genSemesterList(courses: AddCourseModel[]): void {
     const stringList: string[] = [];
     for (let i = 0; i < courses.length; i++) {
-      if (!this.semesters.includes(courses[i]) && !stringList.includes(courses[i].semester)) {
+      if (!this.semesters.includes(courses[i]) && !stringList.includes(courses[i].termDescription)) {
         this.semesters.push(courses[i]);
-        stringList.push(courses[i].semester);
+        stringList.push(courses[i].termDescription);
       }
     }
   }

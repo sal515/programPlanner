@@ -29,7 +29,7 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   }
 
   /** Method to return a list from a source list with no duplicate object attributes. For example, if the source list has two course with
-   * the 'COMP' name, only one of them will be included in the returned list. The selected course is also included int eh returned list.
+   * the 'COMP' courseSubject, only one of them will be included in the returned list. The selected course is also included int eh returned list.
    *
    * @param srcList - The list of course to extract from.
    * @param course - The selected course.
@@ -67,7 +67,7 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     return list;
   }
 
-  /** Generate a list of courses and semesters on page load and subscribe to the courses, semester and messages in the addCourse service.
+  /** Generate a list of courses and semesters on page load and subscribe to the courses, termDescription and messages in the addCourse service.
    *
    * @returns void
    */
@@ -85,22 +85,22 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   }
 
   /** Method that is executed upon selecting a course from a drop down list. It will will set the value of the selected course and generate
-   * a list of name and codes for this course.
+   * a list of courseSubject and codes for this course.
    *
    * @param course - The selected course.
    * @returns void
    */
   onSelect(course: AddCourseModel): void {
     this.selectedCourse = course;
-    this.nameList = AddCourseComponent.filter(this.courses, this.selectedCourse.semester, 'semester');
-    this.nameList = AddCourseComponent.genList(this.nameList, this.selectedCourse, 'name');
-    this.codeList = AddCourseComponent.filter(this.courses, this.selectedCourse.name, 'name');
-    this.codeList = AddCourseComponent.genList(this.codeList, this.selectedCourse, 'code');
+    this.nameList = AddCourseComponent.filter(this.courses, this.selectedCourse.termDescription, 'termDescription');
+    this.nameList = AddCourseComponent.genList(this.nameList, this.selectedCourse, 'courseSubject');
+    this.codeList = AddCourseComponent.filter(this.courses, this.selectedCourse.courseSubject, 'courseSubject');
+    this.codeList = AddCourseComponent.genList(this.codeList, this.selectedCourse, 'courseCatalog');
   }
 
-  /** Method that is executed upon selecting a semester. Calls onSelect and reset the user input.
+  /** Method that is executed upon selecting a termDescription. Calls onSelect and reset the user input.
    *
-   * @param course - The selected semester.
+   * @param course - The selected termDescription.
    * @returns void
    */
   onSemesterSelect(course: AddCourseModel): void {
@@ -108,32 +108,32 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     this.clearInput();
   }
 
-  /** Method generates a list of course for the autocomplete dropdown list of the code input.
+  /** Method generates a list of course for the autocomplete dropdown list of the courseCatalog input.
    *
-   * @param input - Text in the course code input field.
+   * @param input - Text in the course courseCatalog input field.
    * @returns void
    */
   genAutocompleteList(input: string): void {
-    let list = AddCourseComponent.filter(this.courses, this.selectedCourse.name, 'name');
-    list = AddCourseComponent.genList(list, this.selectedCourse, 'code');
-    this.codeList = AddCourseComponent.filter(list, input, 'code');
+    let list = AddCourseComponent.filter(this.courses, this.selectedCourse.courseSubject, 'courseSubject');
+    list = AddCourseComponent.genList(list, this.selectedCourse, 'courseCatalog');
+    this.codeList = AddCourseComponent.filter(list, input, 'courseCatalog');
   }
 
-  /** Clears the input of the course code.
+  /** Clears the input of the course courseCatalog.
    * @returns void
    */
   clearInput(): void {
     this.input = null;
   }
 
-  /** Returns the code of the passed course. Useful for the autocomplete field.
+  /** Returns the courseCatalog of the passed course. Useful for the autocomplete field.
    *
-   * @param course - The course from which the code will be returned.
-   * @returns string - The course's code.
+   * @param course - The course from which the courseCatalog will be returned.
+   * @returns string - The course's courseCatalog.
    */
   displayCode(course: AddCourseModel): string {
     if (course) {
-      return course.code;
+      return course.courseCatalog;
     }
   }
 
