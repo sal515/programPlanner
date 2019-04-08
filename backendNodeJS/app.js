@@ -19,6 +19,7 @@ const genDataRoute = require('./routes/generateDataRoute');
 const validateLoginRoute = require('./routes/validateLoginRoute');
 const algorithmRoute = require('./routes/algorithmsRoute');
 const frontendRoute = require('./routes/frontendRoute');
+const removeCourseRoute = require('./routes/removeCourseRoute');
 // ====================================================================
 
 // ---------------------------------------------------------------------
@@ -51,6 +52,7 @@ app.use("/api/generateData", genDataRoute);
 app.use("/validateLogin", validateLoginRoute);
 app.use("/algorithms", algorithmRoute );
 app.use("/frontend",  frontendRoute);
+app.use("/removeCourse", removeCourseRoute);
 
 // middleware handling http request that has no specific routing path by sending error message as response
 app.use((req, res, next) => {
