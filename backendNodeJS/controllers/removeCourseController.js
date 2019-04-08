@@ -46,7 +46,6 @@ exports.removeCourse = (req, res, next) => {
  */
 function getUserProfile(userID) {
 
-    dbHelpers.defaultConnectionToDB();
     return userProfileModel.findOne({userID: userID});
 }
 
