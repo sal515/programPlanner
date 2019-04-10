@@ -15,13 +15,19 @@ var exports = module.exports = {};
 exports.removeCourse = async (req, res, next) => {
     await connect2DB();
 
-    const frontEndInput = req.query;
+    const frontEndInput = req.body;
     const userID = frontEndInput.userID;
     const subject = frontEndInput.courseSubject + frontEndInput.courseCatalog;
     const semester = frontEndInput.termDescription;
     const userProfile = await getUserProfile(userID);
-    const semesterCourseCart = getSemesterCourseCart(semester, userProfile.courseCart);
 
+    if(userProfile == null) {
+        res.status(200).json({
+            message: "no user profile found"
+        })
+    }
+
+    const semesterCourseCart = getSemesterCourseCart(semester, userProfile.courseCart);
     const success = removeCourse(semesterCourseCart, subject);
 
     if (success) {
@@ -31,7 +37,7 @@ exports.removeCourse = async (req, res, next) => {
         //scheduleGeneration(semester, userID);
     } else {
         res.status(200).json({
-            message: "Unable to remove course"
+            message: "not successful :("
         })
     }
 };
@@ -105,7 +111,7 @@ exports.TestRemoveCourse = async (req, res, next) => {
     courseCart = getSemesterCourseCart("Fall 2017", userProfile.courseCart);
     updateCourseCart(userProfile, "Fall 2017", courseCart);
     console.log(userProfile.courseCart);
-    userProfile = await updateUserProfile(userProfile, userProfile.courseCart);
+    await updateUserProfile(userProfile, userProfile.courseCart);
 
     res.status(200).json({
         message: "ok"
