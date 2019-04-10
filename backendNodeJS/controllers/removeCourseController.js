@@ -35,6 +35,9 @@ exports.removeCourse = async (req, res, next) => {
         await updateUserProfile(userProfile, userProfile.courseCart);
         //TODO: call generate sequence
         //scheduleGeneration(semester, userID);
+      res.status(200).json({
+        message: "successful!"
+      })
     } else {
         res.status(200).json({
             message: "not successful :("
