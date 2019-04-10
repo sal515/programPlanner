@@ -105,7 +105,7 @@ exports.TestRemoveCourse = async (req, res, next) => {
     courseCart = getSemesterCourseCart("Fall 2017", userProfile.courseCart);
     updateCourseCart(userProfile, "Fall 2017", courseCart);
     console.log(userProfile.courseCart);
-    userProfile = await updateUserProfile(userProfile, userProfile.courseCart);
+    await updateUserProfile(userProfile, userProfile.courseCart);
 
     res.status(200).json({
         message: "ok"
