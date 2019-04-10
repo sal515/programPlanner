@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AddCourseModel} from '../models/course.model';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Subject} from 'rxjs';
 import {Observable} from 'rxjs';
 import {AuthenticationService} from '../authentication-service-guards/authentication.service';
@@ -13,6 +13,7 @@ export class CourseService {
 
   private courseAddURL = 'http://localhost:3000/algorithms/addCourseToSequence';
   private getCourseURL = 'http://localhost:3000/algorithms/getCourses';
+  private courseRemoveURL = 'http://localhost:3000/removeCourse';
 
   readonly userID: string;
   private httpClient: HttpClient;
@@ -87,7 +88,6 @@ export class CourseService {
             this.clearMessages();
           }, 3000);
         } else {
-
           this.basket.push(course);
           this.basketUpdated.next([...this.basket]);
           this.pushMessage('Course successfully added.');
@@ -108,11 +108,14 @@ export class CourseService {
    * @returns void
    */
   removeCourse(course: AddCourseModel): void {
-    const index = this.basket.indexOf(course);
-    if (index >= 0) {
-      this.basket.splice(index, 1);
-    }
-    this.basketUpdated.next([...this.basket]);
+    this.httpClient.post<({message: string})>(this.courseRemoveURL, course).subscribe((responseData) => {
+        const index = this.basket.indexOf(course);
+        if (index >= 0) {
+          this.basket.splice(index, 1);
+        }
+        this.basketUpdated.next([...this.basket]);
+      }
+    );
   }
 
   /** Creates an observable for the basket.
