@@ -15,11 +15,14 @@ var exports = module.exports = {};
 exports.removeCourse = async (req, res, next) => {
     await connect2DB();
 
-    const frontEndInput = req.query;
+    const frontEndInput = req.body;
     const userID = frontEndInput.userID;
     const subject = frontEndInput.courseSubject + frontEndInput.courseCatalog;
     const semester = frontEndInput.termDescription;
     const userProfile = await getUserProfile(userID);
+    if(userProfile == null) {
+
+    }
     const semesterCourseCart = getSemesterCourseCart(semester, userProfile.courseCart);
 
     const success = removeCourse(semesterCourseCart, subject);
