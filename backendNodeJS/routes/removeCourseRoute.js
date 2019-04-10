@@ -4,7 +4,7 @@ const router = express.Router();
 const removeCourseController = require('../controllers/removeCourseController');
 
 //route used to log in the user
-router.post("", removeCourseController.removeCourse);
+router.get("", removeCourseController.removeCourse);
 
 //Test route
 router.get("/test", removeCourseController.TestRemoveCourse);

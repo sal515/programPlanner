@@ -31,7 +31,7 @@ exports.removeCourse = async (req, res, next) => {
         //scheduleGeneration(semester, userID);
     } else {
         res.status(200).json({
-            message: "Unable to remove course"
+            studentProfile: userProfile
         })
     }
 };
