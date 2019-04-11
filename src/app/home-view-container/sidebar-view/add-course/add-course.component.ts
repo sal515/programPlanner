@@ -15,6 +15,9 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   semesterList: AddCourseModel[] = [];
   nameList: AddCourseModel[] = [];
   codeList: AddCourseModel[] = [];
+  lectureList: AddCourseModel[] = [];
+  labList: AddCourseModel[] = [];
+  tutorialList: AddCourseModel[] = [];
   input: string;
   messages: string[];
 
@@ -98,6 +101,21 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     this.codeList = AddCourseComponent.genList(this.codeList, this.selectedCourse, 'code');
   }
 
+  /**
+   * Takes a list of sections for lectures, labs, and tutorials sent by the backend
+   * Generates a list of all possible sections for each
+   */
+  onSelectLectureSection(course: AddCourseModel): void {
+    this.selectedCourse = course;
+    this.lectureList = AddCourseComponent.genList(this.lectureList, this.selectedCourse.lectureSection, 'lecture');
+  }
+
+  onSelectLabAndTutorialSections(course: AddCourseModel): void {
+    this.selectedCourse = course;
+    this.labList = AddCourseComponent.genList(this.lectureList, this.selectedCourse.labSection, 'lab');
+    this.tutorialList = AddCourseComponent.genList(this.lectureList, this.selectedCourse.tutorialSection, 'tutorial');
+  }
+
   /** Method that is executed upon selecting a semester. Calls onSelect and reset the user input.
    *
    * @param course - The selected semester.
@@ -134,6 +152,24 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   displayCode(course: AddCourseModel): string {
     if (course) {
       return course.code;
+    }
+  }
+
+  displayLecture(course: AddCourseModel): string {
+    if (course) {
+      return course.lectureSection;
+    }
+  }
+
+  displayLab(course: AddCourseModel): string {
+    if (course) {
+      return course.labSection;
+    }
+  }
+
+  displayTutorial(course: AddCourseModel): string {
+    if (course) {
+      return course.tutorialSection;
     }
   }
 

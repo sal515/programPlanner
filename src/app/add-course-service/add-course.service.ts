@@ -13,6 +13,7 @@ export class CourseService {
 
   private courseAddURL = 'http://localhost:3000/algorithms/addCourseToSequence';
   private getCourseURL = 'http://localhost:3000/algorithms/getCourses';
+  private getSectionURL = '';
 
   readonly userID: string;
   private httpClient: HttpClient;
@@ -47,7 +48,10 @@ export class CourseService {
             id: userID,
             semester: map.get('termDescription'),
             name: map.get('courseSubject'),
-            code: map.get('courseCatalog')
+            code: map.get('courseCatalog'),
+            lectureSection: null,
+            tutorialSection: null,
+            labSection: null
           };
           this.courses.push(course);
           this.coursesUpdated.next([...this.courses]);

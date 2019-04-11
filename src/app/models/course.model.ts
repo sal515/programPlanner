@@ -3,4 +3,7 @@ export class AddCourseModel {
   semester: any;
   name: any;
   code: any;
+  lectureSection: any;
+  labSection: any;
+  tutorialSection: any;
 }
