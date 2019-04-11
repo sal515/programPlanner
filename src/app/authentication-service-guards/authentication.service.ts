@@ -64,6 +64,12 @@ export class AuthenticationService {
   isLoggedIn() {
     return localStorage.getItem('studentProfile') != null;
   }
+  /**
+   * Returns the userID in the local storage.
+   */
+  getUserId(): string {
+    return JSON.parse(localStorage.getItem('studentProfile')).userID;
+  }
 }
 
 
