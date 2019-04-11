@@ -94,9 +94,7 @@ export class CourseService {
           if (!responseData.notTakenBool && !responseData.alreadyInCartBool) {
             this.pushMessage('Warning: course has already been taken.');
           }
-          setTimeout(() => {
-            this.clearMessages();
-          }, 3000);
+          setTimeout(() => {this.clearMessages(); }, 3000);
         }
       }
     );
@@ -108,12 +106,16 @@ export class CourseService {
    * @returns void
    */
   removeCourse(course: AddCourseModel): void {
+    this.clearMessages();
     this.httpClient.post<({message: string})>(this.courseRemoveURL, course).subscribe((responseData) => {
+        this.clearMessages();
         const index = this.basket.indexOf(course);
         if (index >= 0) {
           this.basket.splice(index, 1);
         }
         this.basketUpdated.next([...this.basket]);
+        this.pushMessage('Course successfully removed.');
+        setTimeout(() => {this.clearMessages(); }, 3000);
       }
     );
   }
