@@ -1,13 +1,46 @@
-.wrapper{
-  display: grid;
-  grid-template-columns: 1fr 2fr 2fr 2fr 2fr 2fr;
-  text-align: center;
-  /*grid-template-rows: repeat(96, 1fr);*/
+.wrapper {
+    display: grid;
+    grid-template-columns: 0 2fr 2fr 2fr 2fr 2fr;
+    text-align: center;
+    background: white;
+    opacity: 0.9;
+    border-radius: 5px;
 }
-.wrapper > div{
-  background:#eee;
-  border: 1px dashed black;
-  padding:1em;
-  /*height: 10px;*/
-  overflow: hidden;
+
+.wrapper > div {
+    overflow: hidden;
+    font-weight: bold;
+}
+
+.time {
+    color: white;
+    font-size: 10px;
+    padding-top: 1%;
+}
+
+.course {
+    background-color: #DEDEDE;
+    color: black;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+}
+
+.calendarView {
+    padding: 0;
+}
+
+.day {
+    background: #DEDEDE;
+    padding: 5% 15% 5% 15%;
+    border-bottom: 1px solid black;
+}
+
+#monday {
+    border-top-left-radius: 5px;
+}
+
+#friday {
+    border-top-right-radius: 5px;
 }

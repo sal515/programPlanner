@@ -1,13 +1,15 @@
-<app-header></app-header>
+<app-header>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</app-header>
 <main>
-  <mat-sidenav-container class="example-container">
-    <mat-sidenav mode="side" opened>
-      <app-sidebar-view></app-sidebar-view>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <mat-card>
-        <app-calendar-view-component></app-calendar-view-component>
-      </mat-card>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+    <mat-sidenav-container class="example-container">
+        <mat-sidenav class="sidebar" mode="side" opened>
+            <app-sidebar-view></app-sidebar-view>
+        </mat-sidenav>
+        <mat-sidenav-content class="calendarBox">
+            <mat-card class="calendar">
+                <app-calendar-view-component></app-calendar-view-component>
+            </mat-card>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
 </main>

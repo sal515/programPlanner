@@ -1,18 +1,16 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 span {
   text-align: center;
-  color: #FFAB1C;
-  text-shadow: 2px 2px 5px #011627, 1px 1px 5px #011627;
-  font-family: "Gill Sans MT", sans-serif;
+  color: white;
+  font-family: Roboto, "Gill Sans MT", sans-serif;
   font-size: 28px;
 }
 
 .menu_button {
   margin: 0 5px;
-  background: #E02638;
   text-align: center;
-  color: #FFAB1C;
-  text-shadow: 2px 2px 5px #011627, 1px 1px 5px #011627;
-  font-family: "Gill Sans MT", sans-serif;
+    font-family: Roboto, "Gill Sans MT", sans-serif;
   font-size: 28px;
 }
 
@@ -23,9 +21,7 @@ span {
 a {
   text-decoration: none;
   text-align: center;
-  color: #FFAB1C;
-  text-shadow: 2px 2px 5px #011627, 1px 1px 5px #011627;
-  font-family: "Gill Sans MT", sans-serif;
+  font-family: Roboto, "Gill Sans MT", sans-serif;
   font-size: 28px;
 }
 
@@ -35,3 +31,10 @@ ul {
   margin: 0;
 }
 
+.head {
+  background-color: #9A2929;
+}
+
+a:visited {
+  color: white;
+}

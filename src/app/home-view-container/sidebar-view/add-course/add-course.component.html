@@ -2,7 +2,7 @@
   <form (ngSubmit)="onSubmit(selectedCourse)" #addForm="ngForm">
     <!-- Dropdown list to select the semester of the course. -->
     <mat-form-field>
-      <mat-label>Select Semester:</mat-label>
+      <mat-label>Select Semester</mat-label>
       <mat-select (selectionChange)="onSemesterSelect($event.value)">
         <mat-option *ngFor="let course of semesterList" [value]="course" >
           {{course.semester}}
@@ -12,7 +12,7 @@
     <div *ngIf="selectedCourse" >
       <!-- Dropdown list to select the name of the course based on the selected semester. -->
       <mat-form-field>
-        <mat-label>Course Name:</mat-label>
+        <mat-label>Course Name</mat-label>
         <mat-select [(value)]="selectedCourse" (selectionChange)="onSelect($event.value)">
           <mat-option *ngFor="let course of nameList" [value]="course" >
             {{course.name}}
@@ -21,7 +21,7 @@
       </mat-form-field>
       <!-- Dropdown list to select the code of the course based on the selected name. -->
       <mat-form-field>
-        <mat-label>Course Code:</mat-label>
+        <mat-label>Course Code</mat-label>
         <input required matInput  [matAutocomplete]="auto"
                name="courseName" #course="ngModel" [(ngModel)]="input"
                (ngModelChange)="genAutocompleteList(input)" />

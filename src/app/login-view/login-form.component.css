@@ -1,62 +1,86 @@
 @import url('https://unpkg.com/bootstrap@3.3.7/dist/css/bootstrap.min.css');
+@import url('https://fonts.googleapis.com/css?family=Roboto');
 
-.background_login{
-  background-color: lightgrey;
+.background_login {
+    background-image: url(EV.jpg);
+    background-size: 100%;
 }
 
-.title_login{
-  text-align: center;
-  color: #FFAB1C;
-  text-shadow: 2px 2px 5px #011627, 1px 1px 5px #011627;
-  font-family: "Gill Sans MT", sans-serif;
-  font-size: 28px;
+.title_login {
+    text-align: center;
+    color: darkorange;
+    font-weight: bold;
+    font-size: 40px;
+    font-family: Roboto, "Gill Sans MT", sans-serif;
 }
 
-.padding_title_first{
-  padding-top: 100px;
+.padding_title_first {
+    padding-top: 3%;
 }
 
-.padding_title_second{
-  padding-bottom: 50px;
+.padding_title_second {
+    padding-bottom: 9%;
 }
 
-.container{
-  background: #E02638;
-  width: 500px;
-  padding: 10px 10px;
-  border-radius: 8px;
-  margin: 0px auto;
-}
-.text_login{
-  color: #FDFFFC;
-  text-shadow: 2px 2px 1px #011627;
+.container {
+    background: darkgray;
+    opacity: 0.9;
+    width: 25%;
+    padding: 10px 10px;
+    border-radius: 8px;
+    margin: 0 auto;
 }
 
-.forgot_button{
-  font-family: "Gill Sans MT", sans-serif;
-  font-size: 16px;
-  text-align: right;
-  text-shadow: 0px 0px 1px #011627;
-  text-decoration: underline;
+.text_login {
+    color: #FDFFFC;
+    font-size: 20px;
+    font-family: Roboto, "Gill Sans MT", sans-serif;
 }
 
-.failed_login_container{
-  width: 400px;
-  margin: 0px auto;
-  padding-bottom: 50px;
+.forgot_button {
+    font-family: Roboto, "Gill Sans MT", sans-serif;
+    font-size: 16px;
+    text-align: right;
+    text-decoration: underline;
 }
 
-.failed_login{
-  text-align: center;
-  font-family: "Gill Sans MT", sans-serif;
-  font-size: 20px;
-  border-color: #E02638;
-  background-color: #E8E8E8;
-  border-style: solid;
-  border-radius: 8px;
+.failed_login_container {
+    width: 400px;
+    margin: 0 auto;
+    padding-bottom: 50px;
 }
 
-.missing_element{
-  font-weight: bold;
+.failed_login {
+    text-align: center;
+    font-family: Roboto, "Gill Sans MT", sans-serif;
+    font-size: 20px;
+    border-color: #E02638;
+    background-color: #E8E8E8;
+    border-style: solid;
+    border-radius: 8px;
 }
 
+.missing_element {
+    font-weight: bold;
+}
+
+.form-group {
+    text-align: center;
+}
+
+#left {
+    float: left;
+}
+
+#right {
+    float: right;
+}
+
+a {
+    color: white;
+    font-family: Roboto, "Gill Sans MT", sans-serif;
+}
+
+.btn {
+    font-family: Roboto, "Gill Sans MT", sans-serif;
+}
