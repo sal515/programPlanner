@@ -2,12 +2,33 @@
   display: grid;
   grid-template-columns: 1fr 2fr 2fr 2fr 2fr 2fr;
   text-align: center;
+  background: white;
+  opacity: 0.9;
   /*grid-template-rows: repeat(96, 1fr);*/
 }
 .wrapper > div{
-  background:#eee;
-  border: 1px dashed black;
-  padding:1em;
-  /*height: 10px;*/
   overflow: hidden;
+  font-weight: bold;
+}
+
+.time {
+  border: 0.5px solid black;
+  background-color: white;
+  font-size: 14px;
+  padding: 5% 15% 5% 15%;
+}
+
+.course {
+  background-color: #DEDEDE;
+  color: black;
+  border-radius: 5px;
+}
+
+.calendarView {
+  padding: 0;
+}
+
+.day {
+  padding: 5% 15% 5% 15%;
+  border: 0.5px solid black;
 }

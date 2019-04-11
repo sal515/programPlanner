@@ -1,40 +1,47 @@
+<head>
+    <title>Program Planner</title>
+    <link href="login-form.component.css">
+</head>
 <body class="background_login">
-  <div class="title_login padding_title_first">Concordia University </div>
-  <div class="title_login padding_title_second">SOEN 341 - Program Planner</div>
-  <div *ngIf="submitted && auth_failed" class="failed_login_container">
+<div class="title_login padding_title_first">Concordia University</div>
+<div class="title_login padding_title_second">Program Planner</div>
+<div *ngIf="submitted && auth_failed" class="failed_login_container">
     <div class="failed_login">
-      <div>Wrong username or password.</div>
-      <div> Please try again.</div>
+        <div>Wrong username or password.</div>
+        <div> Please try again.</div>
     </div>
-  </div>
-  <div class="container">
+</div>
+<div class="container">
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
-          <label class="text_login">Student ID / Netname</label>
-          <input type="text" class="form-control" formControlName="netname" required>
-          <div>
-            <div *ngIf="submitted && missing_netname" class="missing_element">
-              Username is required.
+            <label class="text_login">Student ID / Netname</label>
+            <input type="text" class="form-control" formControlName="netname" required>
+            <div>
+                <div *ngIf="submitted && missing_netname" class="missing_element">
+                    Username is required.
+                </div>
             </div>
-          </div>
         </div>
 
         <div class="form-group">
-          <label class="text_login">Password</label>
-          <input type="password" class="form-control" formControlName="password" required>
-          <div>
-            <div *ngIf="submitted && missing_password" class="missing_element">
-              Password is required.
+            <label class="text_login">Password</label>
+            <input type="password" class="form-control" formControlName="password" required>
+            <div>
+                <div *ngIf="submitted && missing_password" class="missing_element">
+                    Password is required.
+                </div>
             </div>
-          </div>
         </div>
 
-        <button type="submit" class="btn">Sign In</button>
-
-        <div class="forgot_button">
-          <a target="_blank" href="https://fcms.concordia.ca/idss/pages/account/passwordreset.aspx">
-            Forgot password ?</a>
+        <div>
+            <button id="left" type="submit" class="btn" style="opacity: 1">Sign In</button>
+            <a id="right" target="_blank" href="https://fcms.concordia.ca/idss/pages/account/passwordreset.aspx">
+                Forgot password ?</a>
         </div>
+
+<!--        <div class="forgot_button">-->
+<!--            -->
+<!--        </div>-->
     </form>
-  </div>
+</div>
 </body>
