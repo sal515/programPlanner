@@ -73,9 +73,9 @@ export class CourseService {
             const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
             const course: AddCourseModel = {
               id: userID,
-              semester: null,
-              name: null,
-              code: null,
+              semester: map.get('termDescription'),
+              name: map.get('courseSubject'),
+              code: map.get('courseCatalog'),
               lectureSection: map.get('lectureSection'),
               tutorialSection: null,
               labSection: null
@@ -96,10 +96,10 @@ export class CourseService {
             const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
             const course: AddCourseModel = {
               id: userID,
-              semester: null,
-              name: null,
-              code: null,
-              lectureSection: null,
+              semester: map.get('termDescription'),
+              name: map.get('courseSubject'),
+              code: map.get('courseCatalog'),
+              lectureSection: map.get('lectureSection'),
               tutorialSection: map.get('tutorialSection'),
               labSection: map.get('labSection')
             };
