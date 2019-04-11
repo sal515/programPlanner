@@ -1,0 +1,13 @@
+ <h1 class="center courseHistory_title" mat-dialog-title>Course History</h1>
+<mat-dialog-content class="mat-typography">
+   <mat-card class="center grey-background" *ngFor="let semester of semesters">
+     <h3 class = "semester-styling">{{semester}}</h3>
+     <mat-card class="center" *ngFor="let course of courseHistoryData[semester]">
+       {{course}}
+     </mat-card>
+   </mat-card>
+ </mat-dialog-content>
+ <mat-dialog-actions align="center">
+   <button mat-button mat-dialog-close>Close</button>
+ </mat-dialog-actions>
+
