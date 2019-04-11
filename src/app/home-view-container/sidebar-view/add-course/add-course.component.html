@@ -39,7 +39,7 @@
                        name="courseName" #course="ngModel" [(ngModel)]="input"
                        (ngModelChange)="genAutocompleteList(input)"/>
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectLectureSection($event.option.value)"
-                                  [displayWith]="displayCode">
+                                  [displayWith]="displayLecture">
                     <mat-option *ngFor="let course of lectureList" [value]="course">
                         {{course.lectureSection}}
                     </mat-option>

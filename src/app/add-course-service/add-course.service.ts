@@ -13,8 +13,8 @@ export class CourseService {
 
   private courseAddURL = 'http://localhost:3000/algorithms/addCourseToSequence';
   private getCourseURL = 'http://localhost:3000/algorithms/getCourses';
-  private getLectureSectionURL = '';
-  private getLabAndTutSectionURL = '';
+  // private getLectureSectionURL = 'http://localhost:3000/algorithms/getLecturesSections';
+  // private getLabAndTutSectionURL = 'http://localhost:3000/algorithms/getTutLabsSections';
 
   readonly userID: string;
   private httpClient: HttpClient;
