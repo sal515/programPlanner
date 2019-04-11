@@ -35,7 +35,8 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   }
 
   /** Method to return a list from a source list with no duplicate object attributes. For example, if the source list has two course with
-   * the 'COMP' courseSubject, only one of them will be included in the returned list. The selected course is also included int eh returned list.
+   * the 'COMP' courseSubject, only one of them will be included in the returned list. The selected course is also included int eh returned
+   * list.
    *
    * @param srcList - The list of course to extract from.
    * @param course - The selected course.
@@ -73,7 +74,7 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     return list;
   }
 
-  /** Generate a list of courses and semesters on page load and subscribe to the courses, termDescription and messages in the addCourse service.
+  /** Subscribing to a bunch of stuff.
    *
    * @returns void
    */
@@ -84,17 +85,17 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     this.semesterSubscription = this.courseService.getSemestersUpdateListener().subscribe((semesters: AddCourseModel[]) => {
       this.semesterList = semesters;
     });
-    this.messageSubscription = this.courseService.getMessageUpdateListener().subscribe((message: string[]) => {
-      this.messages = message;
+    this.messageSubscription = this.courseService.getMessageUpdateListener().subscribe((messages: string[]) => {
+      this.messages = messages;
     });
-    this.lectureSubscription = this.courseService.getLectureUpdateListener().subscribe((lecturelist: AddCourseModel[]) => {
-      this.lectureList = lecturelist;
+    this.lectureSubscription = this.courseService.getLectureUpdateListener().subscribe((lectureList: AddCourseModel[]) => {
+      this.lectureList = lectureList;
     });
-    this.labSubscription = this.courseService.getLabUpdateListener().subscribe((lab: AddCourseModel[]) => {
-      this.labList = lab;
+    this.labSubscription = this.courseService.getLabUpdateListener().subscribe((labList: AddCourseModel[]) => {
+      this.labList = labList;
     });
-    this.tutSubscription = this.courseService.getTutUpdateListener().subscribe((tut: AddCourseModel[]) => {
-      this.tutorialList = tut;
+    this.tutSubscription = this.courseService.getTutUpdateListener().subscribe((tutList: AddCourseModel[]) => {
+      this.tutorialList = tutList;
     });
     this.courseService.getCourses();
   }
@@ -112,20 +113,28 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     this.codeList = AddCourseComponent.filter(this.courses, this.selectedCourse.courseSubject, 'courseSubject');
     this.codeList = AddCourseComponent.genList(this.codeList, this.selectedCourse, 'courseCatalog');
   }
-
   /**
    * Takes a list of sections for lectures, labs, and tutorials sent by the backend
    * Generates a list of all possible sections for each
    */
+  onSelectCode(course: AddCourseModel): void {
+    this.onSelect(course);
+    this.courseService.getLecture(course);
+  }
+  /** Generates a list of tutorial and a list of labs based on the selected lecture.
+   *
+   * @params course - the selected lecture.
+   */
   onSelectLectureSection(course: AddCourseModel): void {
     this.selectedCourse = course;
-    this.lectureList = AddCourseComponent.genList(this.lectureList, this.selectedCourse.lectureSection, 'lecture'); // what is attribute?
+    this.courseService.getLabAndTut(course);
   }
-
+  /** Selects a tutorial or lab.
+   *
+   * @params course - the selected tutorial or lab.
+   */
   onSelectLabAndTutorialSections(course: AddCourseModel): void {
     this.selectedCourse = course;
-    this.labList = AddCourseComponent.genList(this.lectureList, this.selectedCourse.labSection, 'lab');
-    this.tutorialList = AddCourseComponent.genList(this.lectureList, this.selectedCourse.tutorialSection, 'tutorial'); // what is attribute?
   }
 
   /** Method that is executed upon selecting a semester. Calls onSelect and reset the user input.
@@ -167,25 +176,6 @@ export class AddCourseComponent implements OnInit, OnDestroy {
       return course.courseCatalog;
     }
   }
-
-  displayLecture(course: AddCourseModel): string {
-    if (course) {
-      return course.lectureSection;
-    }
-  }
-
-  displayLab(course: AddCourseModel): string {
-    if (course) {
-      return course.labSection;
-    }
-  }
-
-  displayTutorial(course: AddCourseModel): string {
-    if (course) {
-      return course.tutorialSection;
-    }
-  }
-
   /** Add an input course to the basket using the service method addCourse. Displays an appropriate message based on the input or the
    * result of addCourse.
    *

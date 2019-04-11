@@ -25,7 +25,7 @@
                 <input required matInput [matAutocomplete]="auto"
                        name="courseName" #course="ngModel" [(ngModel)]="input"
                        (ngModelChange)="genAutocompleteList(input)"/>
-                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event.option.value)"
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectCode($event.option.value)"
                                   [displayWith]="displayCode">
                     <mat-option *ngFor="let course of codeList" [value]="course">
                         {{course.courseCatalog}}
