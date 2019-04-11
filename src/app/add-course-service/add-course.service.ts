@@ -119,11 +119,21 @@ export class CourseService {
   }
 
   getLabAndTut(pickedCourse: AddCourseModel): void {
-    this.httpClient.post <{ tutorialSection: string[], labSection: string[] }>(this.getLabAndTutSectionURL, pickedCourse).subscribe((courseData) => {
+    this.httpClient.post <{
+      tutorialSection: string[],
+      labSection: string[]
+    }>(this.getLabAndTutSectionURL, {
+      userID: this.userID,
+      termDescription: pickedCourse.termDescription,
+      courseSubject: pickedCourse.courseSubject,
+      courseCatalog: pickedCourse.courseCatalog,
+      componentCode: pickedCourse.lectureSection
+    }).subscribe((courseData) => {
           this.tuts = [];
           this.tutsUpdated.next(this.tuts);
           this.labs = [];
           this.labsUpdated.next(this.labs);
+          console.log('We got here');
           const tutMap = new Map(JSON.parse(courseData.tutorialSection[0]));
           const tutArray = Array.from(tutMap.keys());
           const labMap = new Map(JSON.parse(courseData.labSection[0]));

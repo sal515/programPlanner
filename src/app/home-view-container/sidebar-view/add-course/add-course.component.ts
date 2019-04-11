@@ -136,13 +136,18 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   onSelectLectureSection(course: AddCourseModel): void {
     this.selectedCourse = course;
     this.courseService.getLabAndTut(course);
+    this.selectedCourse.tutorialSection = this.tutorialList[0].tutorialSection;
+    this.selectedCourse.labSection = this.tutorialList[0].labSection;
   }
   /** Selects a tutorial or lab.
    *
    * @params course - the selected tutorial or lab.
    */
-  onSelectLabAndTutorialSections(course: AddCourseModel): void {
-    this.selectedCourse = course;
+  onSelectTutorialSections(course: AddCourseModel): void {
+    this.selectedCourse.tutorialSection = course.tutorialSection;
+  }
+  onSelectLabSections(course: AddCourseModel): void {
+    this.selectedCourse.labSection = course.labSection;
   }
 
   /** Method that is executed upon selecting a semester. Calls onSelect and reset the user input.
