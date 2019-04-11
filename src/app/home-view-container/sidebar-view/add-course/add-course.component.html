@@ -32,44 +32,32 @@
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
-<!--             Drop down to select the lecture section based on the course chosen-->
+            <!-- Drop down to select the lecture section based on the course chosen-->
             <mat-form-field>
-                <mat-label>Lecture Section</mat-label>
-                <input required matInput [matAutocomplete]="auto"
-                       name="courseName" #course="ngModel" [(ngModel)]="input"
-                       (ngModelChange)="genAutocompleteList(input)"/>
-                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectLectureSection($event.option.value)"
-                                  [displayWith]="displayLecture">
-                    <mat-option *ngFor="let course of lectureList" [value]="course">
-                        {{course.lectureSection}}
-                    </mat-option>
-                </mat-autocomplete>
+              <mat-label>Lecture</mat-label>
+              <mat-select (selectionChange)="onSelectLectureSection($event.value)">
+                <mat-option *ngFor="let course of lectureList" [value]="course">
+                  {{course.lectureSection}}
+                </mat-option>
+              </mat-select>
             </mat-form-field>
-<!--            Drop down to select the lab section based on the course chosen-->
+            <!--Drop down to select the lab section based on the course chosen-->
             <mat-form-field>
-                <mat-label>Laboratory Section</mat-label>
-                <input required matInput [matAutocomplete]="auto"
-                       name="courseName" #course="ngModel" [(ngModel)]="input"
-                       (ngModelChange)="genAutocompleteList(input)"/>
-                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectLabAndTutorialSections($event.option.value)"
-                                  [displayWith]="displayLab">
-                    <mat-option *ngFor="let course of labList" [value]="course">
-                        {{course.labSection}}
-                    </mat-option>
-                </mat-autocomplete>
+            <mat-label>Tutorial</mat-label>
+            <mat-select (selectionChange)="onSelectLabAndTutorialSections($event.value)">
+              <mat-option *ngFor="let course of tutorialList" [value]="course">
+                {{course.tutorialSection}}
+              </mat-option>
+            </mat-select>
             </mat-form-field>
-<!--            Drop down to select the tutorial section based on the lecture chosen -->
+              <!--Drop down to select the tutorial section based on the lecture chosen -->
             <mat-form-field>
-                <mat-label>Tutorial Section</mat-label>
-                <input required matInput [matAutocomplete]="auto"
-                       name="courseName" #course="ngModel" [(ngModel)]="input"
-                       (ngModelChange)="genAutocompleteList(input)"/>
-                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectLabAndTutorialSections($event.option.value)"
-                                  [displayWith]="displayTutorial">
-                    <mat-option *ngFor="let course of tutorialList" [value]="course">
-                        {{course.tutorialSection}}
-                    </mat-option>
-                </mat-autocomplete>
+              <mat-label>Lab</mat-label>
+              <mat-select (selectionChange)="onSelectLabAndTutorialSections($event.value)">
+                <mat-option *ngFor="let course of labList" [value]="course">
+                  {{course.labSection}}
+                </mat-option>
+              </mat-select>
             </mat-form-field>
             <div>
                 <button [disabled]="!addForm.form.valid" type="submit">Add</button>
