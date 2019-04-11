@@ -24,6 +24,9 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   private messageSubscription: Subscription;
   private courseSubscription: Subscription;
   private semesterSubscription: Subscription;
+  private lectureSubscription: Subscription;
+  private labSubscription: Subscription;
+  private tutSubscription: Subscription;
 
   courseService: CourseService;
 
@@ -83,6 +86,15 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     });
     this.messageSubscription = this.courseService.getMessageUpdateListener().subscribe((message: string[]) => {
       this.messages = message;
+    });
+    this.lectureSubscription = this.courseService.getLectureUpdateListener().subscribe((lecturelist: AddCourseModel[]) => {
+      this.lectureList = lecturelist;
+    });
+    this.labSubscription = this.courseService.getLabUpdateListener().subscribe((lab: AddCourseModel[]) => {
+      this.labList = lab;
+    });
+    this.tutSubscription = this.courseService.getTutUpdateListener().subscribe((tut: AddCourseModel[]) => {
+      this.tutorialList = tut;
     });
     this.courseService.getCourses();
   }

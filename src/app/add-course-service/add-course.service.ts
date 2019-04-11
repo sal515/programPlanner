@@ -26,6 +26,9 @@ export class CourseService {
   private basketUpdated = new Subject<AddCourseModel[]>();
   private coursesUpdated = new Subject<AddCourseModel[]>();
   private semestersUpdated = new Subject<AddCourseModel[]>();
+  private lectureUpdated = new Subject<AddCourseModel[]>();
+  private labUpdated = new Subject<AddCourseModel[]>();
+  private tutUpdated = new Subject<AddCourseModel[]>();
   private messagesUpdated = new Subject<string[]>();
 
   AuthenticationService: AuthenticationService;
@@ -145,6 +148,18 @@ export class CourseService {
    */
   getSemestersUpdateListener(): Observable<AddCourseModel[]> {
     return this.semestersUpdated.asObservable();
+  }
+
+  getLectureUpdateListener(): Observable<AddCourseModel[]> {
+    return this.lectureUpdated.asObservable();
+  }
+
+  getLabUpdateListener(): Observable<AddCourseModel[]> {
+    return this.labUpdated.asObservable();
+  }
+
+  getTutUpdateListener(): Observable<AddCourseModel[]> {
+    return this.tutUpdated.asObservable();
   }
 
   /** Creates an observable for the response messages.
