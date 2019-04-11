@@ -22,9 +22,9 @@
     background-color: #DEDEDE;
     color: black;
     border-radius: 5px;
-    text-align: center;
-    overflow: hidden;
-    font-size: 1vw;
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
 }
 
 .calendarView {
