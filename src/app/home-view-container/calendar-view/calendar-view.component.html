@@ -1,26 +1,19 @@
 <div class="calendarView" [ngStyle]="{'width': '100%'}">
   <div class="wrapper">
-    <div class="day" [ngStyle]="{'grid-row' : 1,'grid-column' : 1}">Time</div>
-    <div class="day" [ngStyle]="{'grid-row' : 1,'grid-column' : 2}">Monday</div>
+    <div class="time" [ngStyle]="{'grid-row' : 1,'grid-column' : 1}"> </div>
+    <div class="day" id="monday" [ngStyle]="{'grid-row' : 1,'grid-column' : 2}">Monday</div>
     <div class="day" [ngStyle]="{'grid-row' : 1,'grid-column' : 3}">Tuesday</div>
     <div class="day" [ngStyle]="{'grid-row' : 1,'grid-column' : 4}">Wednesday</div>
     <div class="day" [ngStyle]="{'grid-row' : 1,'grid-column' : 5}">Thursday</div>
-    <div class="day" [ngStyle]="{'grid-row' : 1,'grid-column' : 6}">Friday</div>
-    <div class="time" *ngFor ="let timeColumnIndex of timeColumn" [ngStyle]="{'grid-row-start': timeColumnIndex*3+2 , 'grid-row-end': timeColumnIndex*3+3+2 , 'grid-column': 1}" >
-      {{getTime(timeColumnIndex*30+480)}}
+    <div class="day" id="friday" [ngStyle]="{'grid-row' : 1,'grid-column' : 6}">Friday</div>
+    <div class="time" *ngFor ="let timeColumnIndex of timeColumn" [ngStyle]="{'grid-row-start': timeColumnIndex*3+2 , 'grid-row-end': timeColumnIndex*3+3+2}" >
+      {{getTime(timeColumnIndex*15+525)}}
     </div>
-    <div class="course" *ngFor="let classTemp of classes.classInfo" [ngStyle]="{'grid-row-start': getClassRowStart(classTemp) , 'grid-row-end': getClassRowEnd(classTemp) , 'grid-column': getClassColumn(classTemp)}">
-      <div [ngStyle]="{'text-align': 'center', 'overflow' : 'hidden', 'font-size' : '1vw'}">
+    <div class="course" *ngFor="let classTemp of classes.classInfo" [ngStyle]="{'grid-row-start': getClassRowStart(classTemp) , 'grid-row-end': getClassRowEnd(classTemp)  , 'grid-column': getClassColumn(classTemp)}">
+      <div>
         {{classTemp.name}}<br>
         {{getTime(classTemp.start)}} - {{getTime(classTemp.end)}}
       </div>
     </div>
-    <ng-container *ngFor="let gridIndex of gridTimes">
-
-      <div *ngIf="(checkFreeTime(gridIndex)) === true" [ngStyle]="{'border' : '0px' , 'max-height' : '9px', 'overflow' : 'hidden', 'font-size' : '2px'}" (mouseover)="setMouseOver(gridIndex)" (mousedown)="mouseClicked(gridIndex)" (mouseup)="mouseDeclicked()"> <!-- only creates div if the box isn't occupied by a class, this gives each empty div a unique gridIndex, using this they can be identified-->
-        <!--{{getData(gridIndex)}}-->    <!--prints coordinates of the empty div for debugging-->
-      </div>
-
-    </ng-container>
   </div>
 </div>

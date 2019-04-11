@@ -14,7 +14,7 @@ export class CalendarViewComponent implements OnInit {
         /**
          * Determines the number of time slots in the calendar
          */
-        for (i = 0; i < 93 / 3; i++) {
+        for (i = 0; i < 160 / 3; i++) {
             this.timeColumn[i] = i;
             this.times = [5 * i];
         }
@@ -33,12 +33,12 @@ export class CalendarViewComponent implements OnInit {
     classes: ClassInfoArray = new ClassInfoArray();
     gridTimes: number[] = [];
 
-    clickedBoxes: number[] = [];
-
-    mouseClick = false;
-
     ngOnInit() {
         this.classesService.cast.subscribe(classes => this.classes = classes);
+    }
+
+    getSpace() {
+        return ' ';
     }
 
     getTime(index: number) {
@@ -48,6 +48,9 @@ export class CalendarViewComponent implements OnInit {
 
         time = index;
 
+        /**
+         * Determines time of the course in its displayed box
+         */
         hours = Math.floor(time / 60);
         minutes = (time % 60);
         if (hours > 12) {
@@ -66,14 +69,14 @@ export class CalendarViewComponent implements OnInit {
      * Gets the time row at which the class starts
      */
     getClassRowStart(classInput: ClassInfo) {
-        return (classInput.start - 480) / 10 + 2;
+        return (classInput.start - 525) / 5  + 2;
     }
 
     /**
      * Gets the time row at which the class ends
      */
     getClassRowEnd(classInput: ClassInfo) {
-        return (classInput.end - 480) / 10 + 2;
+        return (classInput.end - 525) / 5 + 2;
     }
 
     /**
@@ -81,56 +84,6 @@ export class CalendarViewComponent implements OnInit {
      */
     getClassColumn(classInput: ClassInfo) {
         return classInput.day + 1;
-    }
-
-    checkFreeTime(inputIndex: number) {
-        let column: number;
-        let row: number;
-
-        column = inputIndex % 5 + 1;
-        row = inputIndex / 5 + 1;
-
-        let i: number;
-        for (i = 0; i < this.classes.classInfo.length; i++) {
-            if ((column === this.classes.classInfo[i].day)
-                && ((row * 5 + 475) >= this.classes.classInfo[i].start)
-                && ((row * 5 + 475) < this.classes.classInfo[i].end)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    getData(inputIndex) {
-        let column: number;
-        let row: number;
-        column = (inputIndex % 5 + 1);
-        row = Math.floor(inputIndex / 5 + 1) * 5 + 475;
-        return (this.getTime(row)).toString() + ' , ' + column.toString();
-    }
-
-    setMouseOver(inputIndex: number) {
-        if (this.mouseClick === false) {
-            return;
-        }
-        const present = false;
-        let i: number;
-        for (i = 0; i < this.clickedBoxes.length; i++) {
-            if (this.clickedBoxes[i] === inputIndex) {
-                this.clickedBoxes.splice(i, 1);
-                return;
-            }
-        }
-        this.clickedBoxes.push(inputIndex);
-    }
-
-    mouseClicked(input: number) {
-        this.mouseClick = true;
-        this.setMouseOver(input);
-    }
-
-    mouseDeclicked() {
-        this.mouseClick = false;
     }
 }
 

@@ -1,34 +1,46 @@
-.wrapper{
-  display: grid;
-  grid-template-columns: 1fr 2fr 2fr 2fr 2fr 2fr;
-  text-align: center;
-  background: white;
-  opacity: 0.9;
-  /*grid-template-rows: repeat(96, 1fr);*/
+.wrapper {
+    display: grid;
+    grid-template-columns: 0fr 2fr 2fr 2fr 2fr 2fr;
+    text-align: center;
+    background: white;
+    opacity: 0.9;
+    border-radius: 5px;
 }
-.wrapper > div{
-  overflow: hidden;
-  font-weight: bold;
+
+.wrapper > div {
+    overflow: hidden;
+    font-weight: bold;
 }
 
 .time {
-  border: 0.5px solid black;
-  background-color: white;
-  font-size: 14px;
-  padding: 5% 15% 5% 15%;
+    color: white;
+    font-size: 10px;
+    padding-top: 1%;
 }
 
 .course {
-  background-color: #DEDEDE;
-  color: black;
-  border-radius: 5px;
+    background-color: #DEDEDE;
+    color: black;
+    border-radius: 5px;
+    text-align: center;
+    overflow: hidden;
+    font-size: 1vw;
 }
 
 .calendarView {
-  padding: 0;
+    padding: 0;
 }
 
 .day {
-  padding: 5% 15% 5% 15%;
-  border: 0.5px solid black;
+    background: #DEDEDE;
+    padding: 5% 15% 5% 15%;
+    border-bottom: 1px solid black;
+}
+
+#monday {
+    border-top-left-radius: 5px;
+}
+
+#friday {
+    border-top-right-radius: 5px;
 }
