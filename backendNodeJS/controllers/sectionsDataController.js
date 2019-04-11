@@ -87,6 +87,8 @@ const userProfileModel = require(modelDirectory + 'userSchema2Model');
 
 exports.sendAllTutLabSections = async (req, res, next) => {
 
+  const userInput = req.body;
+
   await connect2DB();
 
 
@@ -97,11 +99,13 @@ exports.sendAllTutLabSections = async (req, res, next) => {
     mongoose.set('debug', true);
   }
 
-  const userInput = req.body;
+
   if (userInput.userID === "" ||
     userInput.courseSubject === "" ||
     userInput.courseCatalog === "" ||
-    userInput.termDescription === "") {
+    userInput.componentCode === "" ||
+    userInput.termDescription === ""
+  ) {
 
     res.status(200).json({
       "message": "No Input for some of the variables sent"
@@ -109,9 +113,16 @@ exports.sendAllTutLabSections = async (req, res, next) => {
     return;
   }
 
+  userInput.componentCode = await stripSpaces(userInput.componentCode);
+  // console.log(userInput.componentCode);
+
+
   let tutSections = [];
-  let tutSections2SendArr = [];
-  let tutSections2SendMap = new Map();
+  let allTutSections2SendArr = [];
+  let allTutSections2SendMap = new Map();
+
+  let filteredTutSections2SendArr = [];
+  let filteredTutSections2SendMap = new Map();
 
   let labSections = [];
   let labSections2SendArr = [];
@@ -124,8 +135,22 @@ exports.sendAllTutLabSections = async (req, res, next) => {
     userInput.courseCatalog, userInput);
 
   for (const tutSection of tutSections) {
-    tutSections2SendArr.push(tutSection.object.section);
-    tutSections2SendMap.set((tutSection.object.section).toString(), "");
+
+    let TutorialSection = tutSection.object.section;
+    let lecSectionSize = userInput.componentCode.length;
+    let slicedTutorialSection = TutorialSection.slice(0, lecSectionSize);
+
+    // if (slicedTutorialSection === await stripSpaces(userInput.componentCode)) {
+    if (slicedTutorialSection === await stripSpaces(userInput.componentCode)) {
+      console.log("true");
+      filteredTutSections2SendArr.push(tutSection.object.section);
+      filteredTutSections2SendMap.set((tutSection.object.section).toString(), "");
+    }
+
+    allTutSections2SendArr.push(tutSection.object.section);
+    allTutSections2SendMap.set((tutSection.object.section).toString(), "");
+
+
   }
 
   for (const labSection of labSections) {
@@ -135,14 +160,15 @@ exports.sendAllTutLabSections = async (req, res, next) => {
 
   res.status(200).json({
     "message": "ok",
-    tutorialSection: [dbHelpers.map2Json(tutSections2SendMap)],
+    referenceTutorialSection: [dbHelpers.map2Json(allTutSections2SendMap)],
+    tutorialSection:  [dbHelpers.map2Json(filteredTutSections2SendMap)],
     labSection: [dbHelpers.map2Json(labSections2SendMap)]
 
-    // tutorialSection: dbHelpers.map2Json(tutSections2SendMap),
+    // tutorialSection: dbHelpers.map2Json(allTutSections2SendMap),
     // labSection: dbHelpers.map2Json(labSections2SendMap)
 
     // lectureSection: lecSections2SendArr,
-    // tutorialSection: tutSections2SendArr,
+    // tutorialSection: allTutSections2SendArr,
     // labSection: labSections2SendArr
   });
 };
@@ -195,6 +221,11 @@ exports.sendAllLectures = async (req, res, next) => {
 async function connect2DB() {
 // connect to database
   await dbHelpers.defaultConnectionToDB();
+}
+
+async function stripSpaces(str) {
+  str = str.replace(/\s/g, '');
+  return str;
 }
 
 
