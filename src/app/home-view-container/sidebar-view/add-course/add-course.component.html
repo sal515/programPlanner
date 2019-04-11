@@ -5,7 +5,7 @@
             <mat-label>Select Semester</mat-label>
             <mat-select (selectionChange)="onSemesterSelect($event.value)">
                 <mat-option *ngFor="let course of semesterList" [value]="course">
-                    {{course.semester}}
+                    {{course.termDescription}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -15,7 +15,7 @@
                 <mat-label>Course Name</mat-label>
                 <mat-select [(value)]="selectedCourse" (selectionChange)="onSelect($event.value)">
                     <mat-option *ngFor="let course of nameList" [value]="course">
-                        {{course.name}}
+                        {{course.courseSubject}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -28,7 +28,7 @@
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event.option.value)"
                                   [displayWith]="displayCode">
                     <mat-option *ngFor="let course of codeList" [value]="course">
-                        {{course.code}}
+                        {{course.courseCatalog}}
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>

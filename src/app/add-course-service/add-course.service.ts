@@ -13,8 +13,8 @@ export class CourseService {
 
   private courseAddURL = 'http://localhost:3000/algorithms/addCourseToSequence';
   private getCourseURL = 'http://localhost:3000/algorithms/getCourses';
-  // private getLectureSectionURL = 'http://localhost:3000/algorithms/getLecturesSections';
-  // private getLabAndTutSectionURL = 'http://localhost:3000/algorithms/getTutLabsSections';
+  private getLectureSectionURL = 'http://localhost:3000/algorithms/getLecturesSections';
+  private getLabAndTutSectionURL = 'http://localhost:3000/algorithms/getTutLabsSections';
   private courseRemoveURL = 'http://localhost:3000/removeCourse';
   private getCartURL = 'http://localhost:3000/algorithms/getCourseCart';
 
@@ -51,10 +51,10 @@ export class CourseService {
         for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
           const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
           const course: AddCourseModel = {
-            id: userID,
-            semester: map.get('termDescription'),
-            name: map.get('courseSubject'),
-            code: map.get('courseCatalog'),
+            userID: this.userID,
+            termDescription: map.get('termDescription'),
+            courseSubject: map.get('courseSubject'),
+            courseCatalog: map.get('courseCatalog'),
             lectureSection: null,
             tutorialSection: null,
             labSection: null
@@ -81,6 +81,9 @@ export class CourseService {
             termDescription: randCourse.termDescription,
             courseSubject: responseData.coursesCartArr[i].slice(0, 4),
             courseCatalog: responseData.coursesCartArr[i].slice(4, 8),
+            lectureSection: randCourse.lectureSection,
+            tutorialSection: randCourse.tutorialSection,
+            labSection: randCourse.labSection
           };
           this.basket.push(course);
           this.basketUpdated.next(this.basket);
@@ -95,10 +98,10 @@ export class CourseService {
           for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
             const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
             const course: AddCourseModel = {
-              id: userID,
-              semester: map.get('termDescription'),
-              name: map.get('courseSubject'),
-              code: map.get('courseCatalog'),
+              userID: this.userID,
+              termDescription: map.get('termDescription'),
+              courseSubject: map.get('courseSubject'),
+              courseCatalog: map.get('courseCatalog'),
               lectureSection: map.get('lectureSection'),
               tutorialSection: null,
               labSection: null
@@ -118,10 +121,10 @@ export class CourseService {
           for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
             const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
             const course: AddCourseModel = {
-              id: userID,
-              semester: map.get('termDescription'),
-              name: map.get('courseSubject'),
-              code: map.get('courseCatalog'),
+              userID: userID,
+              termDescription: map.get('termDescription'),
+              courseSubject: map.get('courseSubject'),
+              courseCatalog: map.get('courseCatalog'),
               lectureSection: map.get('lectureSection'),
               tutorialSection: map.get('tutorialSection'),
               labSection: map.get('labSection')
