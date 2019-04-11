@@ -66,8 +66,8 @@ export class CourseService {
     );
   }
 
-  getLecture(): void {
-    this.httpClient.get <{ coursesArrayOfMaps: string[] }>(this.getLectureSectionURL).subscribe((courseData) => {
+  getLecture(pickedCourse: AddCourseModel): void {
+    this.httpClient.post <{ coursesArrayOfMaps: string[] }>(this.getLectureSectionURL, pickedCourse).subscribe((courseData) => {
           const userID = this.AuthenticationService.getUserId();
           for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
             const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
@@ -89,8 +89,8 @@ export class CourseService {
     );
   }
 
-  getLabAndTut(): void {
-    this.httpClient.get <{ coursesArrayOfMaps: string[] }>(this.getLabAndTutSectionURL).subscribe((courseData) => {
+  getLabAndTut(pickedCourse: AddCourseModel): void {
+    this.httpClient.post <{ coursesArrayOfMaps: string[] }>(this.getLabAndTutSectionURL, pickedCourse).subscribe((courseData) => {
           const userID = this.AuthenticationService.getUserId();
           for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
             const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
