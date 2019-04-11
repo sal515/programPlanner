@@ -59,22 +59,24 @@ export class CourseService {
       }
     );
   }
-  getUserCart(randCourse: AddCourseModel) {
-    this.httpClient.post<({arrCourse: string[]})>(this.getCartURL, {
+  getUserCart(randCourse: AddCourseModel): void {
+    this.basket = [];
+    this.basketUpdated.next(this.basket);
+    this.httpClient.post<({coursesCartArr: string[]})>(this.getCartURL, {
       termDescription: randCourse.termDescription,
       userID: randCourse.userID
     }).subscribe((responseData) => {
         this.basket = [];
-        for (let i = 0; i < responseData.arrCourse.length; i++) {
+        for (let i = 0; i < responseData.coursesCartArr.length; i++) {
           const course: AddCourseModel = {
             userID: this.userID,
             termDescription: randCourse.termDescription,
-            courseSubject: responseData.arrCourse.slice(0, 4),
-            courseCatalog: responseData.arrCourse.slice(5, 8),
+            courseSubject: responseData.coursesCartArr[i].slice(0, 4),
+            courseCatalog: responseData.coursesCartArr[i].slice(4, 8),
           };
           this.basket.push(course);
+          this.basketUpdated.next(this.basket);
         }
-        this.basketUpdated.next(this.basket);
       }
     );
   }
