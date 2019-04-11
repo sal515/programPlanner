@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AddCourseModel} from '../models/course.model';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Subject} from 'rxjs';
 import {Observable} from 'rxjs';
 import {AuthenticationService} from '../authentication-service-guards/authentication.service';
@@ -15,8 +15,10 @@ export class CourseService {
   private getCourseURL = 'http://localhost:3000/algorithms/getCourses';
   // private getLectureSectionURL = 'http://localhost:3000/algorithms/getLecturesSections';
   // private getLabAndTutSectionURL = 'http://localhost:3000/algorithms/getTutLabsSections';
+  private courseRemoveURL = 'http://localhost:3000/removeCourse';
+  private getCartURL = 'http://localhost:3000/algorithms/getCourseCart';
 
-  readonly userID: string;
+  private userID: string;
   private httpClient: HttpClient;
 
   private basket: AddCourseModel[] = [];
@@ -45,7 +47,7 @@ export class CourseService {
    */
   getCourses(): void {
     this.httpClient.get <{ coursesArrayOfMaps: string[] }>(this.getCourseURL).subscribe((courseData) => {
-        const userID = this.AuthenticationService.getUserId();
+        this.userID = this.AuthenticationService.getUserId();
         for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
           const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
           const course: AddCourseModel = {
@@ -62,6 +64,27 @@ export class CourseService {
         }
         this.genSemesterList(this.courses);
         this.semestersUpdated.next([...this.semesters]);
+      }
+    );
+  }
+  getUserCart(randCourse: AddCourseModel): void {
+    this.basket = [];
+    this.basketUpdated.next(this.basket);
+    this.httpClient.post<({coursesCartArr: string[]})>(this.getCartURL, {
+      termDescription: randCourse.termDescription,
+      userID: randCourse.userID
+    }).subscribe((responseData) => {
+        this.basket = [];
+        for (let i = 0; i < responseData.coursesCartArr.length; i++) {
+          const course: AddCourseModel = {
+            userID: this.userID,
+            termDescription: randCourse.termDescription,
+            courseSubject: responseData.coursesCartArr[i].slice(0, 4),
+            courseCatalog: responseData.coursesCartArr[i].slice(4, 8),
+          };
+          this.basket.push(course);
+          this.basketUpdated.next(this.basket);
+        }
       }
     );
   }
@@ -121,29 +144,21 @@ export class CourseService {
     this.httpClient.post<({
       isCourseGivenDuringSemesterBool: boolean,
       hasPreReqBool: boolean,
-      hasCoReqBool: boolean,
       notTakenBool: boolean,
       alreadyInCartBool: boolean,
-      notifyCalender: boolean
+      notifyCalenderBool: boolean
     })>(this.courseAddURL, course).subscribe((responseData) => {
         this.clearMessages();
-        if (!responseData.isCourseGivenDuringSemesterBool || !responseData.hasPreReqBool
-          || !responseData.hasCoReqBool || !responseData.notTakenBool
-          || !responseData.alreadyInCartBool) {
-          if (!responseData.isCourseGivenDuringSemesterBool) {
-            this.pushMessage('Error: Course not available for this semester.');
-          }
-          if (!responseData.hasPreReqBool) {
-            this.pushMessage('Error: Missing one or more pre-requisites.');
-          }
-          if (!responseData.hasCoReqBool) {
-            this.pushMessage('Error: Missing one or more co-requisites.');
-          }
-          if (!responseData.notTakenBool) {
-            this.pushMessage('Error: Course has already been taken.');
-          }
-          if (!responseData.alreadyInCartBool) {
+        if (!responseData.isCourseGivenDuringSemesterBool || !responseData.hasPreReqBool || responseData.alreadyInCartBool) {
+          if (responseData.alreadyInCartBool) {
             this.pushMessage('Error: Course already in cart.');
+          } else {
+            if (!responseData.isCourseGivenDuringSemesterBool) {
+              this.pushMessage('Error: Course not available for this semester.');
+            }
+            if (!responseData.hasPreReqBool) {
+              this.pushMessage('Error: Missing one or more pre-requisites.');
+            }
           }
           setTimeout(() => {
             this.clearMessages();
@@ -152,9 +167,10 @@ export class CourseService {
           this.basket.push(course);
           this.basketUpdated.next([...this.basket]);
           this.pushMessage('Course successfully added.');
-          setTimeout(() => {
-            this.clearMessages();
-          }, 3000);
+          if (!responseData.notTakenBool && !responseData.alreadyInCartBool) {
+            this.pushMessage('Warning: course has already been taken.');
+          }
+          setTimeout(() => {this.clearMessages(); }, 3000);
         }
       }
     );
@@ -166,11 +182,18 @@ export class CourseService {
    * @returns void
    */
   removeCourse(course: AddCourseModel): void {
-    const index = this.basket.indexOf(course);
-    if (index >= 0) {
-      this.basket.splice(index, 1);
-    }
-    this.basketUpdated.next([...this.basket]);
+    this.clearMessages();
+    this.httpClient.post<({message: string})>(this.courseRemoveURL, course).subscribe((responseData) => {
+        this.clearMessages();
+        const index = this.basket.indexOf(course);
+        if (index >= 0) {
+          this.basket.splice(index, 1);
+        }
+        this.basketUpdated.next([...this.basket]);
+        this.pushMessage('Course successfully removed.');
+        setTimeout(() => {this.clearMessages(); }, 3000);
+      }
+    );
   }
 
   /** Creates an observable for the basket.
@@ -189,7 +212,7 @@ export class CourseService {
      return this.coursesUpdated.asObservable();
   }
 
-  /** Creates an observable for the semester list.
+  /** Creates an observable for the termDescription list.
    *
    * @returns Observable<AddCourseModel[]>
    */
@@ -243,9 +266,9 @@ export class CourseService {
   genSemesterList(courses: AddCourseModel[]): void {
     const stringList: string[] = [];
     for (let i = 0; i < courses.length; i++) {
-      if (!this.semesters.includes(courses[i]) && !stringList.includes(courses[i].semester)) {
+      if (!this.semesters.includes(courses[i]) && !stringList.includes(courses[i].termDescription)) {
         this.semesters.push(courses[i]);
-        stringList.push(courses[i].semester);
+        stringList.push(courses[i].termDescription);
       }
     }
   }
