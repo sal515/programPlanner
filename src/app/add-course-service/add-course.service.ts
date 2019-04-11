@@ -14,8 +14,9 @@ export class CourseService {
   private courseAddURL = 'http://localhost:3000/algorithms/addCourseToSequence';
   private getCourseURL = 'http://localhost:3000/algorithms/getCourses';
   private courseRemoveURL = 'http://localhost:3000/removeCourse';
+  private getCartURL = 'http://localhost:3000/algorithms/getCourseCart';
 
-  readonly userID: string;
+  private userID: string;
   private httpClient: HttpClient;
 
   private basket: AddCourseModel[] = [];
@@ -41,11 +42,11 @@ export class CourseService {
    */
   getCourses(): void {
     this.httpClient.get <{ coursesArrayOfMaps: string[] }>(this.getCourseURL).subscribe((courseData) => {
-        const userID = this.AuthenticationService.getUserId();
+        this.userID = this.AuthenticationService.getUserId();
         for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
           const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
           const course: AddCourseModel = {
-            userID: userID,
+            userID: this.userID,
             termDescription: map.get('termDescription'),
             courseSubject: map.get('courseSubject'),
             courseCatalog: map.get('courseCatalog')
@@ -55,6 +56,25 @@ export class CourseService {
         }
         this.genSemesterList(this.courses);
         this.semestersUpdated.next([...this.semesters]);
+      }
+    );
+  }
+  getUserCart(randCourse: AddCourseModel) {
+    this.httpClient.post<({arrCourse: string[]})>(this.getCartURL, {
+      termDescription: randCourse.termDescription,
+      userID: randCourse.userID
+    }).subscribe((responseData) => {
+        this.basket = [];
+        for (let i = 0; i < responseData.arrCourse.length; i++) {
+          const course: AddCourseModel = {
+            userID: this.userID,
+            termDescription: randCourse.termDescription,
+            courseSubject: responseData.arrCourse.slice(0, 4),
+            courseCatalog: responseData.arrCourse.slice(5, 8),
+          };
+          this.basket.push(course);
+        }
+        this.basketUpdated.next(this.basket);
       }
     );
   }
