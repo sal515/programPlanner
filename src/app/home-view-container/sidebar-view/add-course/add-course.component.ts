@@ -117,6 +117,14 @@ export class AddCourseComponent implements OnInit, OnDestroy {
    * Takes a list of sections for lectures, labs, and tutorials sent by the backend
    * Generates a list of all possible sections for each
    */
+  onSelectName(course: AddCourseModel): void {
+    this.onSelect(course);
+    this.clearInput();
+  }
+  /**
+   * Takes a list of sections for lectures, labs, and tutorials sent by the backend
+   * Generates a list of all possible sections for each
+   */
   onSelectCode(course: AddCourseModel): void {
     this.onSelect(course);
     this.courseService.getLecture(course);
@@ -174,6 +182,11 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   displayCode(course: AddCourseModel): string {
     if (course) {
       return course.courseCatalog;
+    }
+  }
+  displayLecture(course: AddCourseModel): string {
+    if (course) {
+      return course.lectureSection;
     }
   }
   /** Add an input course to the basket using the service method addCourse. Displays an appropriate message based on the input or the

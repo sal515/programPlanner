@@ -96,17 +96,18 @@ export class CourseService {
   }
 
   getLecture(pickedCourse: AddCourseModel): void {
-    this.httpClient.post <{ coursesArrayOfMaps: string[] }>(this.getLectureSectionURL, pickedCourse).subscribe((courseData) => {
+    this.httpClient.post <{ lectureSection: string[] }>(this.getLectureSectionURL, pickedCourse).subscribe((courseData) => {
           this.lectures = [];
           this.lecturesUpdated.next(this.lectures);
-          for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
-            const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
+          const map = new Map(JSON.parse(courseData.lectureSection[0]));
+          const lecArray = Array.from(map.keys());
+          for (let i = 0; i < lecArray.length; i++) {
             const course: AddCourseModel = {
               userID: this.userID,
               termDescription: pickedCourse.termDescription,
               courseSubject: pickedCourse.courseSubject,
               courseCatalog: pickedCourse.courseCatalog,
-              lectureSection: map.get('lectureSection'),
+              lectureSection: lecArray[i],
               tutorialSection: pickedCourse.tutorialSection,
               labSection: pickedCourse.labSection
             };
@@ -118,26 +119,40 @@ export class CourseService {
   }
 
   getLabAndTut(pickedCourse: AddCourseModel): void {
-    this.httpClient.post <{ coursesArrayOfMaps: string[] }>(this.getLabAndTutSectionURL, pickedCourse).subscribe((courseData) => {
-          this.labs = [];
-          this.labsUpdated.next(this.labs);
+    this.httpClient.post <{ tutorialSection: string[], labSection: string[] }>(this.getLabAndTutSectionURL, pickedCourse).subscribe((courseData) => {
           this.tuts = [];
           this.tutsUpdated.next(this.tuts);
-          for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
-            const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
+          this.labs = [];
+          this.labsUpdated.next(this.labs);
+          const tutMap = new Map(JSON.parse(courseData.tutorialSection[0]));
+          const tutArray = Array.from(tutMap.keys());
+          const labMap = new Map(JSON.parse(courseData.labSection[0]));
+          const labArray = Array.from(labMap.keys());
+          for (let i = 0; i < tutArray.length; i++) {
             const course: AddCourseModel = {
               userID: this.userID,
               termDescription: pickedCourse.termDescription,
               courseSubject: pickedCourse.courseSubject,
               courseCatalog: pickedCourse.courseCatalog,
               lectureSection: pickedCourse.lectureSection,
-              tutorialSection: map.get('tutorialSection'),
-              labSection: map.get('labSection')
+              tutorialSection: tutArray[i],
+              labSection: pickedCourse.lectureSection,
+            };
+            this.tuts.push(course);
+            this.tutsUpdated.next(this.tuts);
+          }
+          for (let i = 0; i < labArray.length; i++) {
+            const course: AddCourseModel = {
+              userID: this.userID,
+              termDescription: pickedCourse.termDescription,
+              courseSubject: pickedCourse.courseSubject,
+              courseCatalog: pickedCourse.courseCatalog,
+              lectureSection: pickedCourse.lectureSection,
+              tutorialSection: pickedCourse.tutorialSection,
+              labSection: labArray[i],
             };
             this.labs.push(course);
             this.labsUpdated.next(this.labs);
-            this.tuts.push(course);
-            this.tutsUpdated.next(this.tuts);
           }
         }
     );

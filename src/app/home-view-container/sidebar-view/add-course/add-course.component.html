@@ -13,7 +13,7 @@
             <!-- Dropdown list to select the name of the course based on the selected semester. -->
             <mat-form-field>
                 <mat-label>Course Name</mat-label>
-                <mat-select [(value)]="selectedCourse" (selectionChange)="onSelect($event.value)">
+                <mat-select (selectionChange)="onSelectName($event.value)">
                     <mat-option *ngFor="let course of nameList" [value]="course">
                         {{course.courseSubject}}
                     </mat-option>
