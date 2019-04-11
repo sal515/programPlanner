@@ -8,82 +8,6 @@ const scheduleModel = require(DbSchemeDirectory + 'scheduleSchema2Model');
 // importing the user profiles
 const userProfileModel = require(modelDirectory + 'userSchema2Model');
 
-//
-// exports.sendAllSections = async (req, res, next) => {
-//
-//   await connect2DB();
-//
-//   // let mongooseDebug = true;
-//   let mongooseDebug = false;
-//   if (mongooseDebug) {
-//     const mongoose = require("mongoose");
-//     mongoose.set('debug', true);
-//   }
-//
-//   const userInput = req.body;
-//   if (userInput.userID === "" ||
-//     userInput.courseSubject === "" ||
-//     userInput.courseCatalog === "" ||
-//     userInput.termDescription === "") {
-//
-//     res.status(200).json({
-//       "message": "No Input for some of the variables sent"
-//     });
-//     return;
-//   }
-//
-//   let lecSections = [];
-//   let lecSections2SendArr = [];
-//   let lecSections2SendMap = new Map();
-//   let tutSections = [];
-//   let tutSections2SendArr = [];
-//   let tutSections2SendMap = new Map();
-//   let labSections = [];
-//   let labSections2SendArr = [];
-//   let labSections2SendMap = new Map();
-//
-//   lecSections = await findCourseComponents("LEC", userInput.courseSubject,
-//     userInput.courseCatalog, userInput);
-//
-//   tutSections = await findCourseComponents("TUT", userInput.courseSubject,
-//     userInput.courseCatalog, userInput);
-//
-//   labSections = await findCourseComponents("LAB", userInput.courseSubject,
-//     userInput.courseCatalog, userInput);
-//
-//   // console.log(lecSections);
-//
-//   for (const lecSection of lecSections) {
-//     lecSections2SendArr.push(lecSection.object.section);
-//     lecSections2SendMap.set((lecSection.object.section).toString(), "");
-//   }
-//
-//   for (const tutSection of tutSections) {
-//     tutSections2SendArr.push(tutSection.object.section);
-//     tutSections2SendMap.set((tutSection.object.section).toString(), "");
-//   }
-//
-//   for (const labSection of labSections) {
-//     labSections2SendArr.push(labSection.object.section);
-//     labSections2SendMap.set((labSection.object.section).toString(), "");
-//   }
-//
-//   res.status(200).json({
-//     "message": "ok",
-//     lectureSection: [dbHelpers.map2Json(lecSections2SendMap)],
-//     tutorialSection: [dbHelpers.map2Json(tutSections2SendMap)],
-//     labSection: [dbHelpers.map2Json(labSections2SendMap)]
-//
-//     // lectureSection: dbHelpers.map2Json(lecSections2SendMap)  ,
-//     // tutorialSection: dbHelpers.map2Json(tutSections2SendMap),
-//     // labSection: dbHelpers.map2Json(labSections2SendMap)
-//
-//     // lectureSection: lecSections2SendArr,
-//     // tutorialSection: tutSections2SendArr,
-//     // labSection: labSections2SendArr
-//   });
-// };
-//
 
 exports.sendAllTutLabSections = async (req, res, next) => {
 
@@ -142,15 +66,12 @@ exports.sendAllTutLabSections = async (req, res, next) => {
 
     // if (slicedTutorialSection === await stripSpaces(userInput.componentCode)) {
     if (slicedTutorialSection === await stripSpaces(userInput.componentCode)) {
-      console.log("true");
+      // console.log("true");
       filteredTutSections2SendArr.push(tutSection.object.section);
       filteredTutSections2SendMap.set((tutSection.object.section).toString(), "");
     }
-
     allTutSections2SendArr.push(tutSection.object.section);
     allTutSections2SendMap.set((tutSection.object.section).toString(), "");
-
-
   }
 
   for (const labSection of labSections) {

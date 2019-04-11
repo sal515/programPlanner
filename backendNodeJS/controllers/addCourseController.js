@@ -109,9 +109,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
   let userProfile;
 
 
-
-
-  let debug = 9;
+  let debug = -1;
 
   try {
 
@@ -238,9 +236,6 @@ async function asyncAddCourseController(userInput, req, res, next) {
     }
 
 
-
-
-
     // ================= Check for Co Req ==========================
 
     //FIXME:  Don't Know what should be the logic for CO-Req
@@ -270,43 +265,76 @@ async function asyncAddCourseController(userInput, req, res, next) {
 
     // =================== Saving the course in the courseCart Variable ==============
 
-    // if (debug === 0) {
-    if (debug >= 7) {
+
+    if (debug === -1) {
+      // if (debug >= 7) {
 
       statusObj.setNotifyCalenderBool(false);
 
-      if (!statusObj.getAlreadyInCartBool() && statusObj.getIsCourseGivenDuringSemesterBool() &&
-        statusObj.getHasPreReqBool()) {
+      // FIXME Uncommnet this logical check below !!!!MUST!!!!!
+      // if (!statusObj.getAlreadyInCartBool() && statusObj.getIsCourseGivenDuringSemesterBool() &&
+      //   statusObj.getHasPreReqBool()) {
 
-        // const userProfile = await findUserProfileDocument(userInput, req, res, next);
-        // console.log(userProfile);
-        // userProfile.courseCart = {"Test_Semester1": ["COEN244", "SOEN311"]};
+      const userProfile = await findUserProfileDocument(userInput, req, res, next);
+      // console.log(userProfile);
+      // userProfile.courseCart = {"Test_Semester1": ["COEN244", "SOEN311"]};
 
-        // console.log(userProfile.courseCart.get("Test_Semester1"));
-        // let coursesArr = (userProfile.courseCart.get("Test_Semester1"));
+      // console.log(userProfile.courseCart.get("Test_Semester1"));
+      // let courseDetailsMap = (userProfile.courseCart.get("Test_Semester1"));
 
-        let coursesArr = [];
+      let courseDetailsMap = new Map();
+      let courseTermMap = new Map();
 
-        // if the course cart for the semester exists, get those values
-        if (userProfile.courseCart.has(userInput.termDescription)) {
-          coursesArr = (userProfile.courseCart.get(userInput.termDescription));
-        }
-        // push the new value into the course cart of the current semester
-        coursesArr.push(userInput.courseSubject + userInput.courseCatalog);
-
-        // coursesArr.push("COEN444");
-        // arr = userProfile.courseCart.get("Test_Semester1").push("AERO111");
-        // userProfile.courseCart.set("Test_Semester1", arr);
-
-        // userProfile.courseCart.set("Test_Semester1", coursesArr);
-        userProfile.courseCart.set(userInput.termDescription, coursesArr);
-
-        await userProfile.save();
-        // FIXME : Uncomment Notify Calendar line below
-        statusObj.setNotifyCalenderBool(true);
-
+      // if the course cart for the semester exists, get those values
+      if (userProfile.courseCart.has(userInput.termDescription)) {
+        // courseTermMap = (userProfile.courseCart.get(userInput.termDescription));
+        courseTermMap = (userProfile.courseCart.get(userInput.termDescription));
+        // courseTermMap = (userProfile.get("courseCart"));
       }
+
+      console.log(typeof courseTermMap);;
+
+      let anotherMap = new Map(Object.entries(courseTermMap));
+
+      console.log(typeof anotherMap);
+      // console.log(courseTermMap);
+
+      // FIXME : This line is not recognizing that courseTermMap is a map
+      console.log(courseTermMap.has((userInput.courseSubject + userInput.courseCatalog)));
+
+      // push the new value into the course cart of the current semester
+      // courseDetailsMap.set("courseSubject", userInput.courseSubject);
+      // courseDetailsMap.set("courseCatalog", userInput.courseCatalog);
+      // courseDetailsMap.set("lectureSection", userInput.lectureSection);
+      // courseDetailsMap.set("labSection", userInput.labSection);
+      // courseDetailsMap.set("tutorialSection", userInput.tutorialSection);
+
+      // if (userInput.labSection === "") {
+      //   courseDetailsMap.set("labSection", "");
+      // }
+      // if (userInput.tutorialSection === "") {
+      //   courseDetailsMap.set("tutorialSection", "");
+      // }
+      //
+      // console.log(courseDetailsMap);
+      //
+      // courseTermMap.set((userInput.courseSubject.toString() + userInput.courseCatalog.toString()), courseDetailsMap);
+
+
+      // courseDetailsMap.push("COEN444");
+      // arr = userProfile.courseCart.get("Test_Semester1").push("AERO111");
+      // userProfile.courseCart.set("Test_Semester1", arr);
+
+      // userProfile.courseCart.set("Test_Semester1", courseDetailsMap);
+      // userProfile.courseCart.set(userInput.termDescription, courseTermMap);
+
+      // await userProfile.save();
+      // FIXME : Uncomment Notify Calendar line below
+      statusObj.setNotifyCalenderBool(true);
+
     }
+    // FIXME: uncomment the } below
+    // }
 
 
   } catch
