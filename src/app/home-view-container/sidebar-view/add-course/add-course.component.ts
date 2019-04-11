@@ -119,13 +119,13 @@ export class AddCourseComponent implements OnInit, OnDestroy {
    */
   onSelectLectureSection(course: AddCourseModel): void {
     this.selectedCourse = course;
-    this.lectureList = AddCourseComponent.genList(this.lectureList, this.selectedCourse.lectureSection, 'lecture');
+    this.lectureList = AddCourseComponent.genList(this.lectureList, this.selectedCourse.lectureSection, 'lecture'); // what is attribute?
   }
 
   onSelectLabAndTutorialSections(course: AddCourseModel): void {
     this.selectedCourse = course;
     this.labList = AddCourseComponent.genList(this.lectureList, this.selectedCourse.labSection, 'lab');
-    this.tutorialList = AddCourseComponent.genList(this.lectureList, this.selectedCourse.tutorialSection, 'tutorial');
+    this.tutorialList = AddCourseComponent.genList(this.lectureList, this.selectedCourse.tutorialSection, 'tutorial'); // what is attribute?
   }
 
   /** Method that is executed upon selecting a semester. Calls onSelect and reset the user input.

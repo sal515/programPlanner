@@ -13,7 +13,8 @@ export class CourseService {
 
   private courseAddURL = 'http://localhost:3000/algorithms/addCourseToSequence';
   private getCourseURL = 'http://localhost:3000/algorithms/getCourses';
-  private getSectionURL = '';
+  private getLectureSectionURL = '';
+  private getLabAndTutSectionURL = '';
 
   readonly userID: string;
   private httpClient: HttpClient;
@@ -62,6 +63,52 @@ export class CourseService {
         this.genSemesterList(this.courses);
         this.semestersUpdated.next([...this.semesters]);
       }
+    );
+  }
+
+  getLecture(): void {
+    this.httpClient.get <{ coursesArrayOfMaps: string[] }>(this.getLectureSectionURL).subscribe((courseData) => {
+          const userID = this.AuthenticationService.getUserId();
+          for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
+            const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
+            const course: AddCourseModel = {
+              id: userID,
+              semester: null,
+              name: null,
+              code: null,
+              lectureSection: map.get('lectureSection'),
+              tutorialSection: null,
+              labSection: null
+            };
+            this.courses.push(course);
+            this.coursesUpdated.next([...this.courses]);
+          }
+          this.genSemesterList(this.courses);
+          this.semestersUpdated.next([...this.semesters]);
+        }
+    );
+  }
+
+  getLabAndTut(): void {
+    this.httpClient.get <{ coursesArrayOfMaps: string[] }>(this.getLabAndTutSectionURL).subscribe((courseData) => {
+          const userID = this.AuthenticationService.getUserId();
+          for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
+            const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
+            const course: AddCourseModel = {
+              id: userID,
+              semester: null,
+              name: null,
+              code: null,
+              lectureSection: null,
+              tutorialSection: map.get('tutorialSection'),
+              labSection: map.get('labSection')
+            };
+            this.courses.push(course);
+            this.coursesUpdated.next([...this.courses]);
+          }
+          this.genSemesterList(this.courses);
+          this.semestersUpdated.next([...this.semesters]);
+        }
     );
   }
 
