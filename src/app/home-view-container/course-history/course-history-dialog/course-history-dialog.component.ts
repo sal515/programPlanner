@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-course-history-dialog',
@@ -13,11 +13,6 @@ export class CourseHistoryDialogComponent{
   static getCourseHistory()
   {
     let studentProfile = JSON.parse(localStorage.getItem('studentProfile'));
-    let courseHistory = studentProfile.courseHistory;
-    let semestersArray : string[] = [];
-    for (let semester in courseHistory){
-        semestersArray.push(semester);
-    }
     return studentProfile.courseHistory;
   }
 
