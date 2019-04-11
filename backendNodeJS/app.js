@@ -9,6 +9,8 @@ const app = express();
 const bodyParser = require("body-parser");
 // importing corsHelper file
 const corsHelper = require('./server/corsHelper');
+// connection to the database
+const dbHelpers = require("./databaseHandlers/dbHelper");
 // ====================================================================
 
 // ---------------------------------------------------------------------
@@ -21,6 +23,9 @@ const algorithmRoute = require('./routes/algorithmsRoute');
 const frontendRoute = require('./routes/frontendRoute');
 const removeCourseRoute = require('./routes/removeCourseRoute');
 // ====================================================================
+
+// connecting to the database using the default connection method
+dbHelpers.defaultConnectionToDB();
 
 // ---------------------------------------------------------------------
 //  Express middleware functions used to parse the incoming request's body
