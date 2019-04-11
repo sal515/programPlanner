@@ -24,14 +24,17 @@ export class CourseService {
   private basket: AddCourseModel[] = [];
   private courses: AddCourseModel[] = [];
   private semesters: AddCourseModel[] = [];
+  private lectures: AddCourseModel[] = [];
+  private labs: AddCourseModel[] = [];
+  private tuts: AddCourseModel[] = [];
   private messages: string[] = [];
 
   private basketUpdated = new Subject<AddCourseModel[]>();
   private coursesUpdated = new Subject<AddCourseModel[]>();
   private semestersUpdated = new Subject<AddCourseModel[]>();
-  private lectureUpdated = new Subject<AddCourseModel[]>();
-  private labUpdated = new Subject<AddCourseModel[]>();
-  private tutUpdated = new Subject<AddCourseModel[]>();
+  private lecturesUpdated = new Subject<AddCourseModel[]>();
+  private labsUpdated = new Subject<AddCourseModel[]>();
+  private tutsUpdated = new Subject<AddCourseModel[]>();
   private messagesUpdated = new Subject<string[]>();
 
   AuthenticationService: AuthenticationService;
@@ -94,46 +97,48 @@ export class CourseService {
 
   getLecture(pickedCourse: AddCourseModel): void {
     this.httpClient.post <{ coursesArrayOfMaps: string[] }>(this.getLectureSectionURL, pickedCourse).subscribe((courseData) => {
-          const userID = this.AuthenticationService.getUserId();
+          this.lectures = [];
+          this.lecturesUpdated.next(this.lectures);
           for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
             const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
             const course: AddCourseModel = {
               userID: this.userID,
-              termDescription: map.get('termDescription'),
-              courseSubject: map.get('courseSubject'),
-              courseCatalog: map.get('courseCatalog'),
+              termDescription: pickedCourse.termDescription,
+              courseSubject: pickedCourse.courseSubject,
+              courseCatalog: pickedCourse.courseCatalog,
               lectureSection: map.get('lectureSection'),
-              tutorialSection: null,
-              labSection: null
+              tutorialSection: pickedCourse.tutorialSection,
+              labSection: pickedCourse.labSection
             };
-            this.courses.push(course);
-            this.coursesUpdated.next([...this.courses]);
+            this.lectures.push(course);
+            this.lecturesUpdated.next(this.lectures);
           }
-          this.genSemesterList(this.courses);
-          this.semestersUpdated.next([...this.semesters]);
         }
     );
   }
 
   getLabAndTut(pickedCourse: AddCourseModel): void {
     this.httpClient.post <{ coursesArrayOfMaps: string[] }>(this.getLabAndTutSectionURL, pickedCourse).subscribe((courseData) => {
-          const userID = this.AuthenticationService.getUserId();
+          this.labs = [];
+          this.labsUpdated.next(this.labs);
+          this.tuts = [];
+          this.tutsUpdated.next(this.tuts);
           for (let i = 0; i < courseData.coursesArrayOfMaps.length; i++) {
             const map = new Map(JSON.parse(courseData.coursesArrayOfMaps[i]));
             const course: AddCourseModel = {
-              userID: userID,
-              termDescription: map.get('termDescription'),
-              courseSubject: map.get('courseSubject'),
-              courseCatalog: map.get('courseCatalog'),
-              lectureSection: map.get('lectureSection'),
+              userID: this.userID,
+              termDescription: pickedCourse.termDescription,
+              courseSubject: pickedCourse.courseSubject,
+              courseCatalog: pickedCourse.courseCatalog,
+              lectureSection: pickedCourse.lectureSection,
               tutorialSection: map.get('tutorialSection'),
               labSection: map.get('labSection')
             };
-            this.courses.push(course);
-            this.coursesUpdated.next([...this.courses]);
+            this.labs.push(course);
+            this.labsUpdated.next(this.labs);
+            this.tuts.push(course);
+            this.tutsUpdated.next(this.tuts);
           }
-          this.genSemesterList(this.courses);
-          this.semestersUpdated.next([...this.semesters]);
         }
     );
   }
@@ -224,15 +229,15 @@ export class CourseService {
   }
 
   getLectureUpdateListener(): Observable<AddCourseModel[]> {
-    return this.lectureUpdated.asObservable();
+    return this.lecturesUpdated.asObservable();
   }
 
   getLabUpdateListener(): Observable<AddCourseModel[]> {
-    return this.labUpdated.asObservable();
+    return this.labsUpdated.asObservable();
   }
 
   getTutUpdateListener(): Observable<AddCourseModel[]> {
-    return this.tutUpdated.asObservable();
+    return this.tutsUpdated.asObservable();
   }
 
   /** Creates an observable for the response messages.
