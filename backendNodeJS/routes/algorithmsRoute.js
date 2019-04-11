@@ -10,6 +10,7 @@ const populateSidebarController = require('../controllers/populateSidebarControl
 
 router.post("/addCourseToSequence", addCourseController.addCourseToSequence);
 router.get("/getCourses", populateSidebarController.populateSidebar);
+router.post("/getCourseCart", populateSidebarController.populateCourseCartCourses);
 
 
 
