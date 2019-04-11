@@ -69,12 +69,8 @@ function getSemesterCourseCart(semester, courseCart) {
  * @returns {boolean}
  */
 function removeCourse(courseCart, subject) {
-    const index = courseCart.indexOf(subject);
-    if (index > -1) {
-        courseCart.splice(index, 1);
-        return true;
-    }
-    return false;
+    courseCart.delete(subject);
+    return courseCart.has(subject);
 }
 
 /**
