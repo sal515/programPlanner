@@ -37,10 +37,6 @@ export class CalendarViewComponent implements OnInit {
         this.classesService.cast.subscribe(classes => this.classes = classes);
     }
 
-    getSpace() {
-        return ' ';
-    }
-
     getTime(index: number) {
         let hours: number;
         let minutes: number;

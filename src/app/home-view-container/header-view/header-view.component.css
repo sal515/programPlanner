@@ -1,14 +1,16 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 span {
   text-align: center;
   color: white;
-  font-family: "Gill Sans MT", sans-serif;
+  font-family: Roboto, "Gill Sans MT", sans-serif;
   font-size: 28px;
 }
 
 .menu_button {
   margin: 0 5px;
   text-align: center;
-  font-family: "Gill Sans MT", sans-serif;
+    font-family: Roboto, "Gill Sans MT", sans-serif;
   font-size: 28px;
 }
 
@@ -19,7 +21,7 @@ span {
 a {
   text-decoration: none;
   text-align: center;
-  font-family: "Gill Sans MT", sans-serif;
+  font-family: Roboto, "Gill Sans MT", sans-serif;
   font-size: 28px;
 }
 

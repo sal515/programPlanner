@@ -1,4 +1,5 @@
 @import url('https://unpkg.com/bootstrap@3.3.7/dist/css/bootstrap.min.css');
+@import url('https://fonts.googleapis.com/css?family=Roboto');
 
 .background_login {
     background-image: url(EV.jpg);
@@ -7,10 +8,10 @@
 
 .title_login {
     text-align: center;
-    color: #FFAB1C;
+    color: darkorange;
     font-weight: bold;
-    font-family: "Gill Sans MT", sans-serif;
-    font-size: 36px;
+    font-size: 40px;
+    font-family: Roboto, "Gill Sans MT", sans-serif;
 }
 
 .padding_title_first {
@@ -18,13 +19,13 @@
 }
 
 .padding_title_second {
-    padding-bottom: 5%;
+    padding-bottom: 9%;
 }
 
 .container {
     background: darkgray;
     opacity: 0.9;
-    width: 500px;
+    width: 25%;
     padding: 10px 10px;
     border-radius: 8px;
     margin: 0 auto;
@@ -33,10 +34,11 @@
 .text_login {
     color: #FDFFFC;
     font-size: 20px;
+    font-family: Roboto, "Gill Sans MT", sans-serif;
 }
 
 .forgot_button {
-    font-family: "Gill Sans MT", sans-serif;
+    font-family: Roboto, "Gill Sans MT", sans-serif;
     font-size: 16px;
     text-align: right;
     text-decoration: underline;
@@ -50,7 +52,7 @@
 
 .failed_login {
     text-align: center;
-    font-family: "Gill Sans MT", sans-serif;
+    font-family: Roboto, "Gill Sans MT", sans-serif;
     font-size: 20px;
     border-color: #E02638;
     background-color: #E8E8E8;
@@ -76,4 +78,9 @@
 
 a {
     color: white;
+    font-family: Roboto, "Gill Sans MT", sans-serif;
+}
+
+.btn {
+    font-family: Roboto, "Gill Sans MT", sans-serif;
 }

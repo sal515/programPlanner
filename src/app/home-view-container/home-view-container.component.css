@@ -26,3 +26,7 @@
   box-shadow: 10px 0 5px -2px #333333;
   opacity: 0.95;
 }
+
+.a:visited {
+    color: white;
+}

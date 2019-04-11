@@ -1,6 +1,6 @@
 .wrapper {
     display: grid;
-    grid-template-columns: 0fr 2fr 2fr 2fr 2fr 2fr;
+    grid-template-columns: 0 2fr 2fr 2fr 2fr 2fr;
     text-align: center;
     background: white;
     opacity: 0.9;
