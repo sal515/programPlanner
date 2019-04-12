@@ -8,6 +8,8 @@ var _ = require('lodash');
 // Example of using the examples reference file examples.testingFunc();
 const examples = require("./referenceExamples");
 
+const remover = require("./removeCourseController");
+
 var exports = module.exports = {};
 
 // WORKAROUND : the directory path are declared separate -- this allows Webstorm to detect the model functions
@@ -306,49 +308,36 @@ async function asyncAddCourseController(userInput, req, res, next) {
             courseDetails = userProfile["courseCart"].get(userInput.termDescription)[courseCode];
           } else {
             console.log("Course is not found in the courseCart");
-            // courseDetails = null;
           }
         } else {
           console.log("Didn't find the semester -> Create a new semester");
-          // termDetails = null;
         }
       } catch (e) {
         console.log("Error: Didn't find the semester");
       }
 
+      //update a class that is already in the sequence
       if (typeof courseDetails !== 'undefined') {
-        // console.log("courseDetails");
-        // console.log(courseDetails);
-        //  both term and course exists
-        //  modify it
-        // console.log(courseDetails);
-        // console.log(userInput);
 
+        //create new course
         courseDetails["courseSubject"] = userInput.courseSubject;
         courseDetails["courseCatalog"] = userInput.courseCatalog;
         courseDetails["termDescription"] = userInput.termDescription;
         courseDetails["lectureSection"] = userInput.lectureSection;
         courseDetails["labSection"] = userInput.labSection;
         courseDetails["tutorialSection"] = userInput.tutorialSection;
-        //  save it to DB
-        // console.log(userProfile["courseCart"].get(userInput.termDescription));
-        // console.log(userProfile["courseCart"].get(userInput.termDescription)[courseCode]);
 
-        // FIXME :: CAN'T UPDATE Existing course
-        userProfile["courseCart"].get(userInput.termDescription)[courseCode] = courseDetails;
+        let subject = userInput.courseSubject + userInput.courseCatalog;
+        await remover.removeCourseBack(userInput.userID, subject, userInput.termDescription);
 
-        // let courseTempObj = userProfile["courseCart"].get(userInput.termDescription)[courseCode];
-        // let courseTempObj = userProfile["courseCart"].get(userInput.termDescription);
-        // console.log(courseTempObj);
-        // console.log(courseTempObj[courseCode]);
+        termDetails[courseCode] = courseDetails;
+        userProfile["courseCart"].set(userInput.termDescription, termDetails);
 
         statusObj.setNotifyCalenderBool(true);
-        // await userProfile.update();
+
+        //Create semester key value map object
       } else if (typeof termDetails !== 'undefined') {
-        // console.log("termDetails");
-        // console.log(termDetails);
-        // course doesn't exists but the term exists
-        // create a new course
+
         courseDetails = {};
         courseDetails["courseSubject"] = userInput.courseSubject;
         courseDetails["courseCatalog"] = userInput.courseCatalog;
@@ -356,18 +345,14 @@ async function asyncAddCourseController(userInput, req, res, next) {
         courseDetails["lectureSection"] = userInput.lectureSection;
         courseDetails["labSection"] = userInput.labSection;
         courseDetails["tutorialSection"] = userInput.tutorialSection;
-        // insert the course in the term
-        termDetails = {};
+
+        //add course to the semester
         termDetails[courseCode] = courseDetails;
-        // save it to the database
-        // userProfile["courseCart"].get(userInput.termDescription) = termDetails;
+
         userProfile["courseCart"].set(userInput.termDescription, termDetails);
         statusObj.setNotifyCalenderBool(true);
       } else {
-        // console.log(termDetails);
-        // console.log(courseDetails);
-        // both term and course doesn't exits
-        // create course
+
         courseDetails = {};
         courseDetails["courseSubject"] = userInput.courseSubject;
         courseDetails["courseCatalog"] = userInput.courseCatalog;
@@ -375,18 +360,17 @@ async function asyncAddCourseController(userInput, req, res, next) {
         courseDetails["lectureSection"] = userInput.lectureSection;
         courseDetails["labSection"] = userInput.labSection;
         courseDetails["tutorialSection"] = userInput.tutorialSection;
-        // create term
+
+        //create term if it doesnt exist
         termDetails = {};
         termDetails[courseCode] = courseDetails;
-        // save it to database
+
         userProfile["courseCart"].set(userInput.termDescription, termDetails);
         statusObj.setNotifyCalenderBool(true);
       }
       // Save the updated userProfile object to the database
       await userProfile.save();
     }
-    // FIXME: uncomment the } below
-    // }
 
   } catch
     (condition) {
@@ -397,22 +381,15 @@ async function asyncAddCourseController(userInput, req, res, next) {
     "status": 200,
     "isCourseGivenDuringSemesterBool": statusObj.getIsCourseGivenDuringSemesterBool(),
     "hasPreReqBool": statusObj.getHasPreReqBool(),
-    // "hasCoReqBool": statusObj.getHasCoReqBool(),
     "notTakenBool": statusObj.getNotTakenBool(),
     "alreadyInCartBool": statusObj.getAlreadyInCartBool(),
     "notifyCalenderBool": statusObj.getNotifyCalenderBool()
   });
 
-
-  // return new Promise(resolve => {
-  //   resolve(statusObj);
-  // });
-
 }
 
 
 // ====================== Data Handling Functions =============================================
-
 
 async function getPreReqOrArr(userInput, req, res, next, preReqORCoursesArr) {
   const preReqORPromise = await preReqORFunc(userInput, req, res, next).catch((err) => {
@@ -534,11 +511,6 @@ function preReqORFunc(userInput, req, res, next) {
     // const query = preReqOnlyModel.find();
     query.setOptions({lean: true});
     query.collection(preReqORModel.collection);
-    // example to do the query in one line
-    // query.where('object.courseSubject').equals(userInput.courseSubject).exec(function (err, scheduleModel) {
-    // building a query with multiple where statements
-    // query.where('userID').equals(userInput.userID);
-    // query.where('object').equals(userInput.courseSubject);
     query.where('object.courseSubject').equals(userInput.courseSubject);
     query.where('object.courseCatalog').equals(userInput.courseCatalog);
     // query.where('object.termTitle').equals(userInput.termTitle);
