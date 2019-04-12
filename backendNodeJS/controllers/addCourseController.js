@@ -321,7 +321,8 @@ async function asyncAddCourseController(userInput, req, res, next) {
     // "hasCoReqBool": statusObj.getHasCoReqBool(),
     "notTakenBool": statusObj.getNotTakenBool(),
     "alreadyInCartBool": statusObj.getAlreadyInCartBool(),
-    "notifyCalenderBool": statusObj.getNotifyCalenderBool()
+    "notifyCalenderBool": statusObj.getNotifyCalenderBool(),
+    studentProfile: userProfileModel
   });
 
 

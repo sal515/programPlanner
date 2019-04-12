@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {Subject} from 'rxjs';
 import {Observable} from 'rxjs';
 import {AuthenticationService} from '../authentication-service-guards/authentication.service';
+import {ClassesService} from '../classes-service/classes.service';
 
 @Injectable({
   providedIn: 'root'
@@ -228,7 +229,8 @@ export class CourseService {
       hasPreReqBool: boolean,
       notTakenBool: boolean,
       alreadyInCartBool: boolean,
-      notifyCalenderBool: boolean
+      notifyCalenderBool: boolean,
+      studentProfile: object
     })>(this.courseAddURL, course).subscribe((responseData) => {
         this.clearMessages();
         if (!responseData.isCourseGivenDuringSemesterBool || !responseData.hasPreReqBool || responseData.alreadyInCartBool) {
@@ -257,6 +259,10 @@ export class CourseService {
           setTimeout(() => {
             this.clearMessages();
             }, 3000);
+          if (responseData.studentProfile != null) {
+            localStorage.setItem('studentProfile', JSON.stringify(responseData.studentProfile));
+          }
+          new ClassesService().editUser(course.termDescription);
         }
       }
     );
@@ -270,7 +276,7 @@ export class CourseService {
    */
   removeCourse(course: AddCourseModel): void {
     this.clearMessages();
-    this.httpClient.post<({message: string})>(this.courseRemoveURL, course).subscribe((responseData) => {
+    this.httpClient.post<({message: string, studentProfile: object})>(this.courseRemoveURL, course).subscribe((responseData) => {
         this.clearMessages();
         const index = this.basket.indexOf(course);
         if (index >= 0) {
@@ -278,6 +284,10 @@ export class CourseService {
         }
         this.basketUpdated.next([...this.basket]);
         this.messages.push('Course successfully removed.');
+        if (responseData.studentProfile != null) {
+          localStorage.setItem('studentProfile', JSON.stringify(responseData.studentProfile));
+        }
+        new ClassesService().editUser(course.termDescription);
         setTimeout(() => {this.clearMessages(); }, 3000);
       }
     );
