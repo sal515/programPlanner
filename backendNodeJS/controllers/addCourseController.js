@@ -357,7 +357,6 @@ async function asyncAddCourseController(userInput, req, res, next) {
         courseDetails["labSection"] = userInput.labSection;
         courseDetails["tutorialSection"] = userInput.tutorialSection;
         // insert the course in the term
-        termDetails = {};
         termDetails[courseCode] = courseDetails;
         // save it to the database
         // userProfile["courseCart"].get(userInput.termDescription) = termDetails;
