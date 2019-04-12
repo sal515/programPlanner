@@ -2,7 +2,6 @@ const dbHelpers = require("../databaseHandlers/dbHelper");
 
 //imported schema
 const userProfileModel = require('../models/userSchema2Model');
-const userLoginModel = require('../models/frontendModels/loginSchema2Model');
 
 var exports = module.exports = {};
 
@@ -30,10 +29,8 @@ exports.validateLogin = (req, res, next) => {
     userPassword: loginCredentials.userPassword
   });
 
-  //if userProfile is found
-  //the userProfile is sent to the front-end as a json object
-  //else, null is sent instead with
-  //Http response status is always 200 (Success)
+  //if userProfile is found the userProfile is sent to the front-end as a json object
+  //else, null is sent instead with Http response status is always 200 (Success)
   user.exec(function (er, userProfileModel) {
     try {
       if (userProfileModel.userID) {
