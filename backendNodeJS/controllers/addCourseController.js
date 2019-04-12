@@ -161,25 +161,127 @@ async function asyncAddCourseController(userInput, req, res, next) {
             }
         }
 
-        // =============== Retrieve all the pre req OR  courses for the selected course ============
-        // if (debug === 5) {
-        if (debug >= 5) {
-            await getPreReqOrArr(userInput, req, res, next, preReqORCoursesArr);
 
-            // ============== Checking if the user has all the pre-req OR for the course ===================
-            statusObj.setHasPreReqBool(false);
-            if (!(preReqORCoursesArr.length)) {
-                statusObj.setHasPreReqBool(true);
-            } else if (preReqORCoursesArr.length) {
-                preReqORCoursesArr.forEach((preReqORCourseKey) => {
-                    if ((userCourseHistoryMap.has(preReqORCourseKey))) {
-                        statusObj.setHasPreReqBool(true);
-                    }
-                });
-            }
-            if (!(statusObj.getHasPreReqBool())) {
-                console.log(statusObj);
-                throw "break : User doesn't have the pre-req OR to take the course";
+async function populatingCourseDetailsWithSchedule(userInput, lecture, courseDetails, tutorial, lab) {
+  if (userInput.lectureSection !== "") {
+    lecture = await findCourseComponents(
+      "LEC",
+      userInput.lectureSection,
+      userInput.courseSubject,
+      userInput.courseCatalog,
+      userInput);
+
+    console.log(lecture);
+
+    courseDetails["lectureStart"] = lecture.object.classStartTimeMin;
+    courseDetails["lectureEnd"] = lecture.object.classEndTimeMin;
+    courseDetails["lectureDays"] = daysExtractor(lecture);
+  }
+
+  if (userInput.tutorialSection !== "") {
+    tutorial = await findCourseComponents(
+      "TUT",
+      userInput.tutorialSection,
+      userInput.courseSubject,
+      userInput.courseCatalog,
+      userInput);
+
+    courseDetails["tutorialStart"] = tutorial.object.classStartTimeMin;
+    courseDetails["tutorialEnd"] = tutorial.object.classEndTimeMin;
+    courseDetails["tutorialDays"] = daysExtractor(tutorial);
+
+  }
+
+  if (userInput.labSection !== "") {
+    lab = await findCourseComponents(
+      "LAB",
+      userInput.labSection,
+      userInput.courseSubject,
+      userInput.courseCatalog,
+      userInput);
+
+    courseDetails["labStart"] = lab.object.classStartTimeMin;
+    courseDetails["labEnd"] = lab.object.classEndTimeMin;
+    courseDetails["labDays"] = daysExtractor(lab);
+
+  }
+}
+
+/*
+* @param req
+* The req.body should give me the following values
+* UserID
+* Semester
+* Course Subject
+* Course Code
+*
+* @return
+* isCourseGivenDuringSemesterBool
+* hasNotTakenBool
+* hasPreReqBool
+* hasCoReqBool
+* notifyCalenderBool
+* */
+async function asyncAddCourseController(userInput, req, res, next) {
+
+  /*
+  *   Waiting on the connection being established to the database before doing anything
+  *   To make sure that there is not connected exception later on in the project
+  *   Might degrade some performance (Don't know too much about asynchronous function calls yet) - But hopefully avoid issues
+  * */
+  await connect2DB();
+
+
+  // =============================  Logic to add course and Send Responses ===============================================
+  // Logic control variables Initialization
+  // isCourseGivenDuringSemesterBool = false;
+  // hasPreReqBool = false;
+  // hasCoReqBool = false;
+  // notTakenBeforeBool = false;
+  // alreadyInCartBool = false;
+  let statusObj = new addCourseStatus(false, false,
+    false, false, false, false);
+
+  // function variables declared
+  let courseSubCat2Check = userInput.courseSubject + userInput.courseCatalog;
+  // contains all the courses taken by the user already
+  let userCourseHistoryArr = [];
+  let userCourseHistoryMap = new Map();
+  // contains all the courses in the not taken list against the user requested Course
+  let notTakenCoursesMap = new Map();
+  // contains all the pre-req courses that needs to be done for the user requested course
+  let preReqCoursesArr = [];
+  let preReqORCoursesArr = [];
+
+  let courseCartArr = [];
+
+  let userProfile;
+
+
+  let debug = 10;
+
+  try {
+
+    // checking if the requested course is already in CourseCard
+    // if (debug === 0) {
+    if (debug >= 0) {
+      statusObj.setAlreadyInCartBool(false);
+      // console.log(userInput);
+
+      // assuming the user profile exists, since the user has to login first before accessing this ENDPOINT
+      // const userProfile = await findUserProfileDocument(userInput, req, res, next);
+      userProfile = await findUserProfileDocument(userInput, req, res, next);
+      // console.log(userProfile);
+
+      try {
+        if (userProfile.courseCart.has(userInput.termDescription)) {
+          courseCartArr = userProfile.courseCart.get(userInput.termDescription);
+          courseCartArr.forEach((course) => {
+            // console.log(course);
+            if (course === (userInput.courseSubject + userInput.courseCatalog)) {
+              statusObj.setAlreadyInCartBool(true);
+              throw "Breaking the add request";
+
             }
         }
 
@@ -225,32 +327,168 @@ async function asyncAddCourseController(userInput, req, res, next) {
                 let subject = userInput.courseSubject + userInput.courseCatalog;
                 await remover.removeCourseBack(userInput.userID, subject, userInput.termDescription);
 
-                //insert course in term
-                termDetails[courseCode] = populateCourseDetails(userInput);
-                userProfile["courseCart"].set(userInput.termDescription, termDetails);
 
-                statusObj.setNotifyCalenderBool(true);
+    // ================= Check for Co Req ==========================
 
-                //Create semester key value map object
-            } else if (typeof termDetails !== 'undefined') {
+    //FIXME:  Don't Know what should be the logic for CO-Req
+    // if (debug === 6) {
+    //   // if (debug >= 6) {
+    //   let courseCartArr;
+    //   statusObj.setHasCoReqBool(true);
+    //   preReqCoursesArr = ["ENGR371"];
+    //   if (!(statusObj.getHasPreReqBool())) {
+    //     console.log(preReqCoursesArr);
+    //     // console.log(userInput);
+    //     await creatingTestData(userInput, req, res, next);
+    //     const modifiedUserProfileDoc = await findUserProfileDocument(userInput, req, res, next);
+    //     // console.log(modifiedUserProfileDoc);
+    //     // console.log(modifiedUserProfileDoc.courseCart);
+    //     // console.log(modifiedUserProfileDoc.courseCart.keys());
+    //     // console.log(modifiedUserProfileDoc.courseCart.has(userInput.termDescription));
+    //     if (modifiedUserProfileDoc.courseCart.has(userInput.termDescription)) {
+    //       // console.log(modifiedUserProfileDoc.courseCart.get(userInput.termDescription));
+    //       courseCartArr = modifiedUserProfileDoc.courseCart.get(userInput.termDescription);
+    //       courseCartArr.forEach((courseItem) => {
+    //         console.log(courseItem);
+    //       });
+    //     }
+    //   }
+    // }
 
-                termDetails[courseCode] = populateCourseDetails(userInput);
-                userProfile["courseCart"].set(userInput.termDescription, termDetails);
-                statusObj.setNotifyCalenderBool(true);
+    // =================== Saving the course in the courseCart Variable ==============
 
+
+    // if (debug === -1) {
+    if (debug >= 7) {
+
+      statusObj.setNotifyCalenderBool(false);
+
+      // FIXME :: Uncomment the line below
+      if (!statusObj.getAlreadyInCartBool() && statusObj.getIsCourseGivenDuringSemesterBool() &&
+        statusObj.getHasPreReqBool()) {
+
+        const userProfile = await findUserProfileDocument(userInput, req, res, next);
+
+        // console.log(userProfile);
+        // console.log(userProfile["courseCart"].get(userInput.termDescription));
+
+
+        let termDetails;
+        let courseDetails;
+
+        // How to access the CourseCart Variables
+        // console.log(userProfile["courseCart"]);
+        // console.log(userProfile["courseCart"].get(userInput.termDescription));
+        // let courseCode = (userInput.courseSubject + userInput.courseCatalog).toString();
+        // console.log(userProfile["courseCart"].get(userInput.termDescription)[courseCode]["tutorialSection"]);
+
+        let courseCode = (userInput.courseSubject + userInput.courseCatalog).toString();
+
+
+        // console.log(userProfile["courseCart"].get(userInput.termDescription));
+        // if the course cart for the semester exists, get those values
+        // typeof myVar !== 'undefined'
+        try {
+          if (typeof (userProfile["courseCart"].get(userInput.termDescription)) !== 'undefined') {
+            termDetails = (userProfile["courseCart"].get(userInput.termDescription));
+
+            // check if the course is already saved in the semester
+            if (typeof userProfile["courseCart"].get(userInput.termDescription)[courseCode] !== 'undefined') {
+              console.log("Course found in the the courseCart");
+              courseDetails = userProfile["courseCart"].get(userInput.termDescription)[courseCode];
             } else {
-
-                //create term if it doesnt exist
-                termDetails = {};
-                termDetails[courseCode] = populateCourseDetails(userInput);
-                userProfile["courseCart"].set(userInput.termDescription, termDetails);
-                statusObj.setNotifyCalenderBool(true);
+              console.log("Course is not found in the courseCart");
             }
-            // Save the updated userProfile object to the database
-            await userProfile.save();
+          } else {
+            console.log("Didn't find the semester -> Create a new semester");
+          }
+        } catch (e) {
+          console.log("Error: Didn't find the semester");
         }
+
+        //update a class that is already in the sequence
+        if (typeof courseDetails !== 'undefined') {
+
+          let lecture;
+          let tutorial;
+          let lab;
+
+          await populatingCourseDetailsWithSchedule(userInput, lecture, courseDetails, tutorial, lab);
+
+          //create new course
+          courseDetails["courseSubject"] = userInput.courseSubject;
+          courseDetails["courseCatalog"] = userInput.courseCatalog;
+          courseDetails["termDescription"] = userInput.termDescription;
+          courseDetails["lectureSection"] = userInput.lectureSection;
+          courseDetails["labSection"] = userInput.labSection;
+          courseDetails["tutorialSection"] = userInput.tutorialSection;
+
+          console.log(courseDetails);
+
+          let subject = userInput.courseSubject + userInput.courseCatalog;
+          await remover.removeCourseBack(userInput.userID, subject, userInput.termDescription);
+
+          termDetails[courseCode] = courseDetails;
+          userProfile["courseCart"].set(userInput.termDescription, termDetails);
+
+          statusObj.setNotifyCalenderBool(true);
+
+          //Create semester key value map object
+        } else if (typeof termDetails !== 'undefined') {
+
+          courseDetails = {};
+
+          let lecture;
+          let tutorial;
+          let lab;
+
+          await populatingCourseDetailsWithSchedule(userInput, lecture, courseDetails, tutorial, lab);
+
+          courseDetails["courseSubject"] = userInput.courseSubject;
+          courseDetails["courseCatalog"] = userInput.courseCatalog;
+          courseDetails["termDescription"] = userInput.termDescription;
+          courseDetails["lectureSection"] = userInput.lectureSection;
+          courseDetails["labSection"] = userInput.labSection;
+          courseDetails["tutorialSection"] = userInput.tutorialSection;
+          // insert the course in the term
+          termDetails[courseCode] = courseDetails;
+
+          userProfile["courseCart"].set(userInput.termDescription, termDetails);
+          statusObj.setNotifyCalenderBool(true);
+        } else {
+
+          let lecture;
+          let tutorial;
+          let lab;
+
+          courseDetails = {};
+          //create term if it doesnt exist
+          termDetails = {};
+
+          await populatingCourseDetailsWithSchedule(userInput, lecture, courseDetails, tutorial, lab);
+
+
+          courseDetails["courseSubject"] = userInput.courseSubject;
+          courseDetails["courseCatalog"] = userInput.courseCatalog;
+          courseDetails["termDescription"] = userInput.termDescription;
+          courseDetails["lectureSection"] = userInput.lectureSection;
+          courseDetails["labSection"] = userInput.labSection;
+          courseDetails["tutorialSection"] = userInput.tutorialSection;
+
+
+          termDetails[courseCode] = courseDetails;
+
+          userProfile["courseCart"].set(userInput.termDescription, termDetails);
+          statusObj.setNotifyCalenderBool(true);
+        }
+        // Save the updated userProfile object to the database
+        await userProfile.save();
+        // FIXME :: Uncomment the line below
+      }
+
     } catch
         (condition) {
+
     }
 
     res.status(200).json({
@@ -467,6 +705,70 @@ function isCourseGivenDuringSemesterFunc(userInput, req, res, next) {
             reject(err);
         })
     });
+}
+
+
+// ======================= Database Query Function =============================
+function daysExtractor(section) {
+  let daysArr = [];
+  // 1-Mon, 2-Tues, 3-Wed, 4-Thursday, 5-Friday
+  if (section.object.Mon === "Y") {
+    daysArr.push(1);
+  }
+
+  if (section.object.Tues === "Y") {
+    daysArr.push(2);
+  }
+
+  if (section.object.Wed === "Y") {
+    daysArr.push(3);
+  }
+
+  if (section.object.Thurs === "Y") {
+    daysArr.push(4);
+  }
+
+  if (section.object.Fri === "Y") {
+    daysArr.push(5);
+  }
+  return daysArr;
+}
+
+function findCourseComponents(componentCode, section, courseSubject, courseCatalog, userInput) {
+  return new Promise(async (resolve, reject) => {
+    // ======== Check if the course Exists =======================
+    // const query = scheduleModel.find();
+    const query = scheduleModel.findOne();
+    query.setOptions({lean: true});
+    query.collection(scheduleModel.collection);
+    // example to do the query in one line
+    // query.where('object.courseSubject').equals(userInput.courseSubject).exec(function (err, scheduleModel) {
+    // building a query with multiple where statements
+    query.where('object.courseSubject').equals(courseSubject);
+    query.where('object.courseCatalog').equals(courseCatalog);
+    query.where('object.termDescription').equals(userInput.termDescription);
+    try {
+      if (componentCode === "LEC") {
+        query.where('object.componentCode').equals(componentCode);
+        query.where('object.section').equals(section);
+      } else if (componentCode === "TUT") {
+        query.where('object.componentCode').equals(componentCode);
+        query.where('object.section').equals(section);
+      } else if (componentCode === "LAB") {
+        query.where('object.componentCode').equals(componentCode);
+        query.where('object.section').equals(section);
+      } else {
+        throw "Component Code is not properly selected";
+      }
+      // query.where('object.componentCode').equals("LEC");
+      await query.exec((err, result) => {
+        resolve(result);
+        reject(err);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  });
 }
 
 
