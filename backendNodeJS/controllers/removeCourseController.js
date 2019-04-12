@@ -67,11 +67,8 @@ function getSemesterCourseCart(semester, courseCart) {
  * @returns {boolean}
  */
 function removeCourse(userProfile, subject, semester) {
-
     delete userProfile.courseCart.get(semester)[subject];
     console.log(userProfile.courseCart);
-
-    return false;
 }
 
 /**

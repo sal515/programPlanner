@@ -17,7 +17,6 @@ const modelDirectory = '../models/';
 const DbSchemeDirectory = '../models/DbSchemas/';
 
 // importing schema to save data to the default database
-const coReqOnlyModel = require(DbSchemeDirectory + 'coReqOnlySchema2Model');
 const preReqOnlyModel = require(DbSchemeDirectory + 'preReqOnlySchema2Model');
 const preReqORModel = require(DbSchemeDirectory + 'preReqORSchema2Model');
 
