@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {MatDialog} from '@angular/material';
-import {CourseHistoryDialogComponent} from "./course-history-dialog/course-history-dialog.component";
+import {CourseHistoryDialogComponent} from './course-history-dialog/course-history-dialog.component';
 
 @Component({
   selector: 'app-course-history-component',
@@ -11,13 +11,10 @@ export class CourseHistoryComponent {
   constructor(public dialog: MatDialog) {}
 
   openDialog() {
-    const dialogRef = this.dialog.open(CourseHistoryDialogComponent, {width: "600px"});
+    const dialogRef = this.dialog.open(CourseHistoryDialogComponent, {width: '600px'});
+
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
   }
-
-
 }
-
-

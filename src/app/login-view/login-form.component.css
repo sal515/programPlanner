@@ -3,7 +3,8 @@
 
 .background_login {
     background-image: url(EV.jpg);
-    background-size: 100%;
+    background-size: cover;
+
 }
 
 .title_login {
@@ -25,7 +26,7 @@
 .container {
     background: darkgray;
     opacity: 0.9;
-    width: 25%;
+    width: 500px;
     padding: 10px 10px;
     border-radius: 8px;
     margin: 0 auto;
@@ -41,12 +42,11 @@
     font-family: Roboto, "Gill Sans MT", sans-serif;
     font-size: 16px;
     text-align: right;
-    text-decoration: underline;
 }
 
 .failed_login_container {
     width: 400px;
-    margin: 0 auto;
+    margin: -100px auto -11px auto;
     padding-bottom: 50px;
 }
 
@@ -54,7 +54,7 @@
     text-align: center;
     font-family: Roboto, "Gill Sans MT", sans-serif;
     font-size: 20px;
-    border-color: #E02638;
+    border-color: darkgray;
     background-color: #E8E8E8;
     border-style: solid;
     border-radius: 8px;
@@ -83,4 +83,5 @@ a {
 
 .btn {
     font-family: Roboto, "Gill Sans MT", sans-serif;
+    opacity: 2;
 }

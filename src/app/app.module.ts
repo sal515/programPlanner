@@ -36,7 +36,7 @@ import { CourseBasketComponent } from './home-view-container/sidebar-view/course
 import { LoginFormComponent } from './login-view/login-form.component';
 import { SidebarViewComponent } from './home-view-container/sidebar-view/sidebar-view.component';
 import { CourseHistoryComponent } from './home-view-container/course-history/course-history.component';
-import { CourseHistoryDialogComponent} from "./home-view-container/course-history/course-history-dialog/course-history-dialog.component";
+import { CourseHistoryDialogComponent} from './home-view-container/course-history/course-history-dialog/course-history-dialog.component';
 
 @NgModule({
   declarations: [
