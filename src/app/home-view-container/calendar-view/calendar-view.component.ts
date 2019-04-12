@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ClassesService} from '../../classes-service/classes.service';
 import {ClassInfo, ClassInfoArray} from '../../models/class-info.model';
+import {HomeViewContainerComponent} from '../home-view-container.component';
 
 @Component({
     selector: 'app-calendar-view-component',
@@ -80,6 +81,13 @@ export class CalendarViewComponent implements OnInit {
      */
     getClassColumn(classInput: ClassInfo) {
         return classInput.day + 1;
+    }
+
+    buttonPress() {
+      console.log('hello')
+      this.classes.classInfo.push(new ClassInfo(920, 1000, 'ENGR371',"", 4));
+      this.classes = new ClassesService().parseSequence('Fall 2017');
+      new HomeViewContainerComponent().buttonPress();
     }
 }
 

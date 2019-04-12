@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {ClassInfoArray, ClassInfo} from '../models/class-info.model';
+import {Observable} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +15,7 @@ export class ClassesService {
     }
 
     editUser(weekClasses: ClassInfoArray) {
-        this.classes.next(weekClasses);
+        this.classes.next(this.cast);
     }
 
     getFallSequence() {
@@ -68,6 +69,6 @@ export class ClassesService {
         console.log(calendarCourses.classInfo);
         this.x.classInfo.push(new ClassInfo(1400, 1500, 'COEN250', '', 1));
         console.log(this.x);
-        this.editUser(this.x);
+        return this.x;
     }
 }

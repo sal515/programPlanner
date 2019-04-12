@@ -3,6 +3,7 @@ import {AddCourseModel} from '../../../models/course.model';
 import {CourseService} from '../../../add-course-service/add-course.service';
 import {Subscription} from 'rxjs';
 import {ClassesService} from "../../../classes-service/classes.service";
+import {HomeViewContainerComponent} from '../../home-view-container.component';
 
 @Component({
   selector: 'app-add-course-component',
@@ -195,7 +196,8 @@ export class AddCourseComponent implements OnInit, OnDestroy {
    * @returns void
    */
   onSemesterSelect(course: AddCourseModel): void {
-    new ClassesService().parseSequence(course.termDescription);
+    const x = new ClassesService().parseSequence(course.termDescription);
+    new HomeViewContainerComponent().updateCalendar(x);
     this.onSelect(course);
     this.courseService.getUserCart(course);
     //this.clearAll();

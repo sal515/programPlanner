@@ -44,3 +44,28 @@
 #friday {
     border-top-right-radius: 5px;
 }
+
+.addButton{
+  box-sizing: border-box;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  outline: 0;
+  border: none;
+  display: inline-block;
+  white-space: nowrap;
+  text-decoration: none;
+  vertical-align: baseline;
+  text-align: center;
+  margin: 0;
+  min-width: 44px;
+  line-height: 26px;
+  padding: 0 10px;
+  border-radius: 4px;
+  overflow: visible;
+  font-weight: bold;
+  margin: 0 auto;
+}
