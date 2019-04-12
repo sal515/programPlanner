@@ -26,7 +26,7 @@ export class HomeViewContainerComponent implements  OnInit {
     //
     // this.classes.classInfo.push(new ClassInfo(540, 580, 'ELEC490', "", 5));
 
-    this.classesService.editUser(this.classes);
+    //this.classesService.editUser(this.classes);
   }
 }
 

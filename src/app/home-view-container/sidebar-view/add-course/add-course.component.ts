@@ -195,7 +195,7 @@ export class AddCourseComponent implements OnInit, OnDestroy {
    * @returns void
    */
   onSemesterSelect(course: AddCourseModel): void {
-    //new ClassesService().parseSequence(course.termDescription);
+    new ClassesService().parseSequence(course.termDescription);
     this.onSelect(course);
     this.courseService.getUserCart(course);
     //this.clearAll();
