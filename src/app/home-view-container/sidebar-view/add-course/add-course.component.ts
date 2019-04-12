@@ -2,6 +2,7 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {AddCourseModel} from '../../../models/course.model';
 import {CourseService} from '../../../add-course-service/add-course.service';
 import {Subscription} from 'rxjs';
+import {ClassesService} from "../../../classes-service/classes.service";
 
 @Component({
   selector: 'app-add-course-component',
@@ -137,7 +138,7 @@ export class AddCourseComponent implements OnInit, OnDestroy {
    */
   onSelectName(course: AddCourseModel): void {
     this.onSelect(course);
-    this.clearAll();
+   // this.clearAll();
   }
 
   /**
@@ -194,9 +195,10 @@ export class AddCourseComponent implements OnInit, OnDestroy {
    * @returns void
    */
   onSemesterSelect(course: AddCourseModel): void {
+    //new ClassesService().parseSequence(course.termDescription);
     this.onSelect(course);
     this.courseService.getUserCart(course);
-    this.clearAll();
+    //this.clearAll();
   }
 
   /**

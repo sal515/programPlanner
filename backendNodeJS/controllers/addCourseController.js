@@ -61,7 +61,7 @@ exports.addCourseToSequence = async (req, res, next) => {
 
 
 async function populatingCourseDetailsWithSchedule(userInput, lecture, courseDetails, tutorial, lab) {
-  if (userInput.lectureSection !== "") {
+  if (userInput.lectureSection !== "none") {
     lecture = await findCourseComponents(
       "LEC",
       userInput.lectureSection,
@@ -76,7 +76,7 @@ async function populatingCourseDetailsWithSchedule(userInput, lecture, courseDet
     courseDetails["lectureDays"] = daysExtractor(lecture);
   }
 
-  if (userInput.tutorialSection !== "") {
+  if (userInput.tutorialSection !== "none") {
     tutorial = await findCourseComponents(
       "TUT",
       userInput.tutorialSection,
@@ -90,7 +90,7 @@ async function populatingCourseDetailsWithSchedule(userInput, lecture, courseDet
 
   }
 
-  if (userInput.labSection !== "") {
+  if (userInput.labSection !== "none") {
     lab = await findCourseComponents(
       "LAB",
       userInput.labSection,
@@ -171,11 +171,13 @@ async function asyncAddCourseController(userInput, req, res, next) {
       userProfile = await findUserProfileDocument(userInput, req, res, next);
       // console.log(userProfile);
 
+      console.log(userProfile);
       try {
         if (userProfile.courseCart.has(userInput.termDescription)) {
           courseCartArr = userProfile.courseCart.get(userInput.termDescription);
           courseCartArr.forEach((course) => {
-            // console.log(course);
+             console.log(course);
+             console.log(userInput.courseSubject + userInput.courseCatalog);
             if (course === (userInput.courseSubject + userInput.courseCatalog)) {
               statusObj.setAlreadyInCartBool(true);
               throw "Breaking the add request";
