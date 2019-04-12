@@ -21,8 +21,6 @@ exports.removeCourse = async (req, res, next) => {
     const semester = frontEndInput.termDescription;
     const userProfile = await getUserProfile(userID);
 
-    //TODO: Update Schedule
-
     if (userProfile == null) {
         res.status(200).json({
             message: "no user profile found"
@@ -35,7 +33,7 @@ exports.removeCourse = async (req, res, next) => {
     await updateUserProfile(userProfile, userProfile.courseCart);
 
     res.status(200).json({
-        message: "hi"
+        studentProfile: userProfile
     });
 };
 
