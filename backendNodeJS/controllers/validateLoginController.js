@@ -1,5 +1,3 @@
-const dbHelpers = require("../databaseHandlers/dbHelper");
-
 //imported schema
 const userProfileModel = require('../models/userSchema2Model');
 
@@ -15,9 +13,6 @@ var exports = module.exports = {};
  * @returns HTTP response 200 with {userProfileModel} or null
  */
 exports.validateLogin = (req, res, next) => {
-
-  // connecting to the database using the default connection method
-  dbHelpers.defaultConnectionToDB();
 
   //take login credentials from request parameters
   const loginCredentials = req.query;
@@ -58,9 +53,6 @@ exports.validateLogin = (req, res, next) => {
  * @returns HTTP response 200 (Success)
  */
 exports.saveUserInfo = (req, res, next) => {
-
-  // connecting to the database using the default connection method
-  dbHelpers.defaultConnectionToDB();
 
   // creating fake courseHistory
   var courseHistory = ["SOEN 341", "COMP 346", "ENGR 213"];
