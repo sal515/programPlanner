@@ -8,14 +8,12 @@
 }
 
 .grey-background{
-  background-color: grey;
+  background-color: lightgrey !important;
 }
 
 .semester-styling{
   font-weight: bold;
-}
-
-.md-dialog-container{
-  background-color: lightgrey;
+  color: white;
+  font-family: Roboto, "Gill Sans MT", sans-serif;
 }
 

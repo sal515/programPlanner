@@ -13,6 +13,7 @@ export class CourseHistoryDialogComponent{
   static getCourseHistory()
   {
     let studentProfile = JSON.parse(localStorage.getItem('studentProfile'));
+    console.log(studentProfile);
     return studentProfile.courseHistory;
   }
 
