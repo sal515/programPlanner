@@ -19,13 +19,13 @@ const userSchema2Model = mongoose.Schema({
   completedCredits: {type: Number},
 
   // saved sequences with the classNumbers of each lecture, tutorial, and lab
-  fallSequence: {type: [Map]},
-  winterSequence: {type: [Map]},
-  summerSequence: {type: [Map]},
+  schedule: {type: [Map]},
+  // winterSequence: {type: [Map]},
+  // summerSequence: {type: [Map]},
 
-  tempFallSequence: {type: [Map]},
-  tempWinterSequence: {type: [Map]},
-  tempSummerSequence: {type: [Map]}
+  tempSchedule: {type: [Map]}
+  // tempWinterSequence: {type: [Map]},
+  // tempSummerSequence: {type: [Map]}
 
 });
 

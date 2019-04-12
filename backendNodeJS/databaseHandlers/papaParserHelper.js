@@ -46,8 +46,6 @@ exports.parseCSVAndSaveToDB = function (csvFilePath, model) {
 };
 
 function saveParsedData(data, error, meta, model) {
-  // connecting to the database using the default connection method
-  var mongoose = dbHelpers.defaultConnectionToDB();
 
   // Extracting every object from the data array and creating an object according to the model from the schema file in the model directory
   data.forEach(function (dataObject) {

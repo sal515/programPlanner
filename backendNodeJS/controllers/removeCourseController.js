@@ -59,17 +59,14 @@ function getSemesterCourseCart(semester, courseCart) {
 /**
  * removes the desired course from the [courses]
  * if the course is not present, returns false
- * @param courseCart
+ * @param userProfile
  * @param subject
+ * @param semester
  * @returns {boolean}
  */
-function removeCourse(courseCart, subject) {
-    const index = courseCart.indexOf(subject);
-    if (index > -1) {
-        courseCart.splice(index, 1);
-        return true;
-    }
-    return false;
+function removeCourse(userProfile, subject, semester) {
+    delete userProfile.courseCart.get(semester)[subject];
+    console.log(userProfile.courseCart);
 }
 
 /**
@@ -116,3 +113,14 @@ exports.TestRemoveCourse = async (req, res, next) => {
 async function connect2DB() {
     await dbHelpers.defaultConnectionToDB();
 }
+
+exports.removeCourseBack = async (userID, subject, semester) => {
+    await connect2DB();
+
+    const userProfile = await getUserProfile(userID);
+
+    const semesterCourseCart = getSemesterCourseCart(semester, userProfile.courseCart);
+    removeCourse(userProfile, subject, semester);
+    updateCourseCart(userProfile, semester, semesterCourseCart);
+    await updateUserProfile(userProfile, userProfile.courseCart);
+};
