@@ -11,7 +11,7 @@ export class CourseHistoryComponent {
   constructor(public dialog: MatDialog) {}
 
   openDialog() {
-    const dialogRef = this.dialog.open(CourseHistoryDialogComponent);
+    const dialogRef = this.dialog.open(CourseHistoryDialogComponent, {width: '600px'});
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
