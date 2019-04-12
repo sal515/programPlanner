@@ -156,7 +156,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
   let userProfile;
 
 
-  let debug = -1;
+  let debug = 10;
 
   try {
 
@@ -313,14 +313,14 @@ async function asyncAddCourseController(userInput, req, res, next) {
     // =================== Saving the course in the courseCart Variable ==============
 
 
-    if (debug === -1) {
-    // if (debug >= 7) {
+    // if (debug === -1) {
+    if (debug >= 7) {
 
       statusObj.setNotifyCalenderBool(false);
 
       // FIXME :: Uncomment the line below
-      // if (!statusObj.getAlreadyInCartBool() && statusObj.getIsCourseGivenDuringSemesterBool() &&
-      //   statusObj.getHasPreReqBool()) {
+      if (!statusObj.getAlreadyInCartBool() && statusObj.getIsCourseGivenDuringSemesterBool() &&
+        statusObj.getHasPreReqBool()) {
 
         const userProfile = await findUserProfileDocument(userInput, req, res, next);
 
@@ -439,7 +439,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
         // Save the updated userProfile object to the database
         await userProfile.save();
         // FIXME :: Uncomment the line below
-      // }
+      }
     }
 
   } catch
