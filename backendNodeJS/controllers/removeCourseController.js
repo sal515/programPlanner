@@ -21,25 +21,22 @@ exports.removeCourse = async (req, res, next) => {
     const semester = frontEndInput.termDescription;
     const userProfile = await getUserProfile(userID);
 
-    if(userProfile == null) {
+    //TODO: Update Schedule
+
+    if (userProfile == null) {
         res.status(200).json({
             message: "no user profile found"
         })
     }
 
     const semesterCourseCart = getSemesterCourseCart(semester, userProfile.courseCart);
-    const success = removeCourse(semesterCourseCart, subject);
+    removeCourse(userProfile, subject, semester);
+    updateCourseCart(userProfile, semester, semesterCourseCart);
+    await updateUserProfile(userProfile, userProfile.courseCart);
 
-    if (success) {
-        updateCourseCart(userProfile, semester, semesterCourseCart);
-        await updateUserProfile(userProfile, userProfile.courseCart);
-        //TODO: call generate sequence
-        //scheduleGeneration(semester, userID);
-    } else {
-        res.status(200).json({
-            message: "not successful :("
-        })
-    }
+    res.status(200).json({
+        message: "hi"
+    });
 };
 
 /**
@@ -64,13 +61,14 @@ function getSemesterCourseCart(semester, courseCart) {
 /**
  * removes the desired course from the [courses]
  * if the course is not present, returns false
- * @param courseCart
+ * @param userProfile
  * @param subject
+ * @param semester
  * @returns {boolean}
  */
-function removeCourse(courseCart, subject) {
-    courseCart.delete(subject);
-    return courseCart.has(subject);
+function removeCourse(userProfile, subject, semester) {
+    delete userProfile.courseCart.get(semester)[subject];
+    console.log(userProfile.courseCart);
 }
 
 /**
@@ -117,3 +115,14 @@ exports.TestRemoveCourse = async (req, res, next) => {
 async function connect2DB() {
     await dbHelpers.defaultConnectionToDB();
 }
+
+exports.removeCourseBack = async (userID, subject, semester) => {
+    await connect2DB();
+
+    const userProfile = await getUserProfile(userID);
+
+    const semesterCourseCart = getSemesterCourseCart(semester, userProfile.courseCart);
+    removeCourse(userProfile, subject, semester);
+    updateCourseCart(userProfile, semester, semesterCourseCart);
+    await updateUserProfile(userProfile, userProfile.courseCart);
+};

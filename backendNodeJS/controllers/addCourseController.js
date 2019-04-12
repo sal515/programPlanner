@@ -8,6 +8,8 @@ var _ = require('lodash');
 // Example of using the examples reference file examples.testingFunc();
 const examples = require("./referenceExamples");
 
+const remover = require("./removeCourseController");
+
 var exports = module.exports = {};
 
 // WORKAROUND : the directory path are declared separate -- this allows Webstorm to detect the model functions
@@ -108,9 +110,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
   let userProfile;
 
 
-
-
-  let debug = 9;
+  let debug = -1;
 
   try {
 
@@ -237,9 +237,6 @@ async function asyncAddCourseController(userInput, req, res, next) {
     }
 
 
-
-
-
     // ================= Check for Co Req ==========================
 
     //FIXME:  Don't Know what should be the logic for CO-Req
@@ -269,44 +266,109 @@ async function asyncAddCourseController(userInput, req, res, next) {
 
     // =================== Saving the course in the courseCart Variable ==============
 
-    // if (debug === 0) {
-    if (debug >= 7) {
+
+    if (debug === -1) {
+      // if (debug >= 7) {
 
       statusObj.setNotifyCalenderBool(false);
 
-      if (!statusObj.getAlreadyInCartBool() && statusObj.getIsCourseGivenDuringSemesterBool() &&
-        statusObj.getHasPreReqBool()) {
+      // FIXME Uncommnet this logical check below !!!!MUST!!!!!
+      // if (!statusObj.getAlreadyInCartBool() && statusObj.getIsCourseGivenDuringSemesterBool() &&
+      //   statusObj.getHasPreReqBool()) {
 
-        // const userProfile = await findUserProfileDocument(userInput, req, res, next);
-        // console.log(userProfile);
-        // userProfile.courseCart = {"Test_Semester1": ["COEN244", "SOEN311"]};
+      const userProfile = await findUserProfileDocument(userInput, req, res, next);
 
-        // console.log(userProfile.courseCart.get("Test_Semester1"));
-        // let coursesArr = (userProfile.courseCart.get("Test_Semester1"));
+      // console.log(userProfile);
+      // console.log(userProfile["courseCart"].get(userInput.termDescription));
 
-        let coursesArr = [];
 
-        // if the course cart for the semester exists, get those values
-        if (userProfile.courseCart.has(userInput.termDescription)) {
-          coursesArr = (userProfile.courseCart.get(userInput.termDescription));
+      let termDetails;
+      let courseDetails;
+
+      // How to access the CourseCart Variables
+      // console.log(userProfile["courseCart"]);
+      // console.log(userProfile["courseCart"].get(userInput.termDescription));
+      // let courseCode = (userInput.courseSubject + userInput.courseCatalog).toString();
+      // console.log(userProfile["courseCart"].get(userInput.termDescription)[courseCode]["tutorialSection"]);
+
+      let courseCode = (userInput.courseSubject + userInput.courseCatalog).toString();
+
+
+      // console.log(userProfile["courseCart"].get(userInput.termDescription));
+      // if the course cart for the semester exists, get those values
+      // typeof myVar !== 'undefined'
+      try {
+        if (typeof (userProfile["courseCart"].get(userInput.termDescription)) !== 'undefined') {
+          termDetails = (userProfile["courseCart"].get(userInput.termDescription));
+
+          // check if the course is already saved in the semester
+          if (typeof userProfile["courseCart"].get(userInput.termDescription)[courseCode] !== 'undefined') {
+            console.log("Course found in the the courseCart");
+            courseDetails = userProfile["courseCart"].get(userInput.termDescription)[courseCode];
+          } else {
+            console.log("Course is not found in the courseCart");
+          }
+        } else {
+          console.log("Didn't find the semester -> Create a new semester");
         }
-        // push the new value into the course cart of the current semester
-        coursesArr.push(userInput.courseSubject + userInput.courseCatalog);
+      } catch (e) {
+        console.log("Error: Didn't find the semester");
+      }
 
-        // coursesArr.push("COEN444");
-        // arr = userProfile.courseCart.get("Test_Semester1").push("AERO111");
-        // userProfile.courseCart.set("Test_Semester1", arr);
+      //update a class that is already in the sequence
+      if (typeof courseDetails !== 'undefined') {
 
-        // userProfile.courseCart.set("Test_Semester1", coursesArr);
-        userProfile.courseCart.set(userInput.termDescription, coursesArr);
+        //create new course
+        courseDetails["courseSubject"] = userInput.courseSubject;
+        courseDetails["courseCatalog"] = userInput.courseCatalog;
+        courseDetails["termDescription"] = userInput.termDescription;
+        courseDetails["lectureSection"] = userInput.lectureSection;
+        courseDetails["labSection"] = userInput.labSection;
+        courseDetails["tutorialSection"] = userInput.tutorialSection;
 
-        await userProfile.save();
-        // FIXME : Uncomment Notify Calendar line below
+        let subject = userInput.courseSubject + userInput.courseCatalog;
+        await remover.removeCourseBack(userInput.userID, subject, userInput.termDescription);
+
+        termDetails[courseCode] = courseDetails;
+        userProfile["courseCart"].set(userInput.termDescription, termDetails);
+
         statusObj.setNotifyCalenderBool(true);
 
-      }
-    }
+        //Create semester key value map object
+      } else if (typeof termDetails !== 'undefined') {
 
+        courseDetails = {};
+        courseDetails["courseSubject"] = userInput.courseSubject;
+        courseDetails["courseCatalog"] = userInput.courseCatalog;
+        courseDetails["termDescription"] = userInput.termDescription;
+        courseDetails["lectureSection"] = userInput.lectureSection;
+        courseDetails["labSection"] = userInput.labSection;
+        courseDetails["tutorialSection"] = userInput.tutorialSection;
+        // insert the course in the term
+        termDetails[courseCode] = courseDetails;
+
+        userProfile["courseCart"].set(userInput.termDescription, termDetails);
+        statusObj.setNotifyCalenderBool(true);
+      } else {
+
+        courseDetails = {};
+        courseDetails["courseSubject"] = userInput.courseSubject;
+        courseDetails["courseCatalog"] = userInput.courseCatalog;
+        courseDetails["termDescription"] = userInput.termDescription;
+        courseDetails["lectureSection"] = userInput.lectureSection;
+        courseDetails["labSection"] = userInput.labSection;
+        courseDetails["tutorialSection"] = userInput.tutorialSection;
+
+        //create term if it doesnt exist
+        termDetails = {};
+        termDetails[courseCode] = courseDetails;
+
+        userProfile["courseCart"].set(userInput.termDescription, termDetails);
+        statusObj.setNotifyCalenderBool(true);
+      }
+      // Save the updated userProfile object to the database
+      await userProfile.save();
+    }
 
   } catch
     (condition) {
@@ -317,22 +379,15 @@ async function asyncAddCourseController(userInput, req, res, next) {
     "status": 200,
     "isCourseGivenDuringSemesterBool": statusObj.getIsCourseGivenDuringSemesterBool(),
     "hasPreReqBool": statusObj.getHasPreReqBool(),
-    // "hasCoReqBool": statusObj.getHasCoReqBool(),
     "notTakenBool": statusObj.getNotTakenBool(),
     "alreadyInCartBool": statusObj.getAlreadyInCartBool(),
     "notifyCalenderBool": statusObj.getNotifyCalenderBool()
   });
 
-
-  // return new Promise(resolve => {
-  //   resolve(statusObj);
-  // });
-
 }
 
 
 // ====================== Data Handling Functions =============================================
-
 
 async function getPreReqOrArr(userInput, req, res, next, preReqORCoursesArr) {
   const preReqORPromise = await preReqORFunc(userInput, req, res, next).catch((err) => {
@@ -454,11 +509,6 @@ function preReqORFunc(userInput, req, res, next) {
     // const query = preReqOnlyModel.find();
     query.setOptions({lean: true});
     query.collection(preReqORModel.collection);
-    // example to do the query in one line
-    // query.where('object.courseSubject').equals(userInput.courseSubject).exec(function (err, scheduleModel) {
-    // building a query with multiple where statements
-    // query.where('userID').equals(userInput.userID);
-    // query.where('object').equals(userInput.courseSubject);
     query.where('object.courseSubject').equals(userInput.courseSubject);
     query.where('object.courseCatalog').equals(userInput.courseCatalog);
     // query.where('object.termTitle').equals(userInput.termTitle);
