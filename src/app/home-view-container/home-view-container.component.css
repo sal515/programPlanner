@@ -1,6 +1,7 @@
 .example-container {
   position: absolute;
   background-image: url(EV.jpg);
+  background-size: 100%;
   top: 60px;
   bottom: 0;
   left: 0;

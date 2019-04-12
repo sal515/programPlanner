@@ -27,8 +27,6 @@ const scheduleModel = require('../models/DbSchemas/scheduleSchema2Model');
 exports.genTestStudents = (req, res, next) => {
   jsonFileManager.readFile(studentDataFile, function (err, obj) {
     try {
-      // create connection to database
-      dbHelper.defaultConnectionToDB();
 
       let globalYearKey;
 

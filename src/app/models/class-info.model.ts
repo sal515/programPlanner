@@ -2,25 +2,20 @@ export class ClassInfo {
   start: number;
   end: number;
   name: string;
+  section: string;
   showing: boolean;
-  day: Day;
+  day: number;
 
-  constructor(start: number, end: number, name: string, day: Day) {
+  constructor(start: number, end: number, name: string, section: string, day: number) {
     this.start = start;
     this.end = end;
     this.name = name;
     this.showing = false;
     this.day = day;
+    this.section = section;
   }
 }
 
 export class ClassInfoArray {
   classInfo: ClassInfo[] = [];
-}
-export enum Day {
-  Monday = 1,
-  Tuesday = 2,
-  Wednesday = 3,
-  Thursday = 4,
-  Friday = 5
 }

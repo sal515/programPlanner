@@ -1,4 +1,3 @@
-// variable holding the references of dbhelper methods
 const dbHelpers = require("../databaseHandlers/dbHelper");
 //  papa parser used to parse the CSV to JSON
 const papaParser = require('papaparse');
@@ -8,7 +7,6 @@ const fs = require('fs');
 
 var exports = module.exports = {};
 
-// exports.parseCSVAndSaveToDB = function () {
 exports.parseCSVAndSaveToDB = function (csvFilePath, model) {
   // The file path should be -->   parser.parseCSVAndSaveToDB('backendNodeJS/csv/preReqOR.csv');
   let file = fs.createReadStream(csvFilePath);
@@ -46,8 +44,6 @@ exports.parseCSVAndSaveToDB = function (csvFilePath, model) {
 };
 
 function saveParsedData(data, error, meta, model) {
-  // connecting to the database using the default connection method
-  var mongoose = dbHelpers.defaultConnectionToDB();
 
   // Extracting every object from the data array and creating an object according to the model from the schema file in the model directory
   data.forEach(function (dataObject) {
