@@ -276,66 +276,117 @@ async function asyncAddCourseController(userInput, req, res, next) {
       //   statusObj.getHasPreReqBool()) {
 
       const userProfile = await findUserProfileDocument(userInput, req, res, next);
+
       // console.log(userProfile);
-      // userProfile.courseCart = {"Test_Semester1": ["COEN244", "SOEN311"]};
+      // console.log(userProfile["courseCart"].get(userInput.termDescription));
 
-      // console.log(userProfile.courseCart.get("Test_Semester1"));
-      // let courseDetailsMap = (userProfile.courseCart.get("Test_Semester1"));
 
-      let courseDetailsMap = new Map();
-      let courseTermMap = new Map();
+      let termDetails;
+      let courseDetails;
 
+      // How to access the CourseCart Variables
+      // console.log(userProfile["courseCart"]);
+      // console.log(userProfile["courseCart"].get(userInput.termDescription));
+      // let courseCode = (userInput.courseSubject + userInput.courseCatalog).toString();
+      // console.log(userProfile["courseCart"].get(userInput.termDescription)[courseCode]["tutorialSection"]);
+
+      let courseCode = (userInput.courseSubject + userInput.courseCatalog).toString();
+
+
+      // console.log(userProfile["courseCart"].get(userInput.termDescription));
       // if the course cart for the semester exists, get those values
-      if (userProfile.courseCart.has(userInput.termDescription)) {
-        // courseTermMap = (userProfile.courseCart.get(userInput.termDescription));
-        courseTermMap = (userProfile.courseCart.get(userInput.termDescription));
-        // courseTermMap = (userProfile.get("courseCart"));
+      // typeof myVar !== 'undefined'
+      try {
+        if (typeof (userProfile["courseCart"].get(userInput.termDescription)) !== 'undefined') {
+          termDetails = (userProfile["courseCart"].get(userInput.termDescription));
+
+          // check if the course is already saved in the semester
+          if (typeof userProfile["courseCart"].get(userInput.termDescription)[courseCode] !== 'undefined') {
+            console.log("Course found in the the courseCart");
+            courseDetails = userProfile["courseCart"].get(userInput.termDescription)[courseCode];
+          } else {
+            console.log("Course is not found in the courseCart");
+            // courseDetails = null;
+          }
+        } else {
+          console.log("Didn't find the semester -> Create a new semester");
+          // termDetails = null;
+        }
+      } catch (e) {
+        console.log("Error: Didn't find the semester");
       }
 
-      console.log(typeof courseTermMap);;
+      if (typeof courseDetails !== 'undefined') {
+        // console.log("courseDetails");
+        // console.log(courseDetails);
+        //  both term and course exists
+        //  modify it
+        // console.log(courseDetails);
+        // console.log(userInput);
 
-      let anotherMap = new Map(Object.entries(courseTermMap));
+        courseDetails["courseSubject"] = userInput.courseSubject;
+        courseDetails["courseCatalog"] = userInput.courseCatalog;
+        courseDetails["termDescription"] = userInput.termDescription;
+        courseDetails["lectureSection"] = userInput.lectureSection;
+        courseDetails["labSection"] = userInput.labSection;
+        courseDetails["tutorialSection"] = userInput.tutorialSection;
+        //  save it to DB
+        // console.log(userProfile["courseCart"].get(userInput.termDescription));
+        // console.log(userProfile["courseCart"].get(userInput.termDescription)[courseCode]);
 
-      console.log(typeof anotherMap);
-      // console.log(courseTermMap);
+        // FIXME :: CAN'T UPDATE Existing course
+        userProfile["courseCart"].get(userInput.termDescription)[courseCode] = courseDetails;
 
-      // FIXME : This line is not recognizing that courseTermMap is a map
-      console.log(courseTermMap.has((userInput.courseSubject + userInput.courseCatalog)));
+        // let courseTempObj = userProfile["courseCart"].get(userInput.termDescription)[courseCode];
+        // let courseTempObj = userProfile["courseCart"].get(userInput.termDescription);
+        // console.log(courseTempObj);
+        // console.log(courseTempObj[courseCode]);
 
-      // push the new value into the course cart of the current semester
-      // courseDetailsMap.set("courseSubject", userInput.courseSubject);
-      // courseDetailsMap.set("courseCatalog", userInput.courseCatalog);
-      // courseDetailsMap.set("lectureSection", userInput.lectureSection);
-      // courseDetailsMap.set("labSection", userInput.labSection);
-      // courseDetailsMap.set("tutorialSection", userInput.tutorialSection);
-
-      // if (userInput.labSection === "") {
-      //   courseDetailsMap.set("labSection", "");
-      // }
-      // if (userInput.tutorialSection === "") {
-      //   courseDetailsMap.set("tutorialSection", "");
-      // }
-      //
-      // console.log(courseDetailsMap);
-      //
-      // courseTermMap.set((userInput.courseSubject.toString() + userInput.courseCatalog.toString()), courseDetailsMap);
-
-
-      // courseDetailsMap.push("COEN444");
-      // arr = userProfile.courseCart.get("Test_Semester1").push("AERO111");
-      // userProfile.courseCart.set("Test_Semester1", arr);
-
-      // userProfile.courseCart.set("Test_Semester1", courseDetailsMap);
-      // userProfile.courseCart.set(userInput.termDescription, courseTermMap);
-
-      // await userProfile.save();
-      // FIXME : Uncomment Notify Calendar line below
-      statusObj.setNotifyCalenderBool(true);
-
+        statusObj.setNotifyCalenderBool(true);
+        // await userProfile.update();
+      } else if (typeof termDetails !== 'undefined') {
+        // console.log("termDetails");
+        // console.log(termDetails);
+        // course doesn't exists but the term exists
+        // create a new course
+        courseDetails = {};
+        courseDetails["courseSubject"] = userInput.courseSubject;
+        courseDetails["courseCatalog"] = userInput.courseCatalog;
+        courseDetails["termDescription"] = userInput.termDescription;
+        courseDetails["lectureSection"] = userInput.lectureSection;
+        courseDetails["labSection"] = userInput.labSection;
+        courseDetails["tutorialSection"] = userInput.tutorialSection;
+        // insert the course in the term
+        termDetails = {};
+        termDetails[courseCode] = courseDetails;
+        // save it to the database
+        // userProfile["courseCart"].get(userInput.termDescription) = termDetails;
+        userProfile["courseCart"].set(userInput.termDescription, termDetails);
+        statusObj.setNotifyCalenderBool(true);
+      } else {
+        // console.log(termDetails);
+        // console.log(courseDetails);
+        // both term and course doesn't exits
+        // create course
+        courseDetails = {};
+        courseDetails["courseSubject"] = userInput.courseSubject;
+        courseDetails["courseCatalog"] = userInput.courseCatalog;
+        courseDetails["termDescription"] = userInput.termDescription;
+        courseDetails["lectureSection"] = userInput.lectureSection;
+        courseDetails["labSection"] = userInput.labSection;
+        courseDetails["tutorialSection"] = userInput.tutorialSection;
+        // create term
+        termDetails = {};
+        termDetails[courseCode] = courseDetails;
+        // save it to database
+        userProfile["courseCart"].set(userInput.termDescription, termDetails);
+        statusObj.setNotifyCalenderBool(true);
+      }
+      // Save the updated userProfile object to the database
+      await userProfile.save();
     }
     // FIXME: uncomment the } below
     // }
-
 
   } catch
     (condition) {
