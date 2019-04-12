@@ -252,7 +252,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
       statusObj.setHasPreReqBool(true);
       if (preReqCoursesArr.length) {
         preReqCoursesArr.forEach((preReqCourseKey) => {
-          if (!(userCourseHistoryMap.has(preReqCourseKey))) {
+          if (!(userCourseHistoryMap.has(preReqCourseKey.replace(" ", "")))) {
             statusObj.setHasPreReqBool(false);
             // console.log(statusObj);
             throw "break2 : User doesn't have the pre-req to take the course";
