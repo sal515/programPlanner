@@ -97,7 +97,6 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     this.semesterSubscription = this.courseService.getSemestersUpdateListener().subscribe((semesters: AddCourseModel[]) => {
       this.semesterList = semesters;
     });
-    this.semesterSubscription = this.courseService.getSemestersUpdateListener().subscribe()
     this.messageSubscription = this.courseService.getMessageUpdateListener().subscribe((messages: string[]) => {
       this.messages = messages;
     });
@@ -139,7 +138,7 @@ export class AddCourseComponent implements OnInit, OnDestroy {
    */
   onSelectName(course: AddCourseModel): void {
     this.onSelect(course);
-    this.clearAll();
+   // this.clearAll();
   }
 
   /**
@@ -196,10 +195,10 @@ export class AddCourseComponent implements OnInit, OnDestroy {
    * @returns void
    */
   onSemesterSelect(course: AddCourseModel): void {
-    new ClassesService().parseSequence(course.termDescription);
+    //new ClassesService().parseSequence(course.termDescription);
     this.onSelect(course);
     this.courseService.getUserCart(course);
-    this.clearAll();
+    //this.clearAll();
   }
 
   /**

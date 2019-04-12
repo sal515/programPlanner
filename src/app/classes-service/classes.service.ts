@@ -18,17 +18,22 @@ export class ClassesService {
 
   getFallSequence() {
     const studentProfile = JSON.parse(localStorage.getItem('studentProfile'));
-    return studentProfile.fallSequence;
+   if (studentProfile.courseCart["Fall 2017"] === undefined) {
+     studentProfile.courseCart.set("Fall 2017");
+   }
+   else {
+     return studentProfile.courseCart["Fall 2017"];
+   }
   }
 
   getWinterSequence() {
     const studentProfile = JSON.parse(localStorage.getItem('studentProfile'));
-    return studentProfile.winterSequence;
+    return studentProfile.courseCart["Winter 2018"];
   }
 
   getSummerSequence() {
     const studentProfile = JSON.parse(localStorage.getItem('studentProfile'));
-    return studentProfile.summerSequence;
+    return studentProfile.courseCart["Summer 2018"];
   }
 
   parseSequence(semester: string) {
@@ -43,7 +48,8 @@ export class ClassesService {
     } else {
       sequence = [];
     }
-
+    console.log(localStorage.getItem('studentProfile'));
+    console.log(sequence);
     for (let course of sequence) {
       let courseName = course.courseSubject + " " + course.courseCatalog;
       let numberLectures = course.lectureDays.length;

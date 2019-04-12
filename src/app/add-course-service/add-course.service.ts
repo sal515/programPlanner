@@ -130,7 +130,6 @@ export class CourseService {
     }).subscribe((courseData) => {
           this.tuts = [];
           this.labs = [];
-          console.log('We got here');
           const tutMap = new Map(JSON.parse(courseData.tutorialSection[0]));
           const tutArray = Array.from(tutMap.keys());
           const labMap = new Map(JSON.parse(courseData.labSection[0]));
@@ -232,7 +231,7 @@ export class CourseService {
       notTakenBool: boolean,
       alreadyInCartBool: boolean,
       notifyCalenderBool: boolean,
-      studentProfile: object
+      studentProfile: string
     })>(this.courseAddURL, course).subscribe((responseData) => {
         this.clearMessages();
         if (!responseData.isCourseGivenDuringSemesterBool || !responseData.hasPreReqBool || responseData.alreadyInCartBool) {
@@ -264,7 +263,7 @@ export class CourseService {
           if (responseData.studentProfile != null) {
             localStorage.setItem('studentProfile', JSON.stringify(responseData.studentProfile));
           }
-          new ClassesService().parseSequence(course.termDescription);
+          //new ClassesService().parseSequence(course.termDescription);
         }
       }
     );
@@ -289,7 +288,7 @@ export class CourseService {
         if (responseData.studentProfile != null) {
           localStorage.setItem('studentProfile', JSON.stringify(responseData.studentProfile));
         }
-        new ClassesService().parseSequence(course.termDescription);
+        //new ClassesService().parseSequence(course.termDescription);
         setTimeout(() => {this.clearMessages(); }, 3000);
       }
     );
