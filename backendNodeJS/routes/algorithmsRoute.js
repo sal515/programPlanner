@@ -7,6 +7,8 @@ const router = express.Router();
 const addCourseController = require('../controllers/addCourseController');
 const populateSidebarController = require('../controllers/populateSidebarController');
 const sectionsDataController = require('../controllers/sectionsDataController');
+const scheduleController = require('../controllers/scheduleController');
+
 
 
 router.post("/addCourseToSequence", addCourseController.addCourseToSequence);
@@ -15,6 +17,7 @@ router.post("/getCourseCart", populateSidebarController.populateCourseCartCourse
 // router.post("/getAllSections", sectionsDataController.sendAllSections);
 router.post("/getTutLabsSections", sectionsDataController.sendAllTutLabSections);
 router.post("/getLecturesSections", sectionsDataController.sendAllLectures);
+router.post("/getSchedule", scheduleController.generateSchedules);
 
 
 

@@ -60,6 +60,51 @@ exports.addCourseToSequence = async (req, res, next) => {
 };
 
 
+async function populatingCourseDetailsWithSchedule(userInput, lecture, courseDetails, tutorial, lab) {
+  if (userInput.lectureSection !== "") {
+    lecture = await findCourseComponents(
+      "LEC",
+      userInput.lectureSection,
+      userInput.courseSubject,
+      userInput.courseCatalog,
+      userInput);
+
+    console.log(lecture);
+
+    courseDetails["lectureStart"] = lecture.object.classStartTimeMin;
+    courseDetails["lectureEnd"] = lecture.object.classEndTimeMin;
+    courseDetails["lectureDays"] = daysExtractor(lecture);
+  }
+
+  if (userInput.tutorialSection !== "") {
+    tutorial = await findCourseComponents(
+      "TUT",
+      userInput.tutorialSection,
+      userInput.courseSubject,
+      userInput.courseCatalog,
+      userInput);
+
+    courseDetails["tutorialStart"] = tutorial.object.classStartTimeMin;
+    courseDetails["tutorialEnd"] = tutorial.object.classEndTimeMin;
+    courseDetails["tutorialDays"] = daysExtractor(tutorial);
+
+  }
+
+  if (userInput.labSection !== "") {
+    lab = await findCourseComponents(
+      "LAB",
+      userInput.labSection,
+      userInput.courseSubject,
+      userInput.courseCatalog,
+      userInput);
+
+    courseDetails["labStart"] = lab.object.classStartTimeMin;
+    courseDetails["labEnd"] = lab.object.classEndTimeMin;
+    courseDetails["labDays"] = daysExtractor(lab);
+
+  }
+}
+
 /*
 * @param req
 * The req.body should give me the following values
@@ -111,7 +156,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
   let userProfile;
 
 
-  let debug = 10;
+  let debug = -1;
 
   try {
 
@@ -268,13 +313,14 @@ async function asyncAddCourseController(userInput, req, res, next) {
     // =================== Saving the course in the courseCart Variable ==============
 
 
-    // if (debug === -1) {
-    if (debug >= 7) {
+    if (debug === -1) {
+    // if (debug >= 7) {
 
       statusObj.setNotifyCalenderBool(false);
 
-      if (!statusObj.getAlreadyInCartBool() && statusObj.getIsCourseGivenDuringSemesterBool() &&
-        statusObj.getHasPreReqBool()) {
+      // FIXME :: Uncomment the line below
+      // if (!statusObj.getAlreadyInCartBool() && statusObj.getIsCourseGivenDuringSemesterBool() &&
+      //   statusObj.getHasPreReqBool()) {
 
         const userProfile = await findUserProfileDocument(userInput, req, res, next);
 
@@ -318,6 +364,12 @@ async function asyncAddCourseController(userInput, req, res, next) {
         //update a class that is already in the sequence
         if (typeof courseDetails !== 'undefined') {
 
+          let lecture;
+          let tutorial;
+          let lab;
+
+          await populatingCourseDetailsWithSchedule(userInput, lecture, courseDetails, tutorial, lab);
+
           //create new course
           courseDetails["courseSubject"] = userInput.courseSubject;
           courseDetails["courseCatalog"] = userInput.courseCatalog;
@@ -325,6 +377,8 @@ async function asyncAddCourseController(userInput, req, res, next) {
           courseDetails["lectureSection"] = userInput.lectureSection;
           courseDetails["labSection"] = userInput.labSection;
           courseDetails["tutorialSection"] = userInput.tutorialSection;
+
+          console.log(courseDetails);
 
           let subject = userInput.courseSubject + userInput.courseCatalog;
           await remover.removeCourseBack(userInput.userID, subject, userInput.termDescription);
@@ -338,6 +392,13 @@ async function asyncAddCourseController(userInput, req, res, next) {
         } else if (typeof termDetails !== 'undefined') {
 
           courseDetails = {};
+
+          let lecture;
+          let tutorial;
+          let lab;
+
+          await populatingCourseDetailsWithSchedule(userInput, lecture, courseDetails, tutorial, lab);
+
           courseDetails["courseSubject"] = userInput.courseSubject;
           courseDetails["courseCatalog"] = userInput.courseCatalog;
           courseDetails["termDescription"] = userInput.termDescription;
@@ -351,7 +412,17 @@ async function asyncAddCourseController(userInput, req, res, next) {
           statusObj.setNotifyCalenderBool(true);
         } else {
 
+          let lecture;
+          let tutorial;
+          let lab;
+
           courseDetails = {};
+          //create term if it doesnt exist
+          termDetails = {};
+
+          await populatingCourseDetailsWithSchedule(userInput, lecture, courseDetails, tutorial, lab);
+
+
           courseDetails["courseSubject"] = userInput.courseSubject;
           courseDetails["courseCatalog"] = userInput.courseCatalog;
           courseDetails["termDescription"] = userInput.termDescription;
@@ -359,8 +430,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
           courseDetails["labSection"] = userInput.labSection;
           courseDetails["tutorialSection"] = userInput.tutorialSection;
 
-          //create term if it doesnt exist
-          termDetails = {};
+
           termDetails[courseCode] = courseDetails;
 
           userProfile["courseCart"].set(userInput.termDescription, termDetails);
@@ -368,7 +438,8 @@ async function asyncAddCourseController(userInput, req, res, next) {
         }
         // Save the updated userProfile object to the database
         await userProfile.save();
-      }
+        // FIXME :: Uncomment the line below
+      // }
     }
 
   } catch
@@ -619,6 +690,70 @@ function isCourseGivenDuringSemesterFunc(userInput, req, res, next) {
       resolve(result);
       reject(err);
     })
+  });
+}
+
+
+// ======================= Database Query Function =============================
+function daysExtractor(section) {
+  let daysArr = [];
+  // 1-Mon, 2-Tues, 3-Wed, 4-Thursday, 5-Friday
+  if (section.object.Mon === "Y") {
+    daysArr.push(1);
+  }
+
+  if (section.object.Tues === "Y") {
+    daysArr.push(2);
+  }
+
+  if (section.object.Wed === "Y") {
+    daysArr.push(3);
+  }
+
+  if (section.object.Thurs === "Y") {
+    daysArr.push(4);
+  }
+
+  if (section.object.Fri === "Y") {
+    daysArr.push(5);
+  }
+  return daysArr;
+}
+
+function findCourseComponents(componentCode, section, courseSubject, courseCatalog, userInput) {
+  return new Promise(async (resolve, reject) => {
+    // ======== Check if the course Exists =======================
+    // const query = scheduleModel.find();
+    const query = scheduleModel.findOne();
+    query.setOptions({lean: true});
+    query.collection(scheduleModel.collection);
+    // example to do the query in one line
+    // query.where('object.courseSubject').equals(userInput.courseSubject).exec(function (err, scheduleModel) {
+    // building a query with multiple where statements
+    query.where('object.courseSubject').equals(courseSubject);
+    query.where('object.courseCatalog').equals(courseCatalog);
+    query.where('object.termDescription').equals(userInput.termDescription);
+    try {
+      if (componentCode === "LEC") {
+        query.where('object.componentCode').equals(componentCode);
+        query.where('object.section').equals(section);
+      } else if (componentCode === "TUT") {
+        query.where('object.componentCode').equals(componentCode);
+        query.where('object.section').equals(section);
+      } else if (componentCode === "LAB") {
+        query.where('object.componentCode').equals(componentCode);
+        query.where('object.section').equals(section);
+      } else {
+        throw "Component Code is not properly selected";
+      }
+      // query.where('object.componentCode').equals("LEC");
+      await query.exec((err, result) => {
+        resolve(result);
+        reject(err);
+      });
+    } catch (e) {
+      console.log(e);
+    }
   });
 }
 
