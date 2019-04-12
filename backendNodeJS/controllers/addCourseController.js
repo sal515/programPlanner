@@ -111,7 +111,7 @@ async function asyncAddCourseController(userInput, req, res, next) {
   let userProfile;
 
 
-  let debug = -1;
+  let debug = 10;
 
   try {
 
@@ -268,107 +268,107 @@ async function asyncAddCourseController(userInput, req, res, next) {
     // =================== Saving the course in the courseCart Variable ==============
 
 
-    if (debug === -1) {
-      // if (debug >= 7) {
+    // if (debug === -1) {
+    if (debug >= 7) {
 
       statusObj.setNotifyCalenderBool(false);
 
-      // FIXME Uncommnet this logical check below !!!!MUST!!!!!
-      // if (!statusObj.getAlreadyInCartBool() && statusObj.getIsCourseGivenDuringSemesterBool() &&
-      //   statusObj.getHasPreReqBool()) {
+      if (!statusObj.getAlreadyInCartBool() && statusObj.getIsCourseGivenDuringSemesterBool() &&
+        statusObj.getHasPreReqBool()) {
 
-      const userProfile = await findUserProfileDocument(userInput, req, res, next);
+        const userProfile = await findUserProfileDocument(userInput, req, res, next);
 
-      // console.log(userProfile);
-      // console.log(userProfile["courseCart"].get(userInput.termDescription));
-
-
-      let termDetails;
-      let courseDetails;
-
-      // How to access the CourseCart Variables
-      // console.log(userProfile["courseCart"]);
-      // console.log(userProfile["courseCart"].get(userInput.termDescription));
-      // let courseCode = (userInput.courseSubject + userInput.courseCatalog).toString();
-      // console.log(userProfile["courseCart"].get(userInput.termDescription)[courseCode]["tutorialSection"]);
-
-      let courseCode = (userInput.courseSubject + userInput.courseCatalog).toString();
+        // console.log(userProfile);
+        // console.log(userProfile["courseCart"].get(userInput.termDescription));
 
 
-      // console.log(userProfile["courseCart"].get(userInput.termDescription));
-      // if the course cart for the semester exists, get those values
-      // typeof myVar !== 'undefined'
-      try {
-        if (typeof (userProfile["courseCart"].get(userInput.termDescription)) !== 'undefined') {
-          termDetails = (userProfile["courseCart"].get(userInput.termDescription));
+        let termDetails;
+        let courseDetails;
 
-          // check if the course is already saved in the semester
-          if (typeof userProfile["courseCart"].get(userInput.termDescription)[courseCode] !== 'undefined') {
-            console.log("Course found in the the courseCart");
-            courseDetails = userProfile["courseCart"].get(userInput.termDescription)[courseCode];
+        // How to access the CourseCart Variables
+        // console.log(userProfile["courseCart"]);
+        // console.log(userProfile["courseCart"].get(userInput.termDescription));
+        // let courseCode = (userInput.courseSubject + userInput.courseCatalog).toString();
+        // console.log(userProfile["courseCart"].get(userInput.termDescription)[courseCode]["tutorialSection"]);
+
+        let courseCode = (userInput.courseSubject + userInput.courseCatalog).toString();
+
+
+        // console.log(userProfile["courseCart"].get(userInput.termDescription));
+        // if the course cart for the semester exists, get those values
+        // typeof myVar !== 'undefined'
+        try {
+          if (typeof (userProfile["courseCart"].get(userInput.termDescription)) !== 'undefined') {
+            termDetails = (userProfile["courseCart"].get(userInput.termDescription));
+
+            // check if the course is already saved in the semester
+            if (typeof userProfile["courseCart"].get(userInput.termDescription)[courseCode] !== 'undefined') {
+              console.log("Course found in the the courseCart");
+              courseDetails = userProfile["courseCart"].get(userInput.termDescription)[courseCode];
+            } else {
+              console.log("Course is not found in the courseCart");
+            }
           } else {
-            console.log("Course is not found in the courseCart");
+            console.log("Didn't find the semester -> Create a new semester");
           }
-        } else {
-          console.log("Didn't find the semester -> Create a new semester");
+        } catch (e) {
+          console.log("Error: Didn't find the semester");
         }
-      } catch (e) {
-        console.log("Error: Didn't find the semester");
+
+        //update a class that is already in the sequence
+        if (typeof courseDetails !== 'undefined') {
+
+          //create new course
+          courseDetails["courseSubject"] = userInput.courseSubject;
+          courseDetails["courseCatalog"] = userInput.courseCatalog;
+          courseDetails["termDescription"] = userInput.termDescription;
+          courseDetails["lectureSection"] = userInput.lectureSection;
+          courseDetails["labSection"] = userInput.labSection;
+          courseDetails["tutorialSection"] = userInput.tutorialSection;
+
+          let subject = userInput.courseSubject + userInput.courseCatalog;
+          await remover.removeCourseBack(userInput.userID, subject, userInput.termDescription);
+
+          termDetails[courseCode] = courseDetails;
+          userProfile["courseCart"].set(userInput.termDescription, termDetails);
+
+          statusObj.setNotifyCalenderBool(true);
+
+          //Create semester key value map object
+        } else if (typeof termDetails !== 'undefined') {
+
+          courseDetails = {};
+          courseDetails["courseSubject"] = userInput.courseSubject;
+          courseDetails["courseCatalog"] = userInput.courseCatalog;
+          courseDetails["termDescription"] = userInput.termDescription;
+          courseDetails["lectureSection"] = userInput.lectureSection;
+          courseDetails["labSection"] = userInput.labSection;
+          courseDetails["tutorialSection"] = userInput.tutorialSection;
+          // insert the course in the term
+          termDetails[courseCode] = courseDetails;
+
+          userProfile["courseCart"].set(userInput.termDescription, termDetails);
+          statusObj.setNotifyCalenderBool(true);
+        } else {
+
+          courseDetails = {};
+          courseDetails["courseSubject"] = userInput.courseSubject;
+          courseDetails["courseCatalog"] = userInput.courseCatalog;
+          courseDetails["termDescription"] = userInput.termDescription;
+          courseDetails["lectureSection"] = userInput.lectureSection;
+          courseDetails["labSection"] = userInput.labSection;
+          courseDetails["tutorialSection"] = userInput.tutorialSection;
+
+          //create term if it doesnt exist
+          termDetails = {};
+          termDetails[courseCode] = courseDetails;
+
+          userProfile["courseCart"].set(userInput.termDescription, termDetails);
+          statusObj.setNotifyCalenderBool(true);
+        }
+        // Save the updated userProfile object to the database
+        await userProfile.save();
       }
-
-      //update a class that is already in the sequence
-      if (typeof courseDetails !== 'undefined') {
-
-        //create new course
-        courseDetails["courseSubject"] = userInput.courseSubject;
-        courseDetails["courseCatalog"] = userInput.courseCatalog;
-        courseDetails["termDescription"] = userInput.termDescription;
-        courseDetails["lectureSection"] = userInput.lectureSection;
-        courseDetails["labSection"] = userInput.labSection;
-        courseDetails["tutorialSection"] = userInput.tutorialSection;
-
-        let subject = userInput.courseSubject + userInput.courseCatalog;
-        await remover.removeCourseBack(userInput.userID, subject, userInput.termDescription);
-
-        termDetails[courseCode] = courseDetails;
-        userProfile["courseCart"].set(userInput.termDescription, termDetails);
-
-        statusObj.setNotifyCalenderBool(true);
-
-        //Create semester key value map object
-      } else if (typeof termDetails !== 'undefined') {
-
-        courseDetails = {};
-        courseDetails["courseSubject"] = userInput.courseSubject;
-        courseDetails["courseCatalog"] = userInput.courseCatalog;
-        courseDetails["termDescription"] = userInput.termDescription;
-        courseDetails["lectureSection"] = userInput.lectureSection;
-        courseDetails["labSection"] = userInput.labSection;
-        courseDetails["tutorialSection"] = userInput.tutorialSection;
-        // insert the course in the term
-        termDetails[courseCode] = courseDetails;
-
-        userProfile["courseCart"].set(userInput.termDescription, termDetails);
-        statusObj.setNotifyCalenderBool(true);
-      } else {
-
-        courseDetails = {};
-        courseDetails["courseSubject"] = userInput.courseSubject;
-        courseDetails["courseCatalog"] = userInput.courseCatalog;
-        courseDetails["termDescription"] = userInput.termDescription;
-        courseDetails["lectureSection"] = userInput.lectureSection;
-        courseDetails["labSection"] = userInput.labSection;
-        courseDetails["tutorialSection"] = userInput.tutorialSection;
-
-        //create term if it doesnt exist
-        termDetails = {};
-        termDetails[courseCode] = courseDetails;
-
-        userProfile["courseCart"].set(userInput.termDescription, termDetails);
-        statusObj.setNotifyCalenderBool(true);
-      }
-      // Save the updated userProfile object to the database
-      await userProfile.save();
     }
 
   } catch
