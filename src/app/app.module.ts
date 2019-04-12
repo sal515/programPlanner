@@ -35,8 +35,7 @@ import { AddCourseComponent } from './home-view-container/sidebar-view/add-cours
 import { CourseBasketComponent } from './home-view-container/sidebar-view/course-basket/course-basket.component';
 import { LoginFormComponent } from './login-view/login-form.component';
 import { SidebarViewComponent } from './home-view-container/sidebar-view/sidebar-view.component';
-import { CourseHistoryComponent } from './home-view-container/course-history/course-history.component';
-import { CourseHistoryDialogComponent} from "./home-view-container/course-history/course-history-dialog/course-history-dialog.component";
+import { CourseHistoryComponent, CourseHistoryDialogComponent } from './home-view-container/course-history/course-history.component';
 
 @NgModule({
   declarations: [
