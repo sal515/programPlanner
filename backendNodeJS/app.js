@@ -11,7 +11,6 @@ const bodyParser = require("body-parser");
 const corsHelper = require('./server/corsHelper');
 // connection to the database
 const dbHelpers = require("./databaseHandlers/dbHelper");
-// ====================================================================
 
 // ---------------------------------------------------------------------
 // Importing the routing file to execute the required functions
@@ -21,7 +20,6 @@ const genDataRoute = require('./routes/generateDataRoute');
 const validateLoginRoute = require('./routes/validateLoginRoute');
 const algorithmRoute = require('./routes/algorithmsRoute');
 const removeCourseRoute = require('./routes/removeCourseRoute');
-// ====================================================================
 
 // connecting to the database using the default connection method
 dbHelpers.defaultConnectionToDB();
@@ -33,7 +31,7 @@ dbHelpers.defaultConnectionToDB();
 app.use(bodyParser.json());
 // parsing urlencoded bodies in the request
 app.use(bodyParser.urlencoded({extended: false}));
-// ====================================================================
+
 
 // ---------------------------------------------------------------------
 // Setting the CORS Headers - To enable communication between the frontEnd and BackEnd
@@ -45,8 +43,6 @@ app.use((req, res, next) => {
   corsHelper.setCorsHeaders(res, req, next);
   next();
 });
-// ====================================================================
-
 
 // ---------------------------------------------------------------------
 // ExpressJS middleware used to forward HTTP request to their proper router files
@@ -56,7 +52,6 @@ app.use("/api/generateData", genDataRoute);
 app.use("/validateLogin", validateLoginRoute);
 app.use("/algorithms", algorithmRoute );
 app.use("/removeCourse", removeCourseRoute);
-
 // middleware handling http request that has no specific routing path by sending error message as response
 app.use((req, res, next) => {
   // TODO Cleanup: Remove console log, when test is done
@@ -64,7 +59,6 @@ app.use((req, res, next) => {
   // console.log('Default Request Handler Executed');
   res.send('ERROR: Requested REST API Endpoint was not found - Default Request Handler Executed');
 });
-// ====================================================================
 
 // ---------------------------------------------------------------------
 // Exporting the express app to the server.js file
@@ -72,7 +66,7 @@ app.use((req, res, next) => {
 // The following code will allow up to export this express app called "app" to our NodeJS server
 module.exports = app;
 // NOTE :: The server.js file has to import this app called  "app" found in the backendNodeJS
-// ====================================================================
+
 
 
 
