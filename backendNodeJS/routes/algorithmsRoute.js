@@ -10,7 +10,6 @@ const sectionsDataController = require('../controllers/sectionsDataController');
 // const scheduleController = require('../controllers/scheduleController');
 
 
-
 router.post("/addCourseToSequence", addCourseController.addCourseToSequence);
 router.get("/getCourses", populateSidebarController.populateSidebar);
 router.post("/getCourseCart", populateSidebarController.populateCourseCartCourses);
@@ -18,7 +17,6 @@ router.post("/getCourseCart", populateSidebarController.populateCourseCartCourse
 router.post("/getTutLabsSections", sectionsDataController.sendAllTutLabSections);
 router.post("/getLecturesSections", sectionsDataController.sendAllLectures);
 // router.post("/getSchedule", scheduleController.generateSchedules);
-
 
 
 module.exports = router;

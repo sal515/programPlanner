@@ -98,7 +98,6 @@ exports.TestRemoveCourse = async (req, res, next) => {
     let userID = "1bbbbbbb";
     let userProfile = await getUserProfile(userID);
     let courseCart = getSemesterCourseCart("Fall 2017", userProfile.courseCart);
-
     removeCourse(courseCart, "SOEN341");
     courseCart = getSemesterCourseCart("Fall 2017", userProfile.courseCart);
     updateCourseCart(userProfile, "Fall 2017", courseCart);
@@ -118,7 +117,6 @@ exports.removeCourseBack = async (userID, subject, semester) => {
     await connect2DB();
 
     const userProfile = await getUserProfile(userID);
-
     const semesterCourseCart = getSemesterCourseCart(semester, userProfile.courseCart);
     removeCourse(userProfile, subject, semester);
     updateCourseCart(userProfile, semester, semesterCourseCart);

@@ -1,4 +1,3 @@
-// variable holding the references of dbhelper methods
 const dbHelpers = require("../databaseHandlers/dbHelper");
 //  papa parser used to parse the CSV to JSON
 const papaParser = require('papaparse');
@@ -8,7 +7,6 @@ const fs = require('fs');
 
 var exports = module.exports = {};
 
-// exports.parseCSVAndSaveToDB = function () {
 exports.parseCSVAndSaveToDB = function (csvFilePath, model) {
   // The file path should be -->   parser.parseCSVAndSaveToDB('backendNodeJS/csv/preReqOR.csv');
   let file = fs.createReadStream(csvFilePath);
