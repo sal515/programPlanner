@@ -7,18 +7,18 @@
 <div class="title_login padding_title_second">Program Planner</div>
 <div *ngIf="submitted && auth_failed" class="failed_login_container">
     <div class="failed_login">
-        <div>Wrong username or password.</div>
+        <div>Wrong student ID or password.</div>
         <div> Please try again.</div>
     </div>
 </div>
 <div class="container">
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
-            <label class="text_login">Student ID / Netname</label>
+            <label class="text_login">Student ID</label>
             <input type="text" class="form-control" formControlName="netname" required>
             <div>
                 <div *ngIf="submitted && missing_netname" class="missing_element">
-                    Username is required.
+                    Student ID is required.
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
         </div>
 
         <div>
-            <button id="left" type="submit" class="btn" style="opacity: 1">Sign In</button>
+            <button id="left" type="submit" class="btn">Sign In</button>
             <a id="right" target="_blank" href="https://fcms.concordia.ca/idss/pages/account/passwordreset.aspx">
                 Forgot password ?</a>
         </div>
