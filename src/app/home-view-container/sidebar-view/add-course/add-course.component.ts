@@ -1,6 +1,5 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {AddCourseModel} from '../../../models/course.model';
-
 import {CourseService} from '../../../add-course-service/add-course.service';
 import {Subscription} from 'rxjs';
 
@@ -9,32 +8,42 @@ import {Subscription} from 'rxjs';
   templateUrl: './add-course.component.html',
   styleUrls: ['./add-course.component.css']
 })
+
 export class AddCourseComponent implements OnInit, OnDestroy {
-  courses: AddCourseModel[];
+  // Course to be sent to the backend.
   selectedCourse: AddCourseModel;
+  // Lists to contains the courses generated from the backend.
+  courses: AddCourseModel[];
   semesterList: AddCourseModel[] = [];
   nameList: AddCourseModel[] = [];
   codeList: AddCourseModel[] = [];
   lectureList: AddCourseModel[] = [];
   labList: AddCourseModel[] = [];
   tutorialList: AddCourseModel[] = [];
+  // Validation booleans
+  lecSelected: boolean;
+  tutSelected: boolean;
+  labSelected: boolean;
+  // User's input for the code.
   input: string;
+  // Message array based on the backend's response codes.
   messages: string[];
-
+  // Subscriptions.
   private messageSubscription: Subscription;
   private courseSubscription: Subscription;
   private semesterSubscription: Subscription;
   private lectureSubscription: Subscription;
   private labSubscription: Subscription;
   private tutSubscription: Subscription;
-
+  // Add course service
   courseService: CourseService;
-
+  // Constructor
   constructor(courseService: CourseService) {
     this.courseService = courseService;
   }
 
-  /** Method to return a list from a source list with no duplicate object attributes. For example, if the source list has two course with
+  /**
+   * Method to return a list from a source list with no duplicate object attributes. For example, if the source list has two course with
    * the 'COMP' courseSubject, only one of them will be included in the returned list. The selected course is also included int eh returned
    * list.
    *
@@ -59,7 +68,8 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     return list;
   }
 
-  /** Method to filter a source list of course by their attributed based on an input string.
+  /**
+   * Method to filter a source list of course by their attributed based on an input string.
    *
    * @param list - The list of course to filter.
    * @param val - The value used as a filter.
@@ -74,7 +84,8 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     return list;
   }
 
-  /** Subscribing to a bunch of stuff.
+  /**
+   * Subscribing to a bunch of stuff.
    *
    * @returns void
    */
@@ -98,9 +109,13 @@ export class AddCourseComponent implements OnInit, OnDestroy {
       this.tutorialList = tutList;
     });
     this.courseService.getCourses();
+    this.lecSelected = false;
+    this.tutSelected = false;
+    this.labSelected = false;
   }
 
-  /** Method that is executed upon selecting a course from a drop down list. It will will set the value of the selected course and generate
+  /**
+   * Method that is executed upon selecting a course from a drop down list. It will will set the value of the selected course and generate
    * a list of courseSubject and codes for this course.
    *
    * @param course - The selected course.
@@ -113,44 +128,67 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     this.codeList = AddCourseComponent.filter(this.courses, this.selectedCourse.courseSubject, 'courseSubject');
     this.codeList = AddCourseComponent.genList(this.codeList, this.selectedCourse, 'courseCatalog');
   }
+
   /**
-   * Takes a list of sections for lectures, labs, and tutorials sent by the backend
-   * Generates a list of all possible sections for each
+   * Takes a list of sections for lectures, labs, and tutorials sent by the backend.
+   * Generates a list of all possible sections for each.
+   *
+   * @returns void
    */
   onSelectName(course: AddCourseModel): void {
     this.onSelect(course);
-    this.clearInput();
+    this.clearAll();
   }
+
   /**
-   * Takes a list of sections for lectures, labs, and tutorials sent by the backend
-   * Generates a list of all possible sections for each
+   * Takes a list of sections for lectures, labs, and tutorials sent by the backend.
+   * Generates a list of all possible sections for each.
+   *
+   * @returns void
    */
   onSelectCode(course: AddCourseModel): void {
     this.onSelect(course);
     this.courseService.getLecture(course);
+    this.labList = null;
+    this.tutorialList = null;
   }
-  /** Generates a list of tutorial and a list of labs based on the selected lecture.
+
+  /**
+   * Generates a list of tutorial and a list of labs based on the selected lecture.
    *
    * @params course - the selected lecture.
+   * @returns void
    */
   onSelectLectureSection(course: AddCourseModel): void {
     this.selectedCourse = course;
     this.courseService.getLabAndTut(course);
-    this.selectedCourse.tutorialSection = this.tutorialList[0].tutorialSection;
-    this.selectedCourse.labSection = this.tutorialList[0].labSection;
+    this.lecSelected = true;
   }
-  /** Selects a tutorial or lab.
+
+  /**
+   * Selects a tutorial.
    *
-   * @params course - the selected tutorial or lab.
+   * @params course - the selected tutorial.
+   * @returns void
    */
   onSelectTutorialSections(course: AddCourseModel): void {
     this.selectedCourse.tutorialSection = course.tutorialSection;
-  }
-  onSelectLabSections(course: AddCourseModel): void {
-    this.selectedCourse.labSection = course.labSection;
+    this.tutSelected = true;
   }
 
-  /** Method that is executed upon selecting a semester. Calls onSelect and reset the user input.
+  /**
+   * Selects a lab.
+   *
+   * @params course - the selected lab.
+   * @returns void
+   */
+  onSelectLabSections(course: AddCourseModel): void {
+    this.selectedCourse.labSection = course.labSection;
+    this.labSelected = true;
+  }
+
+  /**
+   * Method that is executed upon selecting a semester. Calls onSelect and reset the user input.
    *
    * @param course - The selected termDescription.
    * @returns void
@@ -158,10 +196,11 @@ export class AddCourseComponent implements OnInit, OnDestroy {
   onSemesterSelect(course: AddCourseModel): void {
     this.onSelect(course);
     this.courseService.getUserCart(course);
-    this.clearInput();
+    this.clearAll();
   }
 
-  /** Method generates a list of course for the autocomplete dropdown list of the courseCatalog input.
+  /**
+   * Method generates a list of course for the autocomplete dropdown list of the courseCatalog input.
    *
    * @param input - Text in the course courseCatalog input field.
    * @returns void
@@ -172,14 +211,8 @@ export class AddCourseComponent implements OnInit, OnDestroy {
     this.codeList = AddCourseComponent.filter(list, input, 'courseCatalog');
   }
 
-  /** Clears the input of the course courseCatalog.
-   * @returns void
-   */
-  clearInput(): void {
-    this.input = null;
-  }
-
-  /** Returns the courseCatalog of the passed course. Useful for the autocomplete field.
+  /**
+   * Returns the courseCatalog of the passed course. Useful for the autocomplete field.
    *
    * @param course - The course from which the courseCatalog will be returned.
    * @returns string - The course's courseCatalog.
@@ -189,29 +222,43 @@ export class AddCourseComponent implements OnInit, OnDestroy {
       return course.courseCatalog;
     }
   }
-  displayLecture(course: AddCourseModel): string {
-    if (course) {
-      return course.lectureSection;
-    }
-  }
-  /** Add an input course to the basket using the service method addCourse. Displays an appropriate message based on the input or the
-   * result of addCourse.
+
+  /**
+   * Clears the lecture, lab and tutorial list and reset their validation booleans. Clears the input field.
    *
-   * @param course - The course to add to the basket.
    * @returns void
    */
+  clearAll(): void {
+    this.input = null;
+    this.lectureList = [];
+    this.tutorialList = [];
+    this.labList = [];
+    this.lecSelected = false;
+    this.tutSelected =  false;
+    this.labSelected = false;
+  }
 
-  onSubmit(course: AddCourseModel) {
+  /**
+   * Executed upon submitting the form, submit the input course to the backend.
+   *
+   * @param course - The course to add to the backend.
+   * @returns void
+   */
+  onSubmit(course: AddCourseModel): void {
       this.courseService.addCourse(course);
   }
 
-  /** Unsubscribe from the message to prevent memory leaks when the component is destroyed.
+  /**
+   * Unsubscribe from the message to prevent memory leaks when the component is destroyed.
    *
    * @returns void
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.messageSubscription.unsubscribe();
     this.courseSubscription.unsubscribe();
     this.semesterSubscription.unsubscribe();
+    this.labSubscription.unsubscribe();
+    this.tutSubscription.unsubscribe();
+    this.lectureSubscription.unsubscribe();
   }
 }

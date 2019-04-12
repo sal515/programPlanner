@@ -22,7 +22,7 @@
             <!-- Dropdown list to select the code of the course based on the selected name. -->
             <mat-form-field>
                 <mat-label>Course Code</mat-label>
-                <input required matInput [matAutocomplete]="auto"
+                <input matInput [matAutocomplete]="auto"
                        name="courseName" #course="ngModel" [(ngModel)]="input"
                        (ngModelChange)="genAutocompleteList(input)"/>
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectCode($event.option.value)"
@@ -44,23 +44,24 @@
             <!--Drop down to select the lab section based on the course chosen-->
             <mat-form-field >
             <mat-label>Tutorial</mat-label>
-            <mat-select (selectionChange)="onSelectTutorialSections($event.value)" required>
+            <mat-select (selectionChange)="onSelectTutorialSections($event.value)">
               <mat-option *ngFor="let course of tutorialList" [value]="course">
                 {{course.tutorialSection}}
               </mat-option>
             </mat-select>
             </mat-form-field>
-              <!--Drop down to select the tutorial section based on the lecture chosen -->
+            <!--Drop down to select the tutorial section based on the lecture chosen -->
             <mat-form-field>
               <mat-label>Lab</mat-label>
-              <mat-select (selectionChange)="onSelectLabSections($event.value)" required>
+              <mat-select (selectionChange)="onSelectLabSections($event.value)" >
                 <mat-option *ngFor="let course of labList" [value]="course">
                   {{course.labSection}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
+            <!-- Submit button-->
             <div>
-                <button [disabled]="!addForm.form.valid" type="submit">Add</button>
+                <button [disabled]="!addForm.form.valid || !lecSelected || !tutSelected || !labSelected" type="submit">Add</button>
             </div>
         </div>
     </form>
