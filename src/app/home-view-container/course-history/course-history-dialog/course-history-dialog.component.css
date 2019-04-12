@@ -1,0 +1,21 @@
+.center {
+  text-align: center;
+}
+
+.courseHistory_title{
+  color: black;
+  font-weight: bold;
+}
+
+.grey-background{
+  background-color: grey;
+}
+
+.semester-styling{
+  font-weight: bold;
+}
+
+.md-dialog-container{
+  background-color: lightgrey;
+}
+
