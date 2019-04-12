@@ -40,6 +40,8 @@ export class ClassesService {
       sequence = this.getWinterSequence()
     } else if (semester == "Summer 2018") {
       sequence = this.getSummerSequence()
+    } else {
+      sequence = [];
     }
 
     for (let course of sequence) {
@@ -58,6 +60,9 @@ export class ClassesService {
           courseName, course.labSection.replace(" ", ""), course.labDays[0]));
       }
     }
-    this.editUser(calendarCourses);
+    console.log(calendarCourses.classInfo);
+    let x = new ClassInfoArray();
+    x.classInfo.push(new ClassInfo(1400, 1500, 'COEN250',"", 1));
+    this.editUser(x);
   }
 }

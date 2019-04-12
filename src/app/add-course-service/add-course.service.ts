@@ -201,19 +201,21 @@ export class CourseService {
       userID: inputCourse.userID
     }).subscribe((responseData) => {
         this.basket = [];
-        for (let i = 0; i < responseData.coursesCartArr.length; i++) {
-          const course: AddCourseModel = {
-            userID: this.userID,
-            termDescription: inputCourse.termDescription,
-            courseSubject: responseData.coursesCartArr[i].slice(0, 4),
-            courseCatalog: responseData.coursesCartArr[i].slice(4, 8),
-            lectureSection: inputCourse.lectureSection,
-            tutorialSection: inputCourse.tutorialSection,
-            labSection: inputCourse.labSection
-          };
-          this.basket.push(course);
+        if(responseData.coursesCartArr != null) {
+          for (let i = 0; i < responseData.coursesCartArr.length; i++) {
+            const course: AddCourseModel = {
+              userID: this.userID,
+              termDescription: inputCourse.termDescription,
+              courseSubject: responseData.coursesCartArr[i].slice(0, 4),
+              courseCatalog: responseData.coursesCartArr[i].slice(4, 8),
+              lectureSection: inputCourse.lectureSection,
+              tutorialSection: inputCourse.tutorialSection,
+              labSection: inputCourse.labSection
+            };
+            this.basket.push(course);
+          }
+          this.basketUpdated.next(this.basket);
         }
-      this.basketUpdated.next(this.basket);
       }
     );
   }
@@ -262,7 +264,7 @@ export class CourseService {
           if (responseData.studentProfile != null) {
             localStorage.setItem('studentProfile', JSON.stringify(responseData.studentProfile));
           }
-          new ClassesService().editUser(course.termDescription);
+          new ClassesService().parseSequence(course.termDescription);
         }
       }
     );
@@ -287,7 +289,7 @@ export class CourseService {
         if (responseData.studentProfile != null) {
           localStorage.setItem('studentProfile', JSON.stringify(responseData.studentProfile));
         }
-        new ClassesService().editUser(course.termDescription);
+        new ClassesService().parseSequence(course.termDescription);
         setTimeout(() => {this.clearMessages(); }, 3000);
       }
     );
